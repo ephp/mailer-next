@@ -1,0 +1,11 @@
+{
+  "autocomplete": {
+    "no_results": "Nessun risultato.",
+    "loading": "Caricamento..."
+  },
+  "error": {
+    "initialize_places": "Si è verificato un errore durante il caricamento delle librerie Google Places",
+    "fetch_autocomplete_suggestions": "Si è verificato un errore nel caricamento dei suggerimenti per l'autocompletamento di Google Places",
+    "fetch_fields": "Si è verificato un errore nel caricamento dei campi aggiuntivi del luogo"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "translation_list_field": {
+    "tabs_label": "Translations are available for the resource",
+    "btn": {
+      "pick_original_language": "Select base language",
+      "add_language": "Add language"
+    }
+  }
+}

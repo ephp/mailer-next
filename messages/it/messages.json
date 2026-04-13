@@ -1,0 +1,198 @@
+{
+  "btn": {
+    "back_to_list": "Torna alla lista",
+    "cancel": "Annulla",
+    "create": "Inserisci",
+    "curriculum": "Curriculum",
+    "delete": "Elimina",
+    "detail": "Dettaglio",
+    "show": "Dettaglio",
+    "disable": "Disabilita",
+    "edit": "Modifica",
+    "enable": "Abilita",
+    "evaluation": "Valutazione",
+    "go_back_home": "Torna alla homepage",
+    "back": "Indietro",
+    "next": "Avanti",
+    "ok": "OK",
+    "operations": "Operazioni",
+    "previous": "Indietro",
+    "profile": "Profilo",
+    "save": "Salva",
+    "register": "Non sei registrato? Crea il tuo profilo",
+    "search": "Cerca",
+    "toggle_visibility": "Mostra contenuto",
+    "clear_search": "Cancella la ricerca",
+    "advanced_search": "Ricerca avanzata",
+    "apply": "Applica",
+    "filter": "Filtra",
+    "confirm": "Conferma",
+    "edit_validation": "Modifica validità",
+    "view_all": "Vedi tutti",
+    "view_all_feminine": "Vedi tutte",
+    "close": "Chiudi",
+    "export_xls": "Esporta XLS",
+    "open": "Apri",
+    "remove": "Rimuovi"
+  },
+  "col": {
+    "actions": "Azioni"
+  },
+  "date_picker_split": {
+    "year": "Anno",
+    "month": "Mese",
+    "day": "Giorno",
+    "today": "Oggi",
+    "week_format": "Settimana {week_number}: {start_date} - {end_date}"
+  },
+  "image_gallery_upload": {
+    "btn": {
+      "clear_errors": "Rimuovi messaggi di errore"
+    }
+  },
+  "common": {
+    "base_title": "MUI template",
+    "base_description": "Descrizione per MUI template.",
+    "no_rows": "Non è stato ancora inserito nessun dato.",
+    "placeholders": {
+      "select": "Seleziona...",
+      "search": "Cerca..."
+    },
+    "field": {
+      "updated_at": "Ultimo aggiornamento"
+    },
+    "error": {
+      "unknown": "Si è verificato un errore"
+    },
+    "form": {
+      "cannot_submit_invalid_form": "Per effettuare il salvataggio, è necessario compilare tutti i campi obbligatori del form con dati corretti.",
+      "cannot_submit_pristine_form": "I dati del form non sono stati modificati"
+    },
+    "approval": {
+      "yes": "Sì",
+      "no": "No"
+    },
+    "month": {
+      "jan": "Gennaio",
+      "feb": "Febbraio",
+      "mar": "Marzo",
+      "apr": "Aprile",
+      "may": "Maggio",
+      "jun": "Giugno",
+      "jul": "Luglio",
+      "aug": "Agosto",
+      "sep": "Settembre",
+      "oct": "Ottobre",
+      "nov": "Novembre",
+      "dec": "Dicembre",
+      "1": "Gennaio",
+      "2": "Febbraio",
+      "3": "Marzo",
+      "4": "Aprile",
+      "5": "Maggio",
+      "6": "Giugno",
+      "7": "Luglio",
+      "8": "Agosto",
+      "9": "Settembre",
+      "10": "Ottobre",
+      "11": "Novembre",
+      "12": "Dicembre"
+    },
+    "month_three": {
+      "jan": "Gen",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "Mag",
+      "jun": "Giu",
+      "jul": "Lug",
+      "aug": "Ago",
+      "sep": "Set",
+      "oct": "Ott",
+      "nov": "Nov",
+      "dec": "Dic",
+      "1": "Gen",
+      "2": "Feb",
+      "3": "Mar",
+      "4": "Apr",
+      "5": "Mag",
+      "6": "Giu",
+      "7": "Lug",
+      "8": "Ago",
+      "9": "Set",
+      "10": "Ott",
+      "11": "Nov",
+      "12": "Dic"
+    },
+    "weekday": {
+      "monday": "Lunedì",
+      "tuesday": "Martedì",
+      "wednesday": "Mercoledì",
+      "thursday": "Giovedì",
+      "friday": "Venerdì",
+      "saturday": "Sabato",
+      "sunday": "Domenica"
+    },
+    "weekday_char": {
+      "monday": "L",
+      "tuesday": "M",
+      "wednesday": "M",
+      "thursday": "G",
+      "friday": "V",
+      "saturday": "S",
+      "sunday": "D"
+    },
+    "weekday_three": {
+      "monday": "Lun",
+      "tuesday": "Mar",
+      "wednesday": "Mer",
+      "thursday": "Gio",
+      "friday": "Ven",
+      "saturday": "Sab",
+      "sunday": "Dom"
+    },
+    "advanced_search": {
+      "n_filters_applied": "{count, plural, =1 {# filtro applicato} other {# filtri applicati}}"
+    },
+    "upload_error": {
+      "upload": "Si è verificato un errore nel caricamento del file.",
+      "delete": "Si è verificato un errore nell'eliminazione del file.",
+      "mimeType": "Non è consentito il caricamento di questo tipo di file. I tipi accettati sono: {mimeTypes}.",
+      "maxSize": "File {fileName} troppo grande, il limite massimo è di {maxSize}.",
+      "generic": "Si è verificato un errore nel caricamento del file {fileName}. ({message})."
+    },
+    "your_groups": "I tuoi gruppi"
+  },
+  "select3": {
+    "placeholder": "Seleziona...",
+    "selection": "Selezione:",
+    "clear_selection": "Annulla selezione",
+    "search_placeholder": "Cerca...",
+    "no_result": "Nessun risultato",
+    "loading": "Caricamento...",
+    "no_group": "Nessun gruppo",
+    "none_selected": "Nessun elemento selezionato",
+    "select_all": "Tutti gli elementi",
+    "selected_items": "Elementi selezionati"
+  },
+  "star_rating": {
+    "label_text": "{count, plural, =1 {# stella} other {# stelle}}, {label}",
+    "rating": {
+      "half": "Terribile",
+      "one": "Terribile",
+      "one_and_half": "Non soddisfacente",
+      "two": "Non soddisfacente",
+      "two_and_half": "Nella media",
+      "three": "Nella media",
+      "three_and_half": "Molto buono",
+      "four": "Molto buono",
+      "four_and_half": "Eccellente",
+      "five": "Eccellente"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Amministrazione",
+    "users": "Utenti"
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "btn": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "send_new_password": "Forgot password",
+    "reset_password": "Reset password",
+    "set_password": "Set password",
+    "create_user": "Create user",
+    "resend_first_login_email": "Re-send first login email",
+    "change_password": "Change password",
+    "delete_profile": "Delete profile",
+    "sign_up": "Sign up"
+  },
+  "roles": {
+    "oimmei": "Oimmei",
+    "admin": "Admin",
+    "user": "User"
+  },
+  "info": {
+    "oimmei": "Sign in as Oimmei",
+    "admin": "Sign in as admin",
+    "user": "Sign in as user"
+  },
+  "user": {
+    "field": {
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "role": "Role",
+      "roles": "Role",
+      "enabled": "Enabled",
+      "password": "Password"
+    },
+    "help": {
+      "enabled": "A disabled user will be unable to access the website. They'll be able to access only if an admin re-enables them."
+    },
+    "enabled": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "messages": {
+      "first_login_instructions": "Upon creating a new user, an email containing a link to set the first password will be sent to the address provided."
+    },
+    "success": {
+      "resend_first_login_email": "The first login email was successfully re-sent"
+    },
+    "error": {
+      "email": {
+        "required": "Please input an email address.",
+        "email": "Please input a valid email address."
+      },
+      "first_name": {
+        "required": "Please input the first name."
+      },
+      "last_name": {
+        "required": "Please input the last name."
+      },
+      "role": {
+        "required": "Please select the user's role."
+      }
+    }
+  },
+  "page": {
+    "login": {
+      "title": "Sign in",
+      "role_message": {
+        "oimmei": "Access reserved for Oimmei",
+        "admin": "Access reserved for ADMIN",
+        "user": "Access reserved for users"
+      }
+    },
+    "signup": {
+      "title": "Sign up"
+    },
+    "forgot_password": {
+      "title": "Forgot password"
+    },
+    "reset_password": {
+      "title": "Reset password"
+    },
+    "first_login": {
+      "title": "Set password"
+    }
+  },
+  "login_form": {
+    "messages": {
+      "remember_me": "Remember me",
+      "forgot_password": "Forgot password?",
+      "sign_up": "Are you a candidate?"
+    },
+    "error": {
+      "unknown": "An error occurred",
+      "email": {
+        "email": "Please input a valid email address",
+        "required": "Please input the email address"
+      },
+      "password": {
+        "required": "Please input the password"
+      }
+    }
+  },
+  "forgot_password_form": {
+    "title": "Forgot password?",
+    "messages": {
+      "already_have_password": "Already have a password?",
+      "sign_in": "Sign in here"
+    },
+    "success": {
+      "email_sent": "An email containing the password reset link was sent to the given address"
+    },
+    "error": {
+      "unknown": "An error occurred",
+      "not_found": "No user with the given credentials was found",
+      "email": {
+        "email": "Please input a valid email address",
+        "required": "Please input the email address"
+      }
+    }
+  },
+  "common_password_form": {
+    "field": {
+      "password_confirmation": "Confirm password"
+    },
+    "messages": {
+      "sign_in": "Sign in here"
+    },
+    "error": {
+      "unknown": "An error occurred",
+      "password": {
+        "required": "Please enter the password"
+      },
+      "password_confirmation": {
+        "required": "Please enter the password confirmation",
+        "match": "The passwords don't match"
+      }
+    }
+  },
+  "first_login_form": {
+    "title": "Set password",
+    "description": "Set the password you'll use to sign into your account.",
+    "success": {
+      "password_reset": "The password was set"
+    }
+  },
+  "reset_password_form": {
+    "title": "Reset password",
+    "description": "Provide a new password for your account.",
+    "success": {
+      "password_reset": "The password was successfully reset"
+    }
+  },
+  "sign_up_form": {
+    "messages": {
+      "already_have_account": "Already have an account?",
+      "sign_in": "Sign in here"
+    }
+  },
+  "user_crud": {
+    "page": {
+      "index": {
+        "title": "Users"
+      },
+      "new": {
+        "title": "Create user"
+      },
+      "edit": {
+        "title": "Edit user"
+      }
+    },
+    "message": {
+      "disable": {
+        "title": "Do you want to disable the user {email}?",
+        "description": "Once disabled, the user will be unable to access the website until it gets enabled again."
+      },
+      "enable": {
+        "title": "Do you want to enable the user {email}?",
+        "description": "Once enabled, the user will be able to access the website again."
+      }
+    }
+  },
+  "profile": {
+    "page": {
+      "main": {
+        "title": "My account"
+      },
+      "personal_info": {
+        "title": "Personal info"
+      },
+      "change_password": {
+        "title": "Change password"
+      },
+      "delete_profile": {
+        "title": "Delete your profile",
+        "description": "Upon confirming, your profile will be removed from the system along with all of its data.",
+        "warning": "The removal will be immediately applied and can't be undone.",
+        "confirm": "Do you want to proceed?"
+      }
+    },
+    "profile_form": {
+      "success": {
+        "profile_updated": "The data were saved"
+      },
+      "error": {
+        "email_already_used": "This email addres is already in use"
+      }
+    },
+    "change_password_form": {
+      "field": {
+        "old_password": "Current password",
+        "new_password": "New password",
+        "new_password_confirmation": "Confirm new password"
+      },
+      "success": {
+        "password_changed": "The password was successfully updated"
+      },
+      "error": {
+        "old_password_invalid": "The current password is invalid",
+        "old_password": {
+          "required": "Please input the current password"
+        },
+        "new_password": {
+          "required": "Please input a new password",
+          "min": "The password has to be at least {n} characters long"
+        },
+        "new_password_confirmation": {
+          "match": "The passwords don't match"
+        }
+      }
+    },
+    "delete_profile": {
+      "error": {
+        "cannot_delete_user": "This account can't be deleted"
+      }
+    }
+  }
+}

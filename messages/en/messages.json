@@ -1,0 +1,193 @@
+{
+  "btn": {
+    "back_to_list": "Back to the list",
+    "cancel": "Cancel",
+    "create": "Create",
+    "curriculum": "Curriculum",
+    "delete": "Delete",
+    "detail": "Detail",
+    "show": "Detail",
+    "disable": "Disable",
+    "edit": "Edit",
+    "enable": "Enable",
+    "evaluation": "Evaluation",
+    "go_back_home": "Back to the homepage",
+    "back": "Back",
+    "next": "Next",
+    "ok": "OK",
+    "operations": "Operations",
+    "previous": "Previous",
+    "profile": "Account",
+    "save": "Save",
+    "register": "Don't have an account? Create one",
+    "search": "Search",
+    "toggle_visibility": "Display content",
+    "clear_search": "Clear search",
+    "advanced_search": "Advanced search",
+    "apply": "Apply",
+    "filter": "Filter",
+    "confirm": "Confirm",
+    "edit_validation": "Change validity",
+    "view_all": "See all",
+    "view_all_feminine": "See all",
+    "close": "Close",
+    "export_xls": "Export XLS",
+    "open": "Open",
+    "remove": "Remove"
+  },
+  "col": {
+    "actions": "Actions"
+  },
+  "date_picker_split": {
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "today": "Today",
+    "week_format": "Week {week_number}: {start_date} - {end_date}"
+  },
+  "common": {
+    "base_title": "MUI template",
+    "base_description": "Description for MUI template.",
+    "no_rows": "No available data.",
+    "placeholders": {
+      "select": "Select...",
+      "search": "Search..."
+    },
+    "field": {
+      "updated_at": "Last update"
+    },
+    "error": {
+      "unknown": "An error occurred"
+    },
+    "form": {
+      "cannot_submit_invalid_form": "In order to save, you have to fill all mandatory fields with valid data.",
+      "cannot_submit_pristine_form": "Form data weren't changed"
+    },
+    "approval": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "month": {
+      "jan": "January",
+      "feb": "February",
+      "mar": "March",
+      "apr": "April",
+      "may": "May",
+      "jun": "June",
+      "jul": "July",
+      "aug": "August",
+      "sep": "September",
+      "oct": "October",
+      "nov": "November",
+      "dec": "December",
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    },
+    "month_three": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec",
+      "1": "Jan",
+      "2": "Feb",
+      "3": "Mar",
+      "4": "Apr",
+      "5": "May",
+      "6": "Jun",
+      "7": "Jul",
+      "8": "Aug",
+      "9": "Sep",
+      "10": "Oct",
+      "11": "Nov",
+      "12": "Dec"
+    },
+    "weekday": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "weekday_char": {
+      "monday": "M",
+      "tuesday": "T",
+      "wednesday": "W",
+      "thursday": "T",
+      "friday": "F",
+      "saturday": "S",
+      "sunday": "S"
+    },
+    "weekday_three": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "advanced_search": {
+      "n_filters_applied": "{count, plural, =1 {# filter applied} other {# filters applied}}"
+    },
+    "upload_error": {
+      "upload": "An error occurred while uploading the file.",
+      "delete": "An error occurred while deleting the file.",
+      "mimeType": "Invalid file type. Allowed file types: {mimeTypes}.",
+      "maxSize": "File {fileName} too large, the maximum file size is {maxSize}.",
+      "generic": "An error occurred while uploading {fileName}. ({message})."
+    },
+    "your_groups": "Your groups"
+  },
+  "select3": {
+    "placeholder": "Select...",
+    "selection": "Selection:",
+    "clear_selection": "Clear selection",
+    "search_placeholder": "Search...",
+    "no_result": "No result",
+    "loading": "Loading...",
+    "no_group": "No group",
+    "none_selected": "No item selected",
+    "select_all": "Select all",
+    "selected_items": "Items selected"
+  },
+  "star_rating": {
+    "label_text": "{count, plural, =1 {# star} other {# stars}}, {label}",
+    "rating": {
+      "half": "Terrible",
+      "one": "Terrible",
+      "one_and_half": "Unsatisfying",
+      "two": "Unsatisfying",
+      "two_and_half": "Average",
+      "three": "Average",
+      "three_and_half": "Good",
+      "four": "Good",
+      "four_and_half": "Excellent",
+      "five": "Excellent"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "users": "Users"
+  }
+}

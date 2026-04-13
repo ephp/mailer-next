@@ -1,0 +1,19 @@
+{
+  "403": {
+    "title": "403 Non autorizzato",
+    "description": "Non hai il permesso di accedere a questa risorsa."
+  },
+  "404": {
+    "title": "404 Non trovato",
+    "description": "Pagina non trovata."
+  },
+  "500": {
+    "title": "500 Errore sconosciuto",
+    "description": "Si è verificato un errore sconosciuto."
+  },
+  "unknown": {
+    "title": "Errore sconosciuto",
+    "description_1": "Si è verificato un errore sconosciuto.",
+    "description_2": "Ricarica la pagina oppure riprova più tardi."
+  }
+}

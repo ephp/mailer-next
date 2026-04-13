@@ -1,0 +1,6 @@
+{
+  "draggable_marker_field": {
+    "marker_text": "Drag and drop the marker to change the location",
+    "helper_text": "Enter the coordinates in the text field in a '<latitudine>, <longitudine>' format, click on the map or drag and drop the marker to set the location."
+  }
+}

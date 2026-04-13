@@ -1,0 +1,6 @@
+{
+  "draggable_marker_field": {
+    "marker_text": "Trascina il marker per modificare la posizione",
+    "helper_text": "Inserisci le coordinate in formato '<latitudine>, <longitudine>' nel campo di testo, clicca sulla mappa oppure trascina il marker per impostare la posizione."
+  }
+}

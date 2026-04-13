@@ -1,0 +1,11 @@
+{
+  "autocomplete": {
+    "no_results": "No result.",
+    "loading": "Loading..."
+  },
+  "error": {
+    "initialize_places": "An error occurred while loading Google Places libraries",
+    "fetch_autocomplete_suggestions": "An error occurred while loading Google Places suggestions for the autocomplete",
+    "fetch_fields": "An error occurred while loading the additional fields for the place"
+  }
+}

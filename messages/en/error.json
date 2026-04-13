@@ -1,0 +1,19 @@
+{
+  "403": {
+    "title": "403 Unauthorized",
+    "description": "You don't have the authorization to access this resource."
+  },
+  "404": {
+    "title": "404 Not found",
+    "description": "Page not found."
+  },
+  "500": {
+    "title": "500 Unknown error",
+    "description": "An unknown error occurred."
+  },
+  "unknown": {
+    "title": "Unknown error",
+    "description_1": "An unknown error occurred.",
+    "description_2": "Refresh the page or try again later."
+  }
+}

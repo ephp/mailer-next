@@ -1,0 +1,236 @@
+{
+  "btn": {
+    "login": "Accedi",
+    "logout": "Esci",
+    "send_new_password": "Recupera password",
+    "reset_password": "Reimposta password",
+    "set_password": "Imposta password",
+    "create_user": "Inserisci utente",
+    "resend_first_login_email": "Reinvia email per il primo accesso",
+    "change_password": "Cambia password",
+    "delete_profile": "Elimina profilo",
+    "sign_up": "Registrati"
+  },
+  "roles": {
+    "oimmei": "Oimmei",
+    "admin": "Amministratore",
+    "user": "Utente"
+  },
+  "info": {
+    "oimmei": "Accedi come Oimmei",
+    "admin": "Accedi con un profilo Amministratore",
+    "user": "Accedi come Utente"
+  },
+  "user": {
+    "field": {
+      "email": "Email",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "role": "Ruolo",
+      "roles": "Ruolo",
+      "enabled": "Abilitato",
+      "password": "Password"
+    },
+    "help": {
+      "enabled": "Un utente che viene disabilitato perderà la possibilità di accedere al portale fino alla successiva riabilitazione."
+    },
+    "enabled": {
+      "enabled": "Abilitato",
+      "disabled": "Disabilitato"
+    },
+    "messages": {
+      "first_login_instructions": "Creando un nuovo utente, verrà mandata una mail all'indirizzo indicato con un link per l'impostazione della prima password."
+    },
+    "success": {
+      "resend_first_login_email": "L'email per il primo accesso è stata nuovamente spedita"
+    },
+    "error": {
+      "email": {
+        "required": "Inserisci un indirizzo email.",
+        "email": "Inserisci un indirizzo email valido."
+      },
+      "first_name": {
+        "required": "Inserisci il nome."
+      },
+      "last_name": {
+        "required": "Inserisci il cognome."
+      },
+      "role": {
+        "required": "Scegli il ruolo dell'utente."
+      }
+    }
+  },
+  "page": {
+    "login": {
+      "title": "Accedi",
+      "role_message": {
+        "oimmei": "Accesso riservato a Oimmei",
+        "admin": "Accesso riservato all'AMMINISTRAZIONE",
+        "user": "Accesso riservato all'utente"
+      }
+    },
+    "signup": {
+      "title": "Registrati"
+    },
+    "forgot_password": {
+      "title": "Password dimenticata"
+    },
+    "reset_password": {
+      "title": "Reimposta password"
+    },
+    "first_login": {
+      "title": "Imposta password"
+    }
+  },
+  "login_form": {
+    "messages": {
+      "remember_me": "Ricordami",
+      "forgot_password": "Password dimenticata?",
+      "sign_up": "Sei un candidato?"
+    },
+    "error": {
+      "unknown": "Si è verificato un errore",
+      "email": {
+        "email": "Inserisci un indirizzo email valido",
+        "required": "Inserisci l'indirizzo email"
+      },
+      "password": {
+        "required": "Inserisci la password"
+      }
+    }
+  },
+  "forgot_password_form": {
+    "title": "Password dimenticata?",
+    "messages": {
+      "already_have_password": "Hai una password?",
+      "sign_in": "Vai all'accesso"
+    },
+    "success": {
+      "email_sent": "Il messaggio contenente il link per reimpostare la password è stato inviato all'indirizzo email indicato"
+    },
+    "error": {
+      "unknown": "Si è verificato un errore",
+      "not_found": "Non è stato trovato nessun utente con queste credenziali",
+      "email": {
+        "email": "Inserisci un indirizzo email valido",
+        "required": "Inserisci l'indirizzo email"
+      }
+    }
+  },
+  "common_password_form": {
+    "field": {
+      "password_confirmation": "Conferma password"
+    },
+    "messages": {
+      "sign_in": "Vai all'accesso"
+    },
+    "error": {
+      "unknown": "Si è verificato un errore",
+      "password": {
+        "required": "Inserisci la password"
+      },
+      "password_confirmation": {
+        "required": "Inserisci la conferma password",
+        "match": "Le password non corrispondono"
+      }
+    }
+  },
+  "first_login_form": {
+    "title": "Imposta password",
+    "description": "Imposta la password che userai per accedere al tuo account.",
+    "success": {
+      "password_reset": "La password è stata impostata"
+    }
+  },
+  "reset_password_form": {
+    "title": "Reimposta password",
+    "description": "Inserisci la nuova password per il tuo account.",
+    "success": {
+      "password_reset": "La password è stata reimpostata"
+    }
+  },
+  "sign_up_form": {
+    "messages": {
+      "already_have_account": "Hai già un profilo?",
+      "sign_in": "Vai all'accesso"
+    }
+  },
+  "user_crud": {
+    "page": {
+      "index": {
+        "title": "Elenco utenti"
+      },
+      "new": {
+        "title": "Inserisci utente"
+      },
+      "edit": {
+        "title": "Modifica utente"
+      }
+    },
+    "message": {
+      "disable": {
+        "title": "Vuoi disabilitare l'utente {email}?",
+        "description": "Una volta disabilitato, l'utente non potrà più accedere al portale fino all'eventuale riabilitazione."
+      },
+      "enable": {
+        "title": "Vuoi abilitare l'utente {email}?",
+        "description": "Se abilitato, l'utente sarà nuovamente in grado di accedere al portale."
+      }
+    }
+  },
+  "profile": {
+    "page": {
+      "main": {
+        "title": "Il mio profilo"
+      },
+      "personal_info": {
+        "title": "Informazioni"
+      },
+      "change_password": {
+        "title": "Cambia password"
+      },
+      "delete_profile": {
+        "title": "Elimina il tuo profilo",
+        "description": "Se confermi, il tuo profilo verrà eliminato dalla piattaforma con tutti i suoi dati.",
+        "warning": "L'eliminazione sarà istantanea e non potrà essere annullata.",
+        "confirm": "Vuoi procedere?"
+      }
+    },
+    "profile_form": {
+      "success": {
+        "profile_updated": "Le modifiche sono state salvate"
+      },
+      "error": {
+        "email_already_used": "Questo indirizzo email è già in uso"
+      }
+    },
+    "change_password_form": {
+      "field": {
+        "old_password": "Password attuale",
+        "new_password": "Nuova password",
+        "new_password_confirmation": "Conferma nuova password"
+      },
+      "success": {
+        "password_changed": "La password è stata modificata con successo"
+      },
+      "error": {
+        "old_password_invalid": "La password attuale non è corretta",
+        "old_password": {
+          "required": "Inserisci la password attuale"
+        },
+        "new_password": {
+          "required": "Inserisci la nuova password",
+          "min": "La password deve contenere almeno {n} caratteri"
+        },
+        "new_password_confirmation": {
+          "match": "Le due password non corrispondono"
+        }
+      }
+    },
+    "delete_profile": {
+      "error": {
+        "cannot_delete_user": "Questo profilo non può essere eliminato"
+      }
+    }
+  }
+}
