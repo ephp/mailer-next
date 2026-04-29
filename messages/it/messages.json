@@ -192,6 +192,8 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "account": "Account",
+    "account_settings": "Impostazioni Account",
     "admin": "Amministrazione",
     "users": "Utenti"
   }

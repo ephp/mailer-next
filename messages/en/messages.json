@@ -187,6 +187,8 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "account": "Account",
+    "account_settings": "Account Settings",
     "admin": "Admin",
     "users": "Users"
   }

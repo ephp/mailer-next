@@ -3,9 +3,10 @@
 import React, {ReactNode} from 'react';
 import {RoutePermittedRole} from '@/shared/constants/AppConst';
 
-// TODO uncomment to enable the user CRUD.
 import PersonIcon from '@mui/icons-material/Person';
+import BusinessIcon from '@mui/icons-material/Business';
 import {
+  ACCOUNT_SETTINGS,
   USER_CRUD_LIST,
 } from "@/shared/constants/AppRoutes";
 
@@ -79,12 +80,31 @@ const routesConfig: RouterConfigData[] = [
   // },
 
   {
+    id: "account",
+    type: "title",
+    titleId: "messages.sidebar.account",
+  },
+
+  {
+    id: "account_settings",
+    type: "item",
+    messageId: "messages.sidebar.account_settings",
+    icon: <BusinessIcon/>,
+    permittedRole: RoutePermittedRole.User,
+    url: ACCOUNT_SETTINGS,
+  },
+
+  {
+    id: "account_divider",
+    type: "divider",
+  },
+
+  {
     id: "admin",
     type: "title",
     titleId: "messages.sidebar.admin",
   },
 
-  // TODO uncomment to enable the user CRUD.
   {
     id: "user_crud",
     type: "item",

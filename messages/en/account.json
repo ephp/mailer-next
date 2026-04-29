@@ -1,0 +1,42 @@
+{
+  "page": {
+    "settings": {
+      "title": "Account Settings"
+    }
+  },
+  "field": {
+    "ragione_sociale": "Company Name",
+    "partita_iva": "VAT Number",
+    "indirizzo": "Address",
+    "smtp_host": "SMTP Server (Host)",
+    "smtp_port": "SMTP Port",
+    "smtp_user": "SMTP User",
+    "smtp_password": "SMTP Password",
+    "smtp_encryption": "SMTP Encryption",
+    "api_key": "API Key",
+    "enabled": "Enabled"
+  },
+  "section": {
+    "smtp": "SMTP Configuration"
+  },
+  "smtp": {
+    "encryption": {
+      "tls": "TLS",
+      "ssl": "SSL",
+      "none": "None"
+    }
+  },
+  "error": {
+    "ragione_sociale": {
+      "required": "Company name is required",
+      "unique": "An account with this company name already exists"
+    },
+    "not_found": "Account not found"
+  },
+  "success": {
+    "created": "Account created successfully",
+    "updated": "Account updated successfully",
+    "enabled": "Account enabled",
+    "disabled": "Account disabled"
+  }
+}

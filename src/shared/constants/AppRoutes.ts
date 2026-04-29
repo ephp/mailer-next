@@ -16,3 +16,5 @@ export const DASHBOARD = "/dashboard";
 export const USER_CRUD_LIST = "/backend/user";
 export const USER_CRUD_NEW = "/backend/user/new";
 export const USER_CRUD_EDIT = "/backend/user/:id/edit";
+
+export const ACCOUNT_SETTINGS = "/account/settings";

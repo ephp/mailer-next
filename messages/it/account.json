@@ -1,0 +1,42 @@
+{
+  "page": {
+    "settings": {
+      "title": "Impostazioni Account"
+    }
+  },
+  "field": {
+    "ragione_sociale": "Ragione Sociale",
+    "partita_iva": "Partita IVA",
+    "indirizzo": "Indirizzo",
+    "smtp_host": "Server SMTP (Host)",
+    "smtp_port": "Porta SMTP",
+    "smtp_user": "Utente SMTP",
+    "smtp_password": "Password SMTP",
+    "smtp_encryption": "Cifratura SMTP",
+    "api_key": "Chiave API",
+    "enabled": "Abilitato"
+  },
+  "section": {
+    "smtp": "Configurazione SMTP"
+  },
+  "smtp": {
+    "encryption": {
+      "tls": "TLS",
+      "ssl": "SSL",
+      "none": "Nessuna"
+    }
+  },
+  "error": {
+    "ragione_sociale": {
+      "required": "La ragione sociale è obbligatoria",
+      "unique": "Esiste già un account con questa ragione sociale"
+    },
+    "not_found": "Account non trovato"
+  },
+  "success": {
+    "created": "Account creato con successo",
+    "updated": "Account aggiornato con successo",
+    "enabled": "Account abilitato",
+    "disabled": "Account disabilitato"
+  }
+}
