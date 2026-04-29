@@ -6,12 +6,23 @@ import {
   array as yupArray,
 } from "yup";
 
+export interface CampaignStructure {
+  template_id: string;
+  colors: {
+    primary: string;
+    text: string;
+    background: string;
+  };
+  logo_url: string | null;
+}
+
 export interface Campaign {
   id: number;
   name: string | null;
   email_subject: string;
   snippet: string | null;
   body: string | null;
+  structure: CampaignStructure | null;
   draft: boolean;
   template: boolean;
   scheduled_at: string | null;
@@ -29,6 +40,7 @@ export const campaignSchema = yupObject({
   email_subject: yupString().required(),
   snippet: yupString().nullable().defined(),
   body: yupString().nullable().defined(),
+  structure: yupObject().nullable().defined(),
   draft: yupBoolean().required(),
   template: yupBoolean().required(),
   scheduled_at: yupString().nullable().defined(),
@@ -40,12 +52,23 @@ export const campaignSchema = yupObject({
   updated_at: yupString().nullable().defined(),
 });
 
+export const defaultCampaignStructure: CampaignStructure = {
+  template_id: 'classic',
+  colors: {
+    primary: '#556cd6',
+    text: '#333333',
+    background: '#f5f5f5',
+  },
+  logo_url: null,
+};
+
 export const newCampaign: Campaign = {
   id: 0,
   name: null,
   email_subject: '',
   snippet: null,
   body: null,
+  structure: defaultCampaignStructure,
   draft: true,
   template: false,
   scheduled_at: null,
