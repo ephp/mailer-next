@@ -63,6 +63,8 @@
       "test_email_field": "Indirizzo email destinatario",
       "draft_title": "Salva bozza",
       "draft_desc": "Salva la campagna come bozza per modificarla o inviarla in seguito.",
+      "template_title": "Salva come template",
+      "template_desc": "Salva questa campagna come template riutilizzabile per future campagne.",
       "schedule_title": "Pianifica invio",
       "schedule_desc": "Imposta una data e un'ora per l'invio automatico della campagna.",
       "schedule_dialog_title": "Pianifica invio",
@@ -81,7 +83,32 @@
     "send_now": "Invia ora",
     "cancel": "Annulla",
     "back_to_list": "Torna alle campagne",
-    "view_stats": "Statistiche"
+    "view_stats": "Statistiche",
+    "duplicate": "Duplica",
+    "save_as_template": "Salva come template"
+  },
+  "template": {
+    "page": {
+      "title": "Libreria template"
+    },
+    "btn": {
+      "library": "Libreria template",
+      "use": "Usa template"
+    },
+    "badge": "Template",
+    "empty": {
+      "title": "Nessun template disponibile",
+      "description": "Salva una campagna come template dal wizard per riutilizzarla in futuro."
+    },
+    "message": {
+      "delete": {
+        "title": "Vuoi eliminare il template \"{name}\"?",
+        "description": "L'eliminazione è permanente."
+      }
+    },
+    "success": {
+      "used": "Campagna creata dal template. Modifica i dettagli e procedi con l'invio."
+    }
   },
   "error": {
     "not_found": "Campagna non trovata",
@@ -98,7 +125,9 @@
     "deleted": "Campagna eliminata con successo",
     "test_sent": "Email di prova inviata con successo",
     "scheduled": "Campagna pianificata con successo",
-    "sent": "Campagna inviata con successo"
+    "sent": "Campagna inviata con successo",
+    "duplicated": "Campagna duplicata con successo",
+    "saved_as_template": "Campagna salvata come template"
   },
   "message": {
     "delete": {

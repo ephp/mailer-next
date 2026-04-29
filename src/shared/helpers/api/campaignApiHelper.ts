@@ -92,3 +92,31 @@ export const getCampaignStats = async (
   const {data} = await oiFetch.get<DetailResult<CampaignStats>>(`/campaigns/${id}/stats`);
   return data;
 };
+
+export const getTemplateList = async (
+  {sortBy, sortDirection, page, perPage}: PaginatedQuery<Campaign, CampaignListFilter>,
+): Promise<PaginatedResult<Campaign>> => {
+  const {data} = await oiFetch.get<PaginatedResult<Campaign>>('/campaign-templates', {
+    params: {
+      page,
+      per_page: perPage,
+      sortBy,
+      sortMode: sortDirection,
+    },
+  });
+  return data;
+};
+
+export const duplicateCampaign = async (
+  {id}: {id: Campaign['id']},
+): Promise<DetailResult<Campaign>> => {
+  const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/duplicate`);
+  return data;
+};
+
+export const saveAsTemplate = async (
+  {id}: {id: Campaign['id']},
+): Promise<DetailResult<Campaign>> => {
+  const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/save-as-template`);
+  return data;
+};

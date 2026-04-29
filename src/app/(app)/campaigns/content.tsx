@@ -17,11 +17,12 @@ import {GridActionsCellItem, GridColDef} from '@mui/x-data-grid';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {Campaign, CampaignListFilter} from '@/types/models/Campaign';
-import {CAMPAIGN_CRUD_EDIT, CAMPAIGN_STATS} from '@/shared/constants/AppRoutes';
+import {CAMPAIGN_CRUD_EDIT, CAMPAIGN_STATS, CAMPAIGN_TEMPLATES} from '@/shared/constants/AppRoutes';
 import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
 import {useSnackbar} from 'notistack';
-import {deleteCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
+import {deleteCampaign, duplicateCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
@@ -73,6 +74,7 @@ const CampaignContent = (): ReactElement => {
   } = useAsyncLoader(getCampaignList, true);
 
   const [deletingCampaign, setDeletingCampaign] = useState<Campaign | null>(null);
+  const router = useRouter();
 
   const columns = useMemo<GridColDef<Campaign>[]>(
     () => ([
@@ -126,6 +128,12 @@ const CampaignContent = (): ReactElement => {
             showInMenu
           />,
           <GridActionsCellItem
+            key="duplicate"
+            label={t('campaign.btn.duplicate')}
+            onClick={() => handleDuplicate(row.id)}
+            showInMenu
+          />,
+          <GridActionsCellItem
             key="delete"
             label={t('messages.btn.delete')}
             onClick={() => setDeletingCampaign({...row})}
@@ -144,6 +152,17 @@ const CampaignContent = (): ReactElement => {
       },
       [fetchCampaignList],
     );
+
+  const handleDuplicate = useCallback((id: number) => {
+    performAsyncCall(duplicateCampaign({id}))
+      .then((res) => {
+        if (res?.item?.id) {
+          enqueueSnackbar({message: t('campaign.success.duplicated'), variant: 'success'});
+          router.push(generatePathStorage(CAMPAIGN_CRUD_EDIT, {id: res.item.id.toString()}));
+        }
+      })
+      .catch(console.error);
+  }, [performAsyncCall, router, enqueueSnackbar, t]);
 
   const closeDeleteModal = () => setDeletingCampaign(null);
 

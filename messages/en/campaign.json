@@ -63,6 +63,8 @@
       "test_email_field": "Recipient email address",
       "draft_title": "Save draft",
       "draft_desc": "Save the campaign as a draft to edit or send it later.",
+      "template_title": "Save as template",
+      "template_desc": "Save this campaign as a reusable template for future campaigns.",
       "schedule_title": "Schedule send",
       "schedule_desc": "Set a date and time for automatic campaign delivery.",
       "schedule_dialog_title": "Schedule send",
@@ -81,7 +83,32 @@
     "send_now": "Send now",
     "cancel": "Cancel",
     "back_to_list": "Back to campaigns",
-    "view_stats": "Statistics"
+    "view_stats": "Statistics",
+    "duplicate": "Duplicate",
+    "save_as_template": "Save as template"
+  },
+  "template": {
+    "page": {
+      "title": "Template library"
+    },
+    "btn": {
+      "library": "Template library",
+      "use": "Use template"
+    },
+    "badge": "Template",
+    "empty": {
+      "title": "No templates available",
+      "description": "Save a campaign as a template from the wizard to reuse it in the future."
+    },
+    "message": {
+      "delete": {
+        "title": "Delete template \"{name}\"?",
+        "description": "Deletion is permanent."
+      }
+    },
+    "success": {
+      "used": "Campaign created from template. Edit the details and proceed with sending."
+    }
   },
   "error": {
     "not_found": "Campaign not found",
@@ -98,7 +125,9 @@
     "deleted": "Campaign deleted successfully",
     "test_sent": "Test email sent successfully",
     "scheduled": "Campaign scheduled successfully",
-    "sent": "Campaign sent successfully"
+    "sent": "Campaign sent successfully",
+    "duplicated": "Campaign duplicated successfully",
+    "saved_as_template": "Campaign saved as template"
   },
   "message": {
     "delete": {

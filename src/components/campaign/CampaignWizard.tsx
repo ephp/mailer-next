@@ -10,7 +10,7 @@ import {useTranslations} from 'next-intl';
 import {Campaign, newCampaign} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
 import {getMailListList} from '@/shared/helpers/api/mailListApiHelper';
-import {createCampaign, updateCampaign, sendTestEmail, sendCampaign} from '@/shared/helpers/api/campaignApiHelper';
+import {createCampaign, updateCampaign, sendTestEmail, sendCampaign, saveAsTemplate} from '@/shared/helpers/api/campaignApiHelper';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import CampaignWizardStep1 from './CampaignWizardStep1';
@@ -162,6 +162,25 @@ const CampaignWizard = ({
     }
   };
 
+  const handleSaveAsTemplate = async () => {
+    if (!formData.email_subject.trim()) {
+      setSubjectError(t('campaign.error.email_subject.required'));
+      setActiveStep(1);
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const saved = await persistCampaign({...formData, draft: true});
+      const id = saved?.id ?? savedId;
+      if (id) {
+        await performAsyncCall(saveAsTemplate({id}));
+      }
+      onOperationCompleted();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const step1Valid = formData.mail_list_ids.length > 0;
   const isLastStep = activeStep === steps.length - 1;
 
@@ -206,6 +225,7 @@ const CampaignWizard = ({
           onSendTest={handleSendTest}
           onSchedule={handleSchedule}
           onSendNow={handleSendNow}
+          onSaveAsTemplate={handleSaveAsTemplate}
         />
       )}
 

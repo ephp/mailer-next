@@ -16,6 +16,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
 import SaveIcon from '@mui/icons-material/Save';
 import EmailIcon from '@mui/icons-material/Email';
+import ArticleIcon from '@mui/icons-material/Article';
 import GroupIcon from '@mui/icons-material/Group';
 import SubjectIcon from '@mui/icons-material/Subject';
 import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
@@ -32,6 +33,7 @@ const CampaignWizardStep4 = ({
   onSendTest,
   onSchedule,
   onSendNow,
+  onSaveAsTemplate,
 }: {
   formData: Campaign;
   isSaving: boolean;
@@ -39,6 +41,7 @@ const CampaignWizardStep4 = ({
   onSendTest: (email: string) => void;
   onSchedule: (scheduledAt: string) => void;
   onSendNow: () => void;
+  onSaveAsTemplate: () => void;
 }): ReactElement => {
   const t = useTranslations('campaign');
 
@@ -189,6 +192,29 @@ const CampaignWizardStep4 = ({
                 onClick={() => setScheduleOpen(true)}
               >
                 {t('btn.schedule')}
+              </Button>
+            </Box>
+          </Paper>
+
+          {/* Save as template */}
+          <Paper variant="outlined" sx={{p: 2}}>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1}}>
+              <Box>
+                <Typography variant="body1" fontWeight="medium">
+                  {t('wizard.step4.template_title')}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t('wizard.step4.template_desc')}
+                </Typography>
+              </Box>
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<ArticleIcon />}
+                onClick={onSaveAsTemplate}
+                disabled={isSaving}
+              >
+                {t('btn.save_as_template')}
               </Button>
             </Box>
           </Paper>
