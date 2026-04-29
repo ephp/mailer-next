@@ -83,3 +83,16 @@ export const newCampaign: Campaign = {
 export interface CampaignListFilter {
   fts?: string;
 }
+
+export interface CampaignStats {
+  total_sent: number;
+  total_failed: number;
+  total_pending: number;
+  total_bounced: number;
+  total_opens: number;
+  total_clicks: number;
+  total_unsubscribes: number;
+  open_rate: number;
+  click_rate: number;
+  unsubscribe_rate: number;
+}

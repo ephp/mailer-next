@@ -30,3 +30,4 @@ export const MAIL_LIST_CONTACTS_IMPORT = "/lists/:id/import";
 export const CAMPAIGN_CRUD_LIST = "/campaigns";
 export const CAMPAIGN_CRUD_NEW = "/campaigns/new";
 export const CAMPAIGN_CRUD_EDIT = "/campaigns/:id/edit";
+export const CAMPAIGN_STATS = "/campaigns/:id/stats";

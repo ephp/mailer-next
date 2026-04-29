@@ -8,6 +8,9 @@
     },
     "edit": {
       "title": "Edit campaign"
+    },
+    "stats": {
+      "title": "Campaign statistics"
     }
   },
   "field": {
@@ -76,7 +79,9 @@
     "send_test": "Send test",
     "schedule": "Schedule",
     "send_now": "Send now",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back_to_list": "Back to campaigns",
+    "view_stats": "Statistics"
   },
   "error": {
     "not_found": "Campaign not found",
@@ -104,5 +109,19 @@
   "status": {
     "draft": "Draft",
     "ready": "Ready"
+  },
+  "stats": {
+    "total_sent": "Emails sent",
+    "total_pending": "Queued",
+    "total_failed": "Failed",
+    "total_bounced": "Bounced",
+    "total_opens": "Unique opens",
+    "total_clicks": "Unique clicks",
+    "total_unsubscribes": "Unsubscribes",
+    "open_rate": "Open rate",
+    "click_rate": "Click rate",
+    "unsubscribe_rate": "Unsubscribe rate",
+    "delivery": "Delivery",
+    "engagement": "Engagement"
   }
 }

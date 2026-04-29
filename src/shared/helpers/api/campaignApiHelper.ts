@@ -4,7 +4,7 @@ import {
   PaginatedQuery,
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
-import {Campaign, CampaignListFilter} from '@/types/models/Campaign';
+import {Campaign, CampaignListFilter, CampaignStats} from '@/types/models/Campaign';
 
 export interface SendCampaignOptions {
   scheduled_at?: string | null;
@@ -83,5 +83,12 @@ export const deleteCampaign = async (
   {id}: {id: Campaign['id']},
 ): Promise<DetailResult<null>> => {
   const {data} = await oiFetch.post<DetailResult<null>>(`/campaigns/${id}/delete`);
+  return data;
+};
+
+export const getCampaignStats = async (
+  {id}: {id: Campaign['id']},
+): Promise<DetailResult<CampaignStats>> => {
+  const {data} = await oiFetch.get<DetailResult<CampaignStats>>(`/campaigns/${id}/stats`);
   return data;
 };

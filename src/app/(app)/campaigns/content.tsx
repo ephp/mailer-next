@@ -18,7 +18,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Link from 'next/link';
 import {Campaign, CampaignListFilter} from '@/types/models/Campaign';
-import {CAMPAIGN_CRUD_EDIT} from '@/shared/constants/AppRoutes';
+import {CAMPAIGN_CRUD_EDIT, CAMPAIGN_STATS} from '@/shared/constants/AppRoutes';
 import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
 import {useSnackbar} from 'notistack';
 import {deleteCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
@@ -111,6 +111,13 @@ const CampaignContent = (): ReactElement => {
         type: 'actions',
         headerName: t('messages.col.actions'),
         getActions: ({row}) => [
+          <GridActionsLinkCellItem
+            key="stats"
+            label={t('campaign.btn.view_stats')}
+            component={Link}
+            href={generatePathStorage(CAMPAIGN_STATS, {id: row.id.toString()})}
+            showInMenu
+          />,
           <GridActionsLinkCellItem
             key="edit"
             label={t('messages.btn.edit')}

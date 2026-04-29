@@ -8,6 +8,9 @@
     },
     "edit": {
       "title": "Modifica campagna"
+    },
+    "stats": {
+      "title": "Statistiche campagna"
     }
   },
   "field": {
@@ -76,7 +79,9 @@
     "send_test": "Invia prova",
     "schedule": "Pianifica",
     "send_now": "Invia ora",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "back_to_list": "Torna alle campagne",
+    "view_stats": "Statistiche"
   },
   "error": {
     "not_found": "Campagna non trovata",
@@ -104,5 +109,19 @@
   "status": {
     "draft": "Bozza",
     "ready": "Pronta"
+  },
+  "stats": {
+    "total_sent": "Email inviate",
+    "total_pending": "In coda",
+    "total_failed": "Fallite",
+    "total_bounced": "Respinte",
+    "total_opens": "Aperture uniche",
+    "total_clicks": "Click unici",
+    "total_unsubscribes": "Disiscrizioni",
+    "open_rate": "Tasso di apertura",
+    "click_rate": "Tasso di click",
+    "unsubscribe_rate": "Tasso di disiscrizione",
+    "delivery": "Consegna",
+    "engagement": "Engagement"
   }
 }
