@@ -35,6 +35,25 @@ export const accountSchema = yupObject({
   enabled: yupBoolean().required(),
 });
 
+export interface SmtpCheckResult {
+  connected: boolean;
+  host: string | null;
+  port: number;
+  error: string | null;
+}
+
+export interface DnsCheckResult {
+  domain: string | null;
+  spf: { found: boolean; record: string | null };
+  dkim: { found: boolean; selector: string | null; record: string | null };
+  dmarc: { found: boolean; record: string | null };
+}
+
+export interface SmtpDiagnosticResult {
+  smtp: SmtpCheckResult;
+  dns: DnsCheckResult;
+}
+
 export const newAccount: Account = {
   id: 0,
   ragione_sociale: '',

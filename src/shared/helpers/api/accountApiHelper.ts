@@ -4,7 +4,7 @@ import {
   PaginatedQuery,
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
-import {Account} from '@/types/models/Account';
+import {Account, SmtpDiagnosticResult} from '@/types/models/Account';
 
 export const getMyAccount = async (): Promise<DetailResult<Account>> => {
   const {data} = await oiFetch.get<DetailResult<Account>>('/account/my-account');
@@ -102,5 +102,15 @@ export const disableAccount = async (
   {id}: {id: Account['id']},
 ): Promise<DetailResult<Account>> => {
   const {data} = await oiFetch.post<DetailResult<Account>>(`/backend/account/${id}/disable`);
+  return data;
+};
+
+export const regenerateApiKey = async (): Promise<DetailResult<Account>> => {
+  const {data} = await oiFetch.post<DetailResult<Account>>('/account/my-account/regenerate-key');
+  return data;
+};
+
+export const diagnoseSMTP = async (): Promise<DetailResult<SmtpDiagnosticResult>> => {
+  const {data} = await oiFetch.post<DetailResult<SmtpDiagnosticResult>>('/account/my-account/diagnose');
   return data;
 };

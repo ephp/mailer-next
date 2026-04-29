@@ -17,7 +17,33 @@
     "enabled": "Enabled"
   },
   "section": {
-    "smtp": "SMTP Configuration"
+    "smtp": "SMTP Configuration",
+    "api": "API Integration",
+    "diagnostic": "SMTP & DNS Diagnostics"
+  },
+  "btn": {
+    "copy_api_key": "Copy API key",
+    "regenerate_api_key": "Regenerate API key",
+    "diagnose": "Run diagnostics"
+  },
+  "diagnostic": {
+    "smtp": {
+      "title": "SMTP Connection",
+      "connected": "Successfully connected to {host}:{port}",
+      "failed": "Connection failed to {host}:{port}",
+      "not_configured": "SMTP host not configured"
+    },
+    "dns": {
+      "title": "DNS Records",
+      "domain": "Domain: {domain}",
+      "domain_unknown": "Domain cannot be determined (configure SMTP host or user)",
+      "spf": "SPF",
+      "dkim": "DKIM (selector: {selector})",
+      "dkim_not_found": "DKIM",
+      "dmarc": "DMARC",
+      "found": "Found",
+      "not_found": "Not found"
+    }
   },
   "smtp": {
     "encryption": {
@@ -37,6 +63,8 @@
     "created": "Account created successfully",
     "updated": "Account updated successfully",
     "enabled": "Account enabled",
-    "disabled": "Account disabled"
+    "disabled": "Account disabled",
+    "api_key_copied": "API key copied to clipboard",
+    "api_key_regenerated": "API key regenerated successfully"
   }
 }

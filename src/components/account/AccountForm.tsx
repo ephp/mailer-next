@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useState} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import Box from '@mui/material/Box';
@@ -8,12 +8,22 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import {Account, newAccount} from '@/types/models/Account';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert';
+import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {Account, newAccount, SmtpDiagnosticResult} from '@/types/models/Account';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
-import {createAccount, updateAccount, updateMyAccount} from '@/shared/helpers/api/accountApiHelper';
+import {createAccount, updateAccount, updateMyAccount, regenerateApiKey, diagnoseSMTP} from '@/shared/helpers/api/accountApiHelper';
 import {useTranslations} from 'next-intl';
 import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
+import {useSnackbar} from 'notistack';
 
 const SMTP_ENCRYPTION_OPTIONS = [
   {value: 'tls', labelKey: 'account.smtp.encryption.tls'},
@@ -39,6 +49,10 @@ const AccountForm = (
 ): ReactElement | null => {
   const t = useTranslations();
   const {performAsyncCall} = useAsyncCallHelper2Actions();
+  const {enqueueSnackbar} = useSnackbar();
+  const [regenerating, setRegenerating] = useState(false);
+  const [diagnosing, setDiagnosing] = useState(false);
+  const [diagnosticResult, setDiagnosticResult] = useState<SmtpDiagnosticResult | null>(null);
 
   const validationSchema = yup.object({
     ragione_sociale: yup.string().required(t('account.error.ragione_sociale.required')),
@@ -86,6 +100,45 @@ const AccountForm = (
       }
     },
   });
+
+  const handleCopyApiKey = () => {
+    if (values.api_key) {
+      navigator.clipboard.writeText(values.api_key).then(() => {
+        enqueueSnackbar({message: t('account.success.api_key_copied'), variant: 'success'});
+      });
+    }
+  };
+
+  const handleDiagnose = async () => {
+    setDiagnosing(true);
+    setDiagnosticResult(null);
+    try {
+      const result = await performAsyncCall(diagnoseSMTP());
+      if (result?.item) {
+        setDiagnosticResult(result.item);
+      }
+    } catch {
+      // error handled by performAsyncCall
+    } finally {
+      setDiagnosing(false);
+    }
+  };
+
+  const handleRegenerateApiKey = async () => {
+    if (!forMyAccount) return;
+    setRegenerating(true);
+    try {
+      const result = await performAsyncCall(regenerateApiKey());
+      if (result?.item) {
+        await setValues(v => ({...v, api_key: result.item!.api_key}));
+        enqueueSnackbar({message: t('account.success.api_key_regenerated'), variant: 'success'});
+      }
+    } catch {
+      // error handled by performAsyncCall
+    } finally {
+      setRegenerating(false);
+    }
+  };
 
   const wrapping = account === null;
 
@@ -234,6 +287,139 @@ const AccountForm = (
             </TextField>
           </SkeletonWrapper>
         </Grid>
+
+        {editing && (
+          <>
+            <Grid size={12}>
+              <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
+                {t('account.section.api')}
+              </Box>
+            </Grid>
+            <Grid size={12}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                  <TextField
+                    fullWidth
+                    label={t('account.field.api_key')}
+                    value={values.api_key}
+                    slotProps={{
+                      input: {readOnly: true},
+                      inputLabel: {shrink: true},
+                    }}
+                  />
+                  <Tooltip title={t('account.btn.copy_api_key')}>
+                    <IconButton onClick={handleCopyApiKey} size="large">
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {forMyAccount && (
+                    <Tooltip title={t('account.btn.regenerate_api_key')}>
+                      <IconButton onClick={handleRegenerateApiKey} disabled={regenerating} size="large">
+                        <RefreshIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Box>
+              </SkeletonWrapper>
+            </Grid>
+          </>
+        )}
+
+        {editing && forMyAccount && (
+          <>
+            <Grid size={12}>
+              <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
+                {t('account.section.diagnostic')}
+              </Box>
+            </Grid>
+            <Grid size={12}>
+              <Box sx={{display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap'}}>
+                <Button
+                  variant="outlined"
+                  onClick={handleDiagnose}
+                  disabled={diagnosing || account === null}
+                  startIcon={diagnosing ? <CircularProgress size={16} /> : undefined}
+                >
+                  {t('account.btn.diagnose')}
+                </Button>
+              </Box>
+            </Grid>
+
+            {diagnosticResult !== null && (
+              <Grid size={12}>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
+                  <Alert
+                    severity={diagnosticResult.smtp.connected ? 'success' : 'error'}
+                    icon={diagnosticResult.smtp.connected ? <CheckCircleIcon /> : <CancelIcon />}
+                  >
+                    <Box sx={{fontWeight: 600, mb: 0.5}}>{t('account.diagnostic.smtp.title')}</Box>
+                    {diagnosticResult.smtp.host === null
+                      ? t('account.diagnostic.smtp.not_configured')
+                      : diagnosticResult.smtp.connected
+                        ? t('account.diagnostic.smtp.connected', {host: diagnosticResult.smtp.host, port: diagnosticResult.smtp.port})
+                        : t('account.diagnostic.smtp.failed', {host: diagnosticResult.smtp.host, port: diagnosticResult.smtp.port})
+                    }
+                    {diagnosticResult.smtp.error && !diagnosticResult.smtp.connected && diagnosticResult.smtp.host !== null && (
+                      <Box sx={{mt: 0.5, fontSize: '0.85em', opacity: 0.8}}>{diagnosticResult.smtp.error}</Box>
+                    )}
+                  </Alert>
+
+                  <Box>
+                    <Box sx={{fontWeight: 600, mb: 1}}>{t('account.diagnostic.dns.title')}</Box>
+                    {diagnosticResult.dns.domain === null ? (
+                      <Alert severity="warning">{t('account.diagnostic.dns.domain_unknown')}</Alert>
+                    ) : (
+                      <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                        <Box sx={{fontSize: '0.85em', color: 'text.secondary'}}>
+                          {t('account.diagnostic.dns.domain', {domain: diagnosticResult.dns.domain})}
+                        </Box>
+                        <Box sx={{display: 'flex', gap: 1, flexWrap: 'wrap'}}>
+                          <Chip
+                            label={t('account.diagnostic.dns.spf')}
+                            color={diagnosticResult.dns.spf.found ? 'success' : 'error'}
+                            icon={diagnosticResult.dns.spf.found ? <CheckCircleIcon /> : <CancelIcon />}
+                            size="small"
+                          />
+                          <Chip
+                            label={
+                              diagnosticResult.dns.dkim.found && diagnosticResult.dns.dkim.selector
+                                ? t('account.diagnostic.dns.dkim', {selector: diagnosticResult.dns.dkim.selector})
+                                : t('account.diagnostic.dns.dkim_not_found')
+                            }
+                            color={diagnosticResult.dns.dkim.found ? 'success' : 'error'}
+                            icon={diagnosticResult.dns.dkim.found ? <CheckCircleIcon /> : <CancelIcon />}
+                            size="small"
+                          />
+                          <Chip
+                            label={t('account.diagnostic.dns.dmarc')}
+                            color={diagnosticResult.dns.dmarc.found ? 'success' : 'error'}
+                            icon={diagnosticResult.dns.dmarc.found ? <CheckCircleIcon /> : <CancelIcon />}
+                            size="small"
+                          />
+                        </Box>
+                        {diagnosticResult.dns.spf.record && (
+                          <Box sx={{fontSize: '0.75em', fontFamily: 'monospace', bgcolor: 'grey.100', p: 1, borderRadius: 1, wordBreak: 'break-all'}}>
+                            SPF: {diagnosticResult.dns.spf.record}
+                          </Box>
+                        )}
+                        {diagnosticResult.dns.dkim.record && (
+                          <Box sx={{fontSize: '0.75em', fontFamily: 'monospace', bgcolor: 'grey.100', p: 1, borderRadius: 1, wordBreak: 'break-all'}}>
+                            DKIM ({diagnosticResult.dns.dkim.selector}): {diagnosticResult.dns.dkim.record}
+                          </Box>
+                        )}
+                        {diagnosticResult.dns.dmarc.record && (
+                          <Box sx={{fontSize: '0.75em', fontFamily: 'monospace', bgcolor: 'grey.100', p: 1, borderRadius: 1, wordBreak: 'break-all'}}>
+                            DMARC: {diagnosticResult.dns.dmarc.record}
+                          </Box>
+                        )}
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+            )}
+          </>
+        )}
 
         <Grid mt={4} size={12}>
           <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: '10px', mb: 3}}>
