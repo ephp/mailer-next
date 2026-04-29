@@ -6,8 +6,10 @@ import {RoutePermittedRole} from '@/shared/constants/AppConst';
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
 import ListIcon from '@mui/icons-material/List';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import {
   ACCOUNT_SETTINGS,
+  CAMPAIGN_CRUD_LIST,
   MAIL_LIST_CRUD_LIST,
   USER_CRUD_LIST,
 } from "@/shared/constants/AppRoutes";
@@ -116,6 +118,18 @@ const routesConfig: RouterConfigData[] = [
     url: MAIL_LIST_CRUD_LIST,
     matches: [
       {url: MAIL_LIST_CRUD_LIST},
+    ],
+  },
+
+  {
+    id: "campaign_crud",
+    type: "item",
+    messageId: "messages.sidebar.campaigns",
+    icon: <CampaignIcon/>,
+    permittedRole: RoutePermittedRole.User,
+    url: CAMPAIGN_CRUD_LIST,
+    matches: [
+      {url: CAMPAIGN_CRUD_LIST},
     ],
   },
 

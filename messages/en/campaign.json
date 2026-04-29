@@ -1,0 +1,65 @@
+{
+  "page": {
+    "index": {
+      "title": "Campaigns"
+    },
+    "new": {
+      "title": "New campaign"
+    },
+    "edit": {
+      "title": "Edit campaign"
+    }
+  },
+  "field": {
+    "name": "Internal name",
+    "email_subject": "Email subject",
+    "snippet": "Preview text",
+    "snippet_helper": "The preview text appears in the inbox before opening the email.",
+    "body": "Email body",
+    "draft": "Draft",
+    "mail_list_ids": "Recipient lists",
+    "recipient_count": "Recipients",
+    "created_at": "Created at"
+  },
+  "wizard": {
+    "step1": {
+      "title": "Recipient lists",
+      "description": "Select the contact lists you want to send this campaign to.",
+      "recipient_count": "Total recipients: {count}",
+      "no_lists": "No lists available. Create a contact list first."
+    },
+    "step2": {
+      "title": "Email content",
+      "description": "Compose your campaign content. Use placeholders to personalize the message.",
+      "placeholders_label": "Available placeholders (click to insert):"
+    }
+  },
+  "btn": {
+    "create": "New campaign",
+    "save_draft": "Save draft"
+  },
+  "error": {
+    "not_found": "Campaign not found",
+    "email_subject": {
+      "required": "Email subject is required"
+    },
+    "mail_list_ids": {
+      "required": "Please select at least one recipient list"
+    }
+  },
+  "success": {
+    "created": "Campaign created successfully",
+    "updated": "Campaign updated successfully",
+    "deleted": "Campaign deleted successfully"
+  },
+  "message": {
+    "delete": {
+      "title": "Delete campaign \"{name}\"?",
+      "description": "Deletion is permanent."
+    }
+  },
+  "status": {
+    "draft": "Draft",
+    "ready": "Ready"
+  }
+}

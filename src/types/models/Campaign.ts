@@ -1,0 +1,62 @@
+import {
+  object as yupObject,
+  number as yupNumber,
+  string as yupString,
+  boolean as yupBoolean,
+  array as yupArray,
+} from "yup";
+
+export interface Campaign {
+  id: number;
+  name: string | null;
+  email_subject: string;
+  snippet: string | null;
+  body: string | null;
+  draft: boolean;
+  template: boolean;
+  scheduled_at: string | null;
+  sent_at: string | null;
+  account_id: number | null;
+  mail_list_ids: number[];
+  recipient_count: number;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export const campaignSchema = yupObject({
+  id: yupNumber().required(),
+  name: yupString().nullable().defined(),
+  email_subject: yupString().required(),
+  snippet: yupString().nullable().defined(),
+  body: yupString().nullable().defined(),
+  draft: yupBoolean().required(),
+  template: yupBoolean().required(),
+  scheduled_at: yupString().nullable().defined(),
+  sent_at: yupString().nullable().defined(),
+  account_id: yupNumber().nullable().defined(),
+  mail_list_ids: yupArray(yupNumber().required()).required(),
+  recipient_count: yupNumber().required(),
+  created_at: yupString().nullable().defined(),
+  updated_at: yupString().nullable().defined(),
+});
+
+export const newCampaign: Campaign = {
+  id: 0,
+  name: null,
+  email_subject: '',
+  snippet: null,
+  body: null,
+  draft: true,
+  template: false,
+  scheduled_at: null,
+  sent_at: null,
+  account_id: null,
+  mail_list_ids: [],
+  recipient_count: 0,
+  created_at: null,
+  updated_at: null,
+};
+
+export interface CampaignListFilter {
+  fts?: string;
+}

@@ -26,3 +26,7 @@ export const MAIL_LIST_CONTACTS = "/lists/:id/contacts";
 export const MAIL_LIST_CONTACTS_NEW = "/lists/:id/contacts/new";
 export const MAIL_LIST_CONTACTS_EDIT = "/lists/:id/contacts/:contactId/edit";
 export const MAIL_LIST_CONTACTS_IMPORT = "/lists/:id/import";
+
+export const CAMPAIGN_CRUD_LIST = "/campaigns";
+export const CAMPAIGN_CRUD_NEW = "/campaigns/new";
+export const CAMPAIGN_CRUD_EDIT = "/campaigns/:id/edit";

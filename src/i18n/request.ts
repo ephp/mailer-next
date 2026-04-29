@@ -10,6 +10,7 @@ export default getRequestConfig(async () => {
     locale,
     messages: {
       account: (await import(`../../messages/${locale}/account.json`)).default,
+      campaign: (await import(`../../messages/${locale}/campaign.json`)).default,
       contact: (await import(`../../messages/${locale}/contact.json`)).default,
       dashboard: (await import(`../../messages/${locale}/dashboard.json`)).default,
       error: (await import(`../../messages/${locale}/error.json`)).default,

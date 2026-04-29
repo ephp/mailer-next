@@ -1,0 +1,65 @@
+{
+  "page": {
+    "index": {
+      "title": "Campagne"
+    },
+    "new": {
+      "title": "Nuova campagna"
+    },
+    "edit": {
+      "title": "Modifica campagna"
+    }
+  },
+  "field": {
+    "name": "Nome interno",
+    "email_subject": "Oggetto email",
+    "snippet": "Testo anteprima",
+    "snippet_helper": "Il testo anteprima appare nella inbox prima di aprire l'email.",
+    "body": "Corpo email",
+    "draft": "Bozza",
+    "mail_list_ids": "Liste destinatari",
+    "recipient_count": "Destinatari",
+    "created_at": "Creata il"
+  },
+  "wizard": {
+    "step1": {
+      "title": "Liste destinatari",
+      "description": "Seleziona le liste di contatti a cui vuoi inviare la campagna.",
+      "recipient_count": "Destinatari totali: {count}",
+      "no_lists": "Nessuna lista disponibile. Crea prima una lista di contatti."
+    },
+    "step2": {
+      "title": "Contenuto email",
+      "description": "Componi il contenuto della tua campagna. Usa i segnaposto per personalizzare il messaggio.",
+      "placeholders_label": "Segnaposto disponibili (clicca per inserire):"
+    }
+  },
+  "btn": {
+    "create": "Nuova campagna",
+    "save_draft": "Salva bozza"
+  },
+  "error": {
+    "not_found": "Campagna non trovata",
+    "email_subject": {
+      "required": "L'oggetto email è obbligatorio"
+    },
+    "mail_list_ids": {
+      "required": "Seleziona almeno una lista destinatari"
+    }
+  },
+  "success": {
+    "created": "Campagna creata con successo",
+    "updated": "Campagna aggiornata con successo",
+    "deleted": "Campagna eliminata con successo"
+  },
+  "message": {
+    "delete": {
+      "title": "Vuoi eliminare la campagna \"{name}\"?",
+      "description": "L'eliminazione è permanente."
+    }
+  },
+  "status": {
+    "draft": "Bozza",
+    "ready": "Pronta"
+  }
+}
