@@ -20,8 +20,34 @@
   },
   "btn": {
     "create": "New contact",
+    "import": "Import CSV",
     "subscribe": "Re-subscribe",
     "unsubscribe": "Unsubscribe"
+  },
+  "import": {
+    "page": {
+      "title": "Import contacts"
+    },
+    "description": "Import contacts from a CSV file. The first row must be the header with column names.",
+    "format_hint": "Expected format (semicolon separator):",
+    "format_example": "email;nome;cognome;telefono;iscritto\nrossi@example.com;Mario;Rossi;3331234567;1",
+    "btn": {
+      "select_file": "Select CSV file",
+      "import": "Import",
+      "back_to_contacts": "Back to contacts"
+    },
+    "result": {
+      "imported": "{count, plural, =0 {No contacts imported} one {# contact imported} other {# contacts imported}}",
+      "skipped": "{count, plural, one {# contact skipped (duplicate)} other {# contacts skipped (duplicates)}}",
+      "errors": "{count, plural, one {# row with errors:} other {# rows with errors:}}",
+      "error_row": "Row {row} ({email}): {reason}",
+      "more_errors": "...and {count} more errors"
+    },
+    "error": {
+      "email_required": "email required",
+      "email_invalid": "invalid email",
+      "missing_email_column": "column 'email' not found"
+    }
   },
   "iscritto": {
     "yes": "Subscribed",

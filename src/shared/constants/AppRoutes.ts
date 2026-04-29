@@ -25,3 +25,4 @@ export const MAIL_LIST_CRUD_EDIT = "/lists/:id/edit";
 export const MAIL_LIST_CONTACTS = "/lists/:id/contacts";
 export const MAIL_LIST_CONTACTS_NEW = "/lists/:id/contacts/new";
 export const MAIL_LIST_CONTACTS_EDIT = "/lists/:id/contacts/:contactId/edit";
+export const MAIL_LIST_CONTACTS_IMPORT = "/lists/:id/import";

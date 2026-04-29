@@ -6,6 +6,12 @@ import {
 } from '@Oimmei-Digital-Boutique/crema-components';
 import {Contact, ContactListFilter} from '@/types/models/Contact';
 
+export type ImportResult = {
+  imported: number;
+  skipped: number;
+  errors: Array<{row: number; email?: string; error: string}>;
+};
+
 type ContactListQuery = PaginatedQuery<Contact, ContactListFilter> & {listId: number};
 
 export const getContactList = async (
@@ -81,5 +87,14 @@ export const unsubscribeContact = async (
   {listId, id}: {listId: number; id: Contact['id']},
 ): Promise<DetailResult<Contact>> => {
   const {data} = await oiFetch.post<DetailResult<Contact>>(`/lists/${listId}/contacts/${id}/unsubscribe`);
+  return data;
+};
+
+export const importContacts = async (
+  {listId, file}: {listId: number; file: File},
+): Promise<DetailResult<ImportResult>> => {
+  const formData = new FormData();
+  formData.append('csv_file', file);
+  const {data} = await oiFetch.post<DetailResult<ImportResult>>(`/lists/${listId}/contacts-import`, formData);
   return data;
 };

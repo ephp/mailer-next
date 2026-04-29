@@ -27,7 +27,7 @@ import {
   subscribeContact,
   unsubscribeContact,
 } from '@/shared/helpers/api/contactApiHelper';
-import {MAIL_LIST_CONTACTS_NEW} from '@/shared/constants/AppRoutes';
+import {MAIL_LIST_CONTACTS_NEW, MAIL_LIST_CONTACTS_IMPORT} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
@@ -212,7 +212,14 @@ const ContactContent = (): ReactElement => {
 
   return (
     <>
-      <Box sx={{display: 'flex', justifyContent: 'flex-end', mb: 2}}>
+      <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 2}}>
+        <Button
+          component={Link}
+          variant="outlined"
+          href={generatePathStorage(MAIL_LIST_CONTACTS_IMPORT, {id: idParam})}
+        >
+          {t('contact.btn.import')}
+        </Button>
         <Button
           component={Link}
           variant="contained"

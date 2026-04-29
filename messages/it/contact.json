@@ -20,8 +20,34 @@
   },
   "btn": {
     "create": "Nuovo contatto",
+    "import": "Importa CSV",
     "subscribe": "Riabilita",
     "unsubscribe": "Disiscriviti"
+  },
+  "import": {
+    "page": {
+      "title": "Importa contatti"
+    },
+    "description": "Importa contatti da un file CSV. La prima riga deve essere l'intestazione con i nomi delle colonne.",
+    "format_hint": "Formato atteso (separatore punto e virgola):",
+    "format_example": "email;nome;cognome;telefono;iscritto\nrossi@example.com;Mario;Rossi;3331234567;1",
+    "btn": {
+      "select_file": "Seleziona file CSV",
+      "import": "Importa",
+      "back_to_contacts": "Torna ai contatti"
+    },
+    "result": {
+      "imported": "{count, plural, =0 {Nessun contatto importato} one {# contatto importato} other {# contatti importati}}",
+      "skipped": "{count, plural, one {# contatto saltato (duplicato)} other {# contatti saltati (duplicati)}}",
+      "errors": "{count, plural, one {# riga con errori:} other {# righe con errori:}}",
+      "error_row": "Riga {row} ({email}): {reason}",
+      "more_errors": "...e altri {count} errori"
+    },
+    "error": {
+      "email_required": "email obbligatoria",
+      "email_invalid": "email non valida",
+      "missing_email_column": "colonna 'email' non trovata"
+    }
   },
   "iscritto": {
     "yes": "Iscritto",
