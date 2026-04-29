@@ -1,0 +1,42 @@
+{
+  "page": {
+    "index": {
+      "title": "Liste di contatti"
+    },
+    "new": {
+      "title": "Nuova lista"
+    },
+    "edit": {
+      "title": "Modifica lista"
+    }
+  },
+  "field": {
+    "name": "Nome lista",
+    "description": "Descrizione",
+    "firma_html": "Firma HTML",
+    "mailer_dsn_override": "DSN Mailer personalizzato",
+    "permetti_disiscrizione": "Permetti disiscrizione",
+    "contact_count": "Contatti"
+  },
+  "btn": {
+    "create": "Nuova lista",
+    "contacts": "Vedi contatti"
+  },
+  "error": {
+    "not_found": "Lista non trovata",
+    "name": {
+      "required": "Il nome della lista è obbligatorio"
+    }
+  },
+  "success": {
+    "created": "Lista creata con successo",
+    "updated": "Lista aggiornata con successo",
+    "deleted": "Lista eliminata con successo"
+  },
+  "message": {
+    "delete": {
+      "title": "Vuoi eliminare la lista \"{name}\"?",
+      "description": "L'eliminazione è permanente e rimuoverà anche tutti i contatti associati."
+    }
+  }
+}

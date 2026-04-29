@@ -5,8 +5,10 @@ import {RoutePermittedRole} from '@/shared/constants/AppConst';
 
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
+import ListIcon from '@mui/icons-material/List';
 import {
   ACCOUNT_SETTINGS,
+  MAIL_LIST_CRUD_LIST,
   USER_CRUD_LIST,
 } from "@/shared/constants/AppRoutes";
 
@@ -96,6 +98,29 @@ const routesConfig: RouterConfigData[] = [
 
   {
     id: "account_divider",
+    type: "divider",
+  },
+
+  {
+    id: "mailing",
+    type: "title",
+    titleId: "messages.sidebar.mailing",
+  },
+
+  {
+    id: "mail_list_crud",
+    type: "item",
+    messageId: "messages.sidebar.lists",
+    icon: <ListIcon/>,
+    permittedRole: RoutePermittedRole.User,
+    url: MAIL_LIST_CRUD_LIST,
+    matches: [
+      {url: MAIL_LIST_CRUD_LIST},
+    ],
+  },
+
+  {
+    id: "mailing_divider",
     type: "divider",
   },
 

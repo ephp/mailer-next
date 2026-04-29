@@ -1,0 +1,51 @@
+{
+  "page": {
+    "index": {
+      "title": "Contatti"
+    },
+    "new": {
+      "title": "Nuovo contatto"
+    },
+    "edit": {
+      "title": "Modifica contatto"
+    }
+  },
+  "field": {
+    "email": "Email",
+    "nome": "Nome",
+    "cognome": "Cognome",
+    "telefono": "Telefono",
+    "iscritto": "Iscritto",
+    "bounce_count": "Bounce"
+  },
+  "btn": {
+    "create": "Nuovo contatto",
+    "subscribe": "Riabilita",
+    "unsubscribe": "Disiscriviti"
+  },
+  "iscritto": {
+    "yes": "Iscritto",
+    "no": "Disiscritto"
+  },
+  "error": {
+    "not_found": "Contatto non trovato",
+    "email": {
+      "required": "L'indirizzo email è obbligatorio",
+      "email": "Inserisci un indirizzo email valido"
+    },
+    "unique": "Esiste già un contatto con questa email in questa lista"
+  },
+  "success": {
+    "created": "Contatto aggiunto con successo",
+    "updated": "Contatto aggiornato con successo",
+    "deleted": "Contatto eliminato con successo",
+    "subscribed": "Contatto riabilitato",
+    "unsubscribed": "Contatto disiscritto"
+  },
+  "message": {
+    "delete": {
+      "title": "Eliminare il contatto \"{email}\"?",
+      "description": "L'eliminazione è permanente."
+    }
+  }
+}

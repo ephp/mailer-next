@@ -1,0 +1,51 @@
+{
+  "page": {
+    "index": {
+      "title": "Contacts"
+    },
+    "new": {
+      "title": "New contact"
+    },
+    "edit": {
+      "title": "Edit contact"
+    }
+  },
+  "field": {
+    "email": "Email",
+    "nome": "First name",
+    "cognome": "Last name",
+    "telefono": "Phone",
+    "iscritto": "Subscribed",
+    "bounce_count": "Bounces"
+  },
+  "btn": {
+    "create": "New contact",
+    "subscribe": "Re-subscribe",
+    "unsubscribe": "Unsubscribe"
+  },
+  "iscritto": {
+    "yes": "Subscribed",
+    "no": "Unsubscribed"
+  },
+  "error": {
+    "not_found": "Contact not found",
+    "email": {
+      "required": "Email address is required",
+      "email": "Please enter a valid email address"
+    },
+    "unique": "A contact with this email already exists in this list"
+  },
+  "success": {
+    "created": "Contact added successfully",
+    "updated": "Contact updated successfully",
+    "deleted": "Contact deleted successfully",
+    "subscribed": "Contact re-subscribed",
+    "unsubscribed": "Contact unsubscribed"
+  },
+  "message": {
+    "delete": {
+      "title": "Delete contact \"{email}\"?",
+      "description": "Deletion is permanent."
+    }
+  }
+}

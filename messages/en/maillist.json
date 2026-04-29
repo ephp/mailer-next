@@ -1,0 +1,42 @@
+{
+  "page": {
+    "index": {
+      "title": "Contact lists"
+    },
+    "new": {
+      "title": "New list"
+    },
+    "edit": {
+      "title": "Edit list"
+    }
+  },
+  "field": {
+    "name": "List name",
+    "description": "Description",
+    "firma_html": "HTML signature",
+    "mailer_dsn_override": "Custom mailer DSN",
+    "permetti_disiscrizione": "Allow unsubscription",
+    "contact_count": "Contacts"
+  },
+  "btn": {
+    "create": "New list",
+    "contacts": "View contacts"
+  },
+  "error": {
+    "not_found": "List not found",
+    "name": {
+      "required": "List name is required"
+    }
+  },
+  "success": {
+    "created": "List created successfully",
+    "updated": "List updated successfully",
+    "deleted": "List deleted successfully"
+  },
+  "message": {
+    "delete": {
+      "title": "Delete list \"{name}\"?",
+      "description": "Deletion is permanent and will also remove all associated contacts."
+    }
+  }
+}

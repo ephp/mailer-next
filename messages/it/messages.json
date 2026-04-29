@@ -194,6 +194,8 @@
     "dashboard": "Dashboard",
     "account": "Account",
     "account_settings": "Impostazioni Account",
+    "mailing": "Mailing",
+    "lists": "Liste di contatti",
     "admin": "Amministrazione",
     "users": "Utenti"
   }

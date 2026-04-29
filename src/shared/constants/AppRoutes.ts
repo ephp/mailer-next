@@ -18,3 +18,10 @@ export const USER_CRUD_NEW = "/backend/user/new";
 export const USER_CRUD_EDIT = "/backend/user/:id/edit";
 
 export const ACCOUNT_SETTINGS = "/account/settings";
+
+export const MAIL_LIST_CRUD_LIST = "/lists";
+export const MAIL_LIST_CRUD_NEW = "/lists/new";
+export const MAIL_LIST_CRUD_EDIT = "/lists/:id/edit";
+export const MAIL_LIST_CONTACTS = "/lists/:id/contacts";
+export const MAIL_LIST_CONTACTS_NEW = "/lists/:id/contacts/new";
+export const MAIL_LIST_CONTACTS_EDIT = "/lists/:id/contacts/:contactId/edit";

@@ -189,6 +189,8 @@
     "dashboard": "Dashboard",
     "account": "Account",
     "account_settings": "Account Settings",
+    "mailing": "Mailing",
+    "lists": "Contact lists",
     "admin": "Admin",
     "users": "Users"
   }
