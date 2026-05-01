@@ -4,15 +4,17 @@ import React, {ReactNode} from 'react';
 import {RoutePermittedRole} from '@/shared/constants/AppConst';
 
 import PersonIcon from '@mui/icons-material/Person';
-import BusinessIcon from '@mui/icons-material/Business';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ListIcon from '@mui/icons-material/List';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ArticleIcon from '@mui/icons-material/Article';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import {
   ACCOUNT_SETTINGS,
   CAMPAIGN_CRUD_LIST,
   CAMPAIGN_TEMPLATES,
   MAIL_LIST_CRUD_LIST,
+  STATISTICS,
   USER_CRUD_LIST,
 } from "@/shared/constants/AppRoutes";
 
@@ -95,7 +97,7 @@ const routesConfig: RouterConfigData[] = [
     id: "account_settings",
     type: "item",
     messageId: "messages.sidebar.account_settings",
-    icon: <BusinessIcon/>,
+    icon: <SettingsIcon/>,
     permittedRole: RoutePermittedRole.User,
     url: ACCOUNT_SETTINGS,
   },
@@ -144,6 +146,18 @@ const routesConfig: RouterConfigData[] = [
     url: CAMPAIGN_TEMPLATES,
     matches: [
       {url: CAMPAIGN_TEMPLATES},
+    ],
+  },
+
+  {
+    id: "statistics",
+    type: "item",
+    messageId: "messages.sidebar.statistics",
+    icon: <BarChartIcon/>,
+    permittedRole: RoutePermittedRole.User,
+    url: STATISTICS,
+    matches: [
+      {url: STATISTICS},
     ],
   },
 
