@@ -6,8 +6,10 @@
   },
   "field": {
     "ragione_sociale": "Company Name",
+    "email_contatto": "Contact Email",
     "partita_iva": "VAT Number",
     "indirizzo": "Address",
+    "logo": "Company Logo",
     "smtp_host": "SMTP Server (Host)",
     "smtp_port": "SMTP Port",
     "smtp_user": "SMTP User",
@@ -17,11 +19,14 @@
     "enabled": "Enabled"
   },
   "section": {
+    "logo": "Company Logo",
     "smtp": "SMTP Configuration",
     "api": "API Integration",
     "diagnostic": "SMTP & DNS Diagnostics"
   },
   "btn": {
+    "upload_logo": "Upload logo",
+    "change_logo": "Change logo",
     "copy_api_key": "Copy API key",
     "regenerate_api_key": "Regenerate API key",
     "diagnose": "Run diagnostics"
@@ -57,11 +62,16 @@
       "required": "Company name is required",
       "unique": "An account with this company name already exists"
     },
+    "email_contatto": {
+      "required": "Contact email is required",
+      "invalid": "Invalid email format"
+    },
     "not_found": "Account not found"
   },
   "success": {
     "created": "Account created successfully",
     "updated": "Account updated successfully",
+    "logo_uploaded": "Logo uploaded successfully",
     "enabled": "Account enabled",
     "disabled": "Account disabled",
     "api_key_copied": "API key copied to clipboard",

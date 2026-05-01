@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement, useRef, useState} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import Box from '@mui/material/Box';
@@ -17,9 +17,13 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import BusinessIcon from '@mui/icons-material/Business';
 import {Account, newAccount, SmtpDiagnosticResult} from '@/types/models/Account';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
-import {createAccount, updateAccount, updateMyAccount, regenerateApiKey, diagnoseSMTP} from '@/shared/helpers/api/accountApiHelper';
+import {createAccount, updateAccount, updateAccountById, regenerateApiKey, diagnoseSMTP, uploadAccountLogo} from '@/shared/helpers/api/accountApiHelper';
+
+type AccountFormValues = Account & { smtp_password: string | null };
 import {useTranslations} from 'next-intl';
 import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
@@ -42,7 +46,7 @@ const AccountForm = (
     account: Account | null;
     editing: boolean;
     loading?: boolean;
-    /** When true, uses the /my-account endpoint instead of the admin endpoint. */
+    /** When true, uses the /api/v1/account endpoint instead of the admin endpoint. */
     forMyAccount?: boolean;
     onOperationCompleted: () => void;
   },
@@ -53,9 +57,12 @@ const AccountForm = (
   const [regenerating, setRegenerating] = useState(false);
   const [diagnosing, setDiagnosing] = useState(false);
   const [diagnosticResult, setDiagnosticResult] = useState<SmtpDiagnosticResult | null>(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const validationSchema = yup.object({
     ragione_sociale: yup.string().required(t('account.error.ragione_sociale.required')),
+    email_contatto: yup.string().required(t('account.error.email_contatto.required')).email(t('account.error.email_contatto.invalid')),
     partita_iva: yup.string().nullable(),
     indirizzo: yup.string().nullable(),
     smtp_host: yup.string().nullable(),
@@ -71,10 +78,10 @@ const AccountForm = (
     errors,
     isSubmitting,
     handleSubmit,
-  } = useFormik<Account>({
+  } = useFormik<AccountFormValues>({
     validateOnBlur: true,
     validationSchema,
-    initialValues: account ?? newAccount,
+    initialValues: {...(account ?? newAccount), smtp_password: null},
     enableReinitialize: true,
     onSubmit: async (data, {setSubmitting}) => {
       let operationCompleted = false;
@@ -84,9 +91,20 @@ const AccountForm = (
         if (!editing) {
           promise = createAccount({entity: {...data}});
         } else if (forMyAccount) {
-          promise = updateMyAccount({entity: {...data}});
+          promise = updateAccount({
+            ragione_sociale: data.ragione_sociale,
+            email_contatto: data.email_contatto,
+            partita_iva: data.partita_iva,
+            indirizzo: data.indirizzo,
+            mailer_dsn: data.mailer_dsn,
+            smtp_host: data.smtp_host,
+            smtp_port: data.smtp_port,
+            smtp_user: data.smtp_user,
+            smtp_password: data.smtp_password,
+            smtp_encryption: data.smtp_encryption,
+          });
         } else {
-          promise = updateAccount({entity: {...data}});
+          promise = updateAccountById({entity: {...data}});
         }
         await performAsyncCall(promise);
         operationCompleted = true;
@@ -140,6 +158,23 @@ const AccountForm = (
     }
   };
 
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoUploading(true);
+    try {
+      await performAsyncCall(uploadAccountLogo(file));
+      enqueueSnackbar({message: t('account.success.logo_uploaded'), variant: 'success'});
+      onOperationCompleted();
+    } catch {
+      // error handled by performAsyncCall
+    } finally {
+      setLogoUploading(false);
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
+
   const wrapping = account === null;
 
   return (
@@ -164,6 +199,23 @@ const AccountForm = (
         <Grid size={{xs: 12, md: 6}}>
           <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
             <TextField
+              name="email_contatto"
+              fullWidth
+              required
+              type="email"
+              label={t('account.field.email_contatto')}
+              value={values.email_contatto}
+              onChange={(e) => setValues(v => ({...v, email_contatto: e.target.value}))}
+              error={!!errors.email_contatto}
+              helperText={errors.email_contatto as string}
+              slotProps={{inputLabel: {shrink: true}}}
+            />
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <TextField
               name="partita_iva"
               fullWidth
               label={t('account.field.partita_iva')}
@@ -176,11 +228,13 @@ const AccountForm = (
           </SkeletonWrapper>
         </Grid>
 
-        <Grid size={{xs: 12, md: 6}}>
+        <Grid size={12}>
           <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
             <TextField
               name="indirizzo"
               fullWidth
+              multiline
+              minRows={2}
               label={t('account.field.indirizzo')}
               value={values.indirizzo ?? ''}
               onChange={(e) => setValues(v => ({...v, indirizzo: e.target.value || null}))}
@@ -190,6 +244,76 @@ const AccountForm = (
             />
           </SkeletonWrapper>
         </Grid>
+
+        {forMyAccount && (
+          <>
+            <Grid size={12}>
+              <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
+                {t('account.section.logo')}
+              </Box>
+            </Grid>
+            <Grid size={12}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 3}}>
+                  {values.logo ? (
+                    <Box
+                      component="img"
+                      src={values.logo.url}
+                      alt={t('account.field.logo')}
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        objectFit: 'contain',
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                        p: 0.5,
+                        bgcolor: 'background.paper',
+                      }}
+                    />
+                  ) : (
+                    <Box sx={{
+                      width: 80,
+                      height: 80,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px dashed',
+                      borderColor: 'grey.400',
+                      borderRadius: 1,
+                      bgcolor: 'grey.50',
+                    }}>
+                      <BusinessIcon sx={{fontSize: 36, color: 'grey.400'}} />
+                    </Box>
+                  )}
+                  <Box>
+                    <input
+                      type="file"
+                      ref={logoInputRef}
+                      accept="image/*"
+                      style={{display: 'none'}}
+                      onChange={handleLogoUpload}
+                    />
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => logoInputRef.current?.click()}
+                      disabled={logoUploading || account === null}
+                      startIcon={logoUploading ? <CircularProgress size={16} /> : <CloudUploadIcon />}
+                    >
+                      {values.logo ? t('account.btn.change_logo') : t('account.btn.upload_logo')}
+                    </Button>
+                    {values.logo && (
+                      <Box sx={{mt: 0.5, fontSize: '0.75em', color: 'text.secondary'}}>
+                        {values.logo.filename}
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </SkeletonWrapper>
+            </Grid>
+          </>
+        )}
 
         <Grid size={12}>
           <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>

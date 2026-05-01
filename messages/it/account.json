@@ -6,8 +6,10 @@
   },
   "field": {
     "ragione_sociale": "Ragione Sociale",
+    "email_contatto": "Email di Contatto",
     "partita_iva": "Partita IVA",
     "indirizzo": "Indirizzo",
+    "logo": "Logo Aziendale",
     "smtp_host": "Server SMTP (Host)",
     "smtp_port": "Porta SMTP",
     "smtp_user": "Utente SMTP",
@@ -17,11 +19,14 @@
     "enabled": "Abilitato"
   },
   "section": {
+    "logo": "Logo Aziendale",
     "smtp": "Configurazione SMTP",
     "api": "Integrazione API",
     "diagnostic": "Diagnostica SMTP & DNS"
   },
   "btn": {
+    "upload_logo": "Carica logo",
+    "change_logo": "Cambia logo",
     "copy_api_key": "Copia chiave API",
     "regenerate_api_key": "Rigenera chiave API",
     "diagnose": "Esegui diagnostica"
@@ -57,11 +62,16 @@
       "required": "La ragione sociale è obbligatoria",
       "unique": "Esiste già un account con questa ragione sociale"
     },
+    "email_contatto": {
+      "required": "L'email di contatto è obbligatoria",
+      "invalid": "Formato email non valido"
+    },
     "not_found": "Account non trovato"
   },
   "success": {
     "created": "Account creato con successo",
     "updated": "Account aggiornato con successo",
+    "logo_uploaded": "Logo caricato con successo",
     "enabled": "Account abilitato",
     "disabled": "Account disabilitato",
     "api_key_copied": "Chiave API copiata negli appunti",

@@ -4,7 +4,7 @@ import React, {ReactElement, useEffect} from 'react';
 import {Account} from '@/types/models/Account';
 import AccountForm from '@/components/account/AccountForm';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
-import {getMyAccount} from '@/shared/helpers/api/accountApiHelper';
+import {getAccount} from '@/shared/helpers/api/accountApiHelper';
 import {useSnackbar} from 'notistack';
 import {useTranslations} from 'next-intl';
 
@@ -16,7 +16,7 @@ const AccountSettingsContent = (): ReactElement | null => {
     result: accountResult,
     loading: accountLoading,
     perform: fetchAccount,
-  } = useAsyncLoader(getMyAccount, false);
+  } = useAsyncLoader(getAccount, false);
 
   useEffect(() => {
     fetchAccount().catch(() => {
