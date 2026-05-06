@@ -8,6 +8,7 @@ import {
   generatePathStorage,
 } from "@Oimmei-Digital-Boutique/crema-components";
 import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import Dialog from "@mui/material/Dialog";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -86,6 +87,13 @@ const MailListContent = () => {
         headerName: t("maillist.field.description"),
         flex: 2,
         sortable: false,
+        renderCell: ({row}) => {
+          const desc = row.description ?? '';
+          const truncated = desc.length > 60 ? desc.slice(0, 60) + '…' : desc;
+          return desc.length > 60
+            ? <Tooltip title={desc}><span>{truncated}</span></Tooltip>
+            : <span>{truncated}</span>;
+        },
       },
       {
         field: "contact_count",
