@@ -15,6 +15,7 @@ import {createMailList, updateMailList} from '@/shared/helpers/api/mailListApiHe
 import {useTranslations} from 'next-intl';
 import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
+import {useSnackbar} from 'notistack';
 
 const MailListForm = (
   {
@@ -22,15 +23,18 @@ const MailListForm = (
     editing,
     loading = false,
     onOperationCompleted,
+    onCancel,
   }: {
     mailList: MailList | null;
     editing: boolean;
     loading?: boolean;
     onOperationCompleted: () => void;
+    onCancel?: () => void;
   },
 ): ReactElement | null => {
   const t = useTranslations();
   const {performAsyncCall} = useAsyncCallHelper2Actions();
+  const {enqueueSnackbar} = useSnackbar();
 
   const validationSchema = yup.object({
     name: yup.string().required(t('maillist.error.name.required')),
@@ -62,6 +66,7 @@ const MailListForm = (
           promise = updateMailList({entity: {...data}});
         }
         await performAsyncCall(promise);
+        enqueueSnackbar(t(editing ? 'maillist.success.updated' : 'maillist.success.created'), {variant: 'success'});
         operationCompleted = true;
       } catch (error) {
         console.error(error);
@@ -158,8 +163,39 @@ const MailListForm = (
           </SkeletonWrapper>
         </Grid>
 
+        {values.permetti_disiscrizione && (
+          <Grid size={12}>
+            <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+              <TextField
+                name="unsubscribe_text"
+                fullWidth
+                multiline
+                rows={3}
+                label={t('maillist.field.unsubscribe_text')}
+                value={values.unsubscribe_text ?? ''}
+                onChange={(e) => setValues(v => ({...v, unsubscribe_text: e.target.value || null}))}
+                error={!!errors.unsubscribe_text}
+                helperText={errors.unsubscribe_text as string}
+                slotProps={{inputLabel: {shrink: true}}}
+              />
+            </SkeletonWrapper>
+          </Grid>
+        )}
+
         <Grid mt={4} size={12}>
           <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: '10px', mb: 3}}>
+            {onCancel && (
+              <Button
+                sx={{minWidth: 100}}
+                color="inherit"
+                variant="outlined"
+                type="button"
+                onClick={onCancel}
+                disabled={isSubmitting}
+              >
+                {t('messages.btn.cancel')}
+              </Button>
+            )}
             <Button
               sx={{minWidth: 100}}
               color="primary"

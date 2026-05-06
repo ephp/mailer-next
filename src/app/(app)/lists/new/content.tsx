@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement} from "react";
+import React, {ReactElement, useCallback} from "react";
 import {generatePathStorage} from "@Oimmei-Digital-Boutique/crema-components";
 import {useRouter} from 'next/navigation';
 import {newMailList} from '@/types/models/MailList';
@@ -10,15 +10,20 @@ import MailListForm from '@/components/maillist/MailListForm';
 const MailListNewContent = (): ReactElement | null => {
   const router = useRouter();
 
-  const onOperationCompleted = (): void => {
+  const onOperationCompleted = useCallback((): void => {
     router.push(generatePathStorage(MAIL_LIST_CRUD_LIST));
-  };
+  }, [router]);
+
+  const onCancel = useCallback((): void => {
+    router.push(generatePathStorage(MAIL_LIST_CRUD_LIST));
+  }, [router]);
 
   return (
     <MailListForm
       mailList={newMailList}
       editing={false}
       onOperationCompleted={onOperationCompleted}
+      onCancel={onCancel}
     />
   );
 };

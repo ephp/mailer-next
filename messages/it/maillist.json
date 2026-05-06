@@ -16,6 +16,7 @@
     "firma_html": "Firma HTML",
     "mailer_dsn_override": "DSN Mailer personalizzato",
     "permetti_disiscrizione": "Permetti disiscrizione",
+    "unsubscribe_text": "Testo disiscrizione",
     "contact_count": "Contatti"
   },
   "btn": {
