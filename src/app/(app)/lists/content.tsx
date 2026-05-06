@@ -17,10 +17,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Link from 'next/link';
 import {MailList, MailListListFilter} from '@/types/models/MailList';
-import {MAIL_LIST_CRUD_EDIT, MAIL_LIST_CONTACTS} from '@/shared/constants/AppRoutes';
+import {MAIL_LIST_CRUD_EDIT, MAIL_LIST_CONTACTS, STATISTICS_LIST} from '@/shared/constants/AppRoutes';
 import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
 import {useSnackbar} from 'notistack';
-import {deleteMailList, getMailListList} from '@/shared/helpers/api/mailListApiHelper';
+import {deleteMailList, getMailLists} from '@/shared/helpers/api/mailListApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
@@ -70,7 +70,7 @@ const MailListContent = () => {
     setResult: setMailLists,
     loading: mailListsLoading,
     perform: fetchMailListList,
-  } = useAsyncLoader(getMailListList, true);
+  } = useAsyncLoader(getMailLists, true);
 
   const [deletingMailList, setDeletingMailList] = useState<MailList | null>(null);
 
@@ -111,6 +111,13 @@ const MailListContent = () => {
             label={t("maillist.btn.contacts")}
             component={Link}
             href={generatePathStorage(MAIL_LIST_CONTACTS, {id: row.id.toString()})}
+            showInMenu
+          />,
+          <GridActionsLinkCellItem
+            key="stats"
+            label={t("statistics.btn.view_list_stats")}
+            component={Link}
+            href={generatePathStorage(STATISTICS_LIST, {id: row.id.toString()})}
             showInMenu
           />,
           <GridActionsLinkCellItem

@@ -5,7 +5,7 @@ import {generatePathStorage} from "@Oimmei-Digital-Boutique/crema-components";
 import {useParams, useRouter} from 'next/navigation';
 import {MAIL_LIST_CRUD_LIST} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
-import {findMailList} from '@/shared/helpers/api/mailListApiHelper';
+import {getMailList} from '@/shared/helpers/api/mailListApiHelper';
 import MailListForm from '@/components/maillist/MailListForm';
 
 const MailListEditContent = (): ReactElement | null => {
@@ -16,7 +16,7 @@ const MailListEditContent = (): ReactElement | null => {
     result: mailListWrapper,
     perform: fetchMailList,
     loading,
-  } = useAsyncLoader(findMailList, true);
+  } = useAsyncLoader(getMailList, true);
 
   const onOperationCompleted = useCallback(() => {
     router.push(generatePathStorage(MAIL_LIST_CRUD_LIST));

@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import {useTranslations} from 'next-intl';
 import {Campaign, newCampaign} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
-import {getMailListList} from '@/shared/helpers/api/mailListApiHelper';
+import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
 import {createCampaign, updateCampaign, sendTestEmail, sendCampaign, saveAsTemplate} from '@/shared/helpers/api/campaignApiHelper';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
@@ -39,7 +39,7 @@ const CampaignWizard = ({
     result: mailListsResult,
     loading: listsLoading,
     perform: fetchLists,
-  } = useAsyncLoader(getMailListList, true);
+  } = useAsyncLoader(getMailLists, true);
 
   useEffect(() => {
     fetchLists({
