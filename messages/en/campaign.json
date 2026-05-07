@@ -43,7 +43,10 @@
     "step2": {
       "title": "Email content",
       "description": "Compose your campaign content. Use placeholders to personalize the message.",
-      "placeholders_label": "Available placeholders (click to insert):"
+      "placeholders_label": "Available placeholders (click to insert):",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "save_error": "Error while saving"
     },
     "step3": {
       "title": "Template & style",

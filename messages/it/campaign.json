@@ -43,7 +43,10 @@
     "step2": {
       "title": "Contenuto email",
       "description": "Componi il contenuto della tua campagna. Usa i segnaposto per personalizzare il messaggio.",
-      "placeholders_label": "Segnaposto disponibili (clicca per inserire):"
+      "placeholders_label": "Segnaposto disponibili (clicca per inserire):",
+      "saving": "Salvataggio in corso...",
+      "saved": "Salvato",
+      "save_error": "Errore durante il salvataggio"
     },
     "step3": {
       "title": "Template e stile",
