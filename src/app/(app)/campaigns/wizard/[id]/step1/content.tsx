@@ -20,7 +20,7 @@ import {useParams, useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {useSnackbar} from 'notistack';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
-import {getCampaign, updateCampaign} from '@/shared/helpers/api/campaignApiHelper';
+import {getCampaign, getRecipientsCount, updateCampaign} from '@/shared/helpers/api/campaignApiHelper';
 import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
 import {getTaxonomyCategoryList} from '@/shared/helpers/api/taxonomyApiHelper';
 import {taxonomyTermsHelper} from '@/shared/helpers/api/taxonomyTermApiHelper';
@@ -148,8 +148,12 @@ const WizardStep1Content = (): ReactElement | null => {
   const [saved, setSaved] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
+  const [recipientCount, setRecipientCount] = useState<number | null>(null);
+  const [recipientLoading, setRecipientLoading] = useState(false);
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const skipFirstSaveRef = useRef(true);
+  const recipientDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
     result: campaignResult,
@@ -221,6 +225,30 @@ const WizardStep1Content = (): ReactElement | null => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [mailListIds, filter, initialized, doSave]);
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    if (recipientDebounceRef.current) clearTimeout(recipientDebounceRef.current);
+
+    if (mailListIds.length === 0) {
+      setRecipientCount(0);
+      setRecipientLoading(false);
+      return;
+    }
+
+    setRecipientLoading(true);
+    recipientDebounceRef.current = setTimeout(() => {
+      getRecipientsCount(mailListIds, filter ?? undefined)
+        .then(count => setRecipientCount(count))
+        .catch(() => setRecipientCount(null))
+        .finally(() => setRecipientLoading(false));
+    }, 500);
+
+    return () => {
+      if (recipientDebounceRef.current) clearTimeout(recipientDebounceRef.current);
+    };
+  }, [mailListIds, filter, initialized]);
 
   const handleToggleList = (id: number) => {
     setMailListIds(prev =>
@@ -323,6 +351,26 @@ const WizardStep1Content = (): ReactElement | null => {
           ))}
         </Paper>
       )}
+
+      <Paper
+        variant="outlined"
+        sx={{
+          mt: 3,
+          px: 3,
+          py: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1.5,
+          backgroundColor: 'action.hover',
+        }}
+      >
+        <Typography variant="subtitle2" fontWeight={600}>
+          {t('campaign.wizard.step1.recipient_count', {
+            count: recipientCount !== null ? recipientCount : '—',
+          })}
+        </Typography>
+        {recipientLoading && <CircularProgress size={16} />}
+      </Paper>
 
       <Box sx={{mt: 2, minHeight: 24, display: 'flex', alignItems: 'center', gap: 1}}>
         {isSaving && (
