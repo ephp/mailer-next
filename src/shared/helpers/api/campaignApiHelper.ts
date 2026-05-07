@@ -144,6 +144,18 @@ export const getRecipientsCount = async (
   return data.item?.count ?? 0;
 };
 
+export const getCampaignsPaginated = async ({
+  page,
+  perPage,
+  filters,
+}: PaginatedQuery<Campaign, CampaignListFilter>): Promise<PaginatedResult<Campaign>> => {
+  return getCampaigns({
+    page,
+    perPage,
+    filter: {status: filters?.status, template: false},
+  });
+};
+
 // ─── Legacy helpers (old API — kept for backwards compatibility) ───────────────
 
 export interface SendCampaignOptions {

@@ -83,6 +83,7 @@
     "send_now": "Invia ora",
     "cancel": "Annulla",
     "back_to_list": "Torna alle campagne",
+    "view": "Visualizza",
     "view_stats": "Statistiche",
     "duplicate": "Duplica",
     "save_as_template": "Salva come template"
@@ -136,8 +137,12 @@
     }
   },
   "status": {
+    "all": "Tutte",
     "draft": "Bozza",
-    "ready": "Pronta"
+    "ready": "Pronta",
+    "scheduled": "Pianificata",
+    "sending": "In invio",
+    "sent": "Inviata"
   },
   "stats": {
     "total_sent": "Email inviate",

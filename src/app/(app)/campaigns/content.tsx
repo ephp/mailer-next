@@ -13,50 +13,62 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {GridActionsCellItem, GridColDef} from '@mui/x-data-grid';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
-import {Campaign, CampaignListFilter} from '@/types/models/Campaign';
-import {CAMPAIGN_CRUD_EDIT, CAMPAIGN_STATS, CAMPAIGN_TEMPLATES} from '@/shared/constants/AppRoutes';
-import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
+import {Campaign, CampaignListFilter, CampaignStatus} from '@/types/models/Campaign';
+import {CAMPAIGN_STATS, WIZARD_STEP_1} from '@/shared/constants/AppRoutes';
 import {useSnackbar} from 'notistack';
-import {deleteCampaignLegacy, duplicateCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
+import {
+  createCampaign,
+  deleteCampaign,
+  getCampaignsPaginated,
+} from '@/shared/helpers/api/campaignApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
 import GridActionsLinkCellItem from '@/@oimmei/components/Mui/GridActionsLinkCellItem';
-import GroupIcon from '@mui/icons-material/Group';
 
-const defaultSortField = 'id';
+const statusColor: Record<CampaignStatus, 'warning' | 'info' | 'success'> = {
+  draft: 'warning',
+  scheduled: 'info',
+  sending: 'info',
+  sent: 'success',
+};
 
 const defaultParameters = {
-  sortBy: defaultSortField as keyof Campaign,
-  filters: {fts: ''},
+  sortBy: 'created_at' as keyof Campaign,
+  filters: {} as CampaignListFilter,
 };
 
 const CampaignFilterComponent = (
   {filterValues, onFilterChanged}: FilterComponentProps<CampaignListFilter>,
 ) => {
-  const t = useTranslations('messages');
+  const t = useTranslations('campaign');
+
+  const handleStatusChange = (_: React.MouseEvent, value: string | null) => {
+    const status = value && value !== '' ? value as CampaignStatus : undefined;
+    onFilterChanged({status});
+  };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        width: 1,
-        marginBottom: 2,
-      }}
-    >
-      <AppSearchBar2
-        value={filterValues.fts}
-        onChange={(e) => onFilterChanged({fts: e.target.value})}
-        placeholder={t('common.placeholders.search')}
-      />
+    <Box sx={{display: 'flex', justifyContent: 'flex-start', marginBottom: 2}}>
+      <ToggleButtonGroup
+        value={filterValues.status ?? ''}
+        exclusive
+        onChange={handleStatusChange}
+        size="small"
+      >
+        <ToggleButton value="">{t('status.all')}</ToggleButton>
+        <ToggleButton value="draft">{t('status.draft')}</ToggleButton>
+        <ToggleButton value="scheduled">{t('status.scheduled')}</ToggleButton>
+        <ToggleButton value="sent">{t('status.sent')}</ToggleButton>
+      </ToggleButtonGroup>
     </Box>
   );
 };
@@ -65,84 +77,130 @@ const CampaignContent = (): ReactElement => {
   const t = useTranslations();
   const {enqueueSnackbar} = useSnackbar();
   const {performAsyncCall} = useAsyncCallHelper2Actions();
+  const router = useRouter();
 
   const {
     result: campaigns,
     setResult: setCampaigns,
     loading: campaignsLoading,
     perform: fetchCampaignList,
-  } = useAsyncLoader(getCampaignList, true);
+  } = useAsyncLoader(getCampaignsPaginated, true);
 
   const [deletingCampaign, setDeletingCampaign] = useState<Campaign | null>(null);
-  const router = useRouter();
+
+  const handleDuplicate = useCallback((id: number) => {
+    performAsyncCall(createCampaign({fromTemplateId: id}))
+      .then((res) => {
+        if (res?.item?.id) {
+          enqueueSnackbar({message: t('campaign.success.duplicated'), variant: 'success'});
+          router.push(generatePathStorage(WIZARD_STEP_1, {id: res.item.id.toString()}));
+        }
+      })
+      .catch(console.error);
+  }, [performAsyncCall, router, enqueueSnackbar, t]);
 
   const columns = useMemo<GridColDef<Campaign>[]>(
-    () => ([
-      {
-        field: 'email_subject',
-        headerName: t('campaign.field.email_subject'),
-        flex: 2,
-      },
-      {
-        field: 'name',
-        headerName: t('campaign.field.name'),
-        flex: 1,
-      },
-      {
-        field: 'recipient_count',
-        headerName: t('campaign.field.recipient_count'),
-        width: 130,
-        sortable: false,
-        renderCell: ({row}) => (
-          <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5}}>
-            <GroupIcon fontSize="small" color="action"/>
-            {row.recipient_count}
-          </Box>
-        ),
-      },
-      {
-        field: 'draft',
-        headerName: t('campaign.field.draft'),
-        width: 100,
-        renderCell: ({row}) => row.draft
-          ? <Chip label={t('campaign.status.draft')} size="small" color="warning"/>
-          : <Chip label={t('campaign.status.ready')} size="small" color="success"/>,
-      },
-      {
-        field: 'actions',
-        type: 'actions',
-        headerName: t('messages.col.actions'),
-        getActions: ({row}) => [
-          <GridActionsLinkCellItem
-            key="stats"
-            label={t('campaign.btn.view_stats')}
-            component={Link}
-            href={generatePathStorage(CAMPAIGN_STATS, {id: row.id.toString()})}
-            showInMenu
-          />,
-          <GridActionsLinkCellItem
-            key="edit"
-            label={t('messages.btn.edit')}
-            component={Link}
-            href={generatePathStorage(CAMPAIGN_CRUD_EDIT, {id: row.id.toString()})}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            key="duplicate"
-            label={t('campaign.btn.duplicate')}
-            onClick={() => handleDuplicate(row.id)}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            key="delete"
-            label={t('messages.btn.delete')}
-            onClick={() => setDeletingCampaign({...row})}
-            showInMenu
-          />,
-        ],
-      },
-    ]),
-    [t],
+    () => {
+      const statusLabels: Record<CampaignStatus, string> = {
+        draft: t('campaign.status.draft'),
+        scheduled: t('campaign.status.scheduled'),
+        sending: t('campaign.status.sending'),
+        sent: t('campaign.status.sent'),
+      };
+
+      return [
+        {
+          field: 'name',
+          headerName: t('campaign.field.name'),
+          flex: 2,
+          renderCell: ({row}) => (
+            <Box sx={{py: 0.5}}>
+              <Typography variant="body2" fontWeight={500}>
+                {row.name ?? row.email_subject}
+              </Typography>
+              {row.name && (
+                <Typography variant="caption" color="text.secondary" display="block">
+                  {row.email_subject}
+                </Typography>
+              )}
+            </Box>
+          ),
+        },
+        {
+          field: 'mail_list_ids',
+          headerName: t('campaign.field.mail_list_ids'),
+          width: 110,
+          sortable: false,
+          renderCell: ({row}) => row.mail_list_ids.length,
+        },
+        {
+          field: 'status',
+          headerName: t('campaign.field.draft'),
+          width: 130,
+          sortable: false,
+          renderCell: ({row}) => (
+            <Chip
+              label={statusLabels[row.status]}
+              size="small"
+              color={statusColor[row.status]}
+            />
+          ),
+        },
+        {
+          field: 'created_at',
+          headerName: t('campaign.field.created_at'),
+          width: 170,
+          renderCell: ({row}) => row.created_at
+            ? new Date(row.created_at).toLocaleString('it-IT', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+            : '—',
+        },
+        {
+          field: 'actions',
+          type: 'actions',
+          headerName: t('messages.col.actions'),
+          getActions: ({row}) => [
+            ...(row.status === 'draft' ? [
+              <GridActionsLinkCellItem
+                key="edit"
+                label={t('messages.btn.edit')}
+                component={Link}
+                href={generatePathStorage(WIZARD_STEP_1, {id: row.id.toString()})}
+                showInMenu
+              />,
+            ] : []),
+            <GridActionsLinkCellItem
+              key="view"
+              label={t('campaign.btn.view')}
+              component={Link}
+              href={generatePathStorage(CAMPAIGN_STATS, {id: row.id.toString()})}
+              showInMenu
+            />,
+            <GridActionsCellItem
+              key="duplicate"
+              label={t('campaign.btn.duplicate')}
+              onClick={() => handleDuplicate(row.id)}
+              disabled={!row.template}
+              showInMenu
+            />,
+            ...(row.status === 'draft' ? [
+              <GridActionsCellItem
+                key="delete"
+                label={t('messages.btn.delete')}
+                onClick={() => setDeletingCampaign({...row})}
+                showInMenu
+              />,
+            ] : []),
+          ],
+        },
+      ];
+    },
+    [t, handleDuplicate],
   );
 
   const onParametersChanged =
@@ -153,21 +211,10 @@ const CampaignContent = (): ReactElement => {
       [fetchCampaignList],
     );
 
-  const handleDuplicate = useCallback((id: number) => {
-    performAsyncCall(duplicateCampaign({id}))
-      .then((res) => {
-        if (res?.item?.id) {
-          enqueueSnackbar({message: t('campaign.success.duplicated'), variant: 'success'});
-          router.push(generatePathStorage(CAMPAIGN_CRUD_EDIT, {id: res.item.id.toString()}));
-        }
-      })
-      .catch(console.error);
-  }, [performAsyncCall, router, enqueueSnackbar, t]);
-
   const closeDeleteModal = () => setDeletingCampaign(null);
 
   const confirmDelete = (campaign: Campaign) => {
-    performAsyncCall(deleteCampaignLegacy({id: campaign.id}))
+    performAsyncCall(deleteCampaign(campaign.id))
       .then(() => {
         setCampaigns(prev => prev !== null ? {
           ...prev,
