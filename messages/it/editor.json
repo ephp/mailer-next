@@ -1,0 +1,35 @@
+{
+  "mode": {
+    "wysiwyg": "Visuale",
+    "html": "HTML"
+  },
+  "btn": {
+    "undo": "Annulla",
+    "redo": "Ripristina",
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "underline": "Sottolineato",
+    "strike": "Barrato",
+    "h1": "Titolo 1",
+    "h2": "Titolo 2",
+    "h3": "Titolo 3",
+    "bullet_list": "Elenco puntato",
+    "ordered_list": "Elenco numerato",
+    "blockquote": "Citazione",
+    "link": "Inserisci/modifica link",
+    "unlink": "Rimuovi link",
+    "image": "Inserisci immagine",
+    "clear": "Rimuovi formattazione"
+  },
+  "dialog": {
+    "link": {
+      "title": "Inserisci link",
+      "url": "URL"
+    },
+    "image": {
+      "title": "Inserisci immagine",
+      "url": "URL immagine",
+      "alt": "Testo alternativo (alt)"
+    }
+  }
+}

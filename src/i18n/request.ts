@@ -9,10 +9,12 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: {
+      tag: (await import(`../@oimmei/bundle/tag/messages/${locale}/tag.json`)).default,
       account: (await import(`../../messages/${locale}/account.json`)).default,
       campaign: (await import(`../../messages/${locale}/campaign.json`)).default,
       contact: (await import(`../../messages/${locale}/contact.json`)).default,
       dashboard: (await import(`../../messages/${locale}/dashboard.json`)).default,
+      editor: (await import(`../../messages/${locale}/editor.json`)).default,
       error: (await import(`../../messages/${locale}/error.json`)).default,
       geojson: (await import(`../../messages/${locale}/geojson.json`)).default,
       gmaps: (await import(`../../messages/${locale}/gmaps.json`)).default,
@@ -20,6 +22,8 @@ export default getRequestConfig(async () => {
       maillist: (await import(`../../messages/${locale}/maillist.json`)).default,
       messages: (await import(`../../messages/${locale}/messages.json`)).default,
       security: (await import(`../../messages/${locale}/security.json`)).default,
+      statistics: (await import(`../../messages/${locale}/statistics.json`)).default,
+      taxonomy: (await import(`../../messages/${locale}/taxonomy.json`)).default,
       translation: (await import(`../../messages/${locale}/translation.json`)).default,
     },
   };

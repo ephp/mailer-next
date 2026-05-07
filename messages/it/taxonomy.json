@@ -1,0 +1,58 @@
+{
+  "page": {
+    "categories": {
+      "title": "Tassonomie"
+    },
+    "new_category": {
+      "title": "Nuova categoria"
+    },
+    "edit_category": {
+      "title": "Modifica categoria"
+    },
+    "terms": {
+      "title": "Termini"
+    },
+    "new_term": {
+      "title": "Nuovo termine"
+    },
+    "edit_term": {
+      "title": "Modifica termine"
+    }
+  },
+  "field": {
+    "name": "Nome"
+  },
+  "btn": {
+    "new_category": "Nuova categoria",
+    "new_term": "Nuovo termine",
+    "manage_terms": "Termini"
+  },
+  "label": {
+    "term_count": "{count, plural, =0 {Nessun termine} one {# termine} other {# termini}}"
+  },
+  "message": {
+    "no_categories": "Nessuna categoria di tassonomia. Creane una per iniziare a segmentare i contatti.",
+    "no_terms": "Nessun termine in questa categoria.",
+    "delete_category": {
+      "title": "Eliminare la categoria \"{name}\"?",
+      "description": "Tutti i termini associati e le assegnazioni ai contatti verranno eliminati."
+    },
+    "delete_term": {
+      "title": "Eliminare il termine \"{name}\"?",
+      "description": "Le assegnazioni ai contatti per questo termine verranno eliminate."
+    }
+  },
+  "success": {
+    "category_created": "Categoria creata",
+    "category_updated": "Categoria aggiornata",
+    "category_deleted": "Categoria eliminata",
+    "term_created": "Termine creato",
+    "term_updated": "Termine aggiornato",
+    "term_deleted": "Termine eliminato",
+    "contact_synced": "Tassonomia contatto aggiornata"
+  },
+  "error": {
+    "category_not_found": "Categoria non trovata",
+    "term_not_found": "Termine non trovato"
+  }
+}

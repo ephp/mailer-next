@@ -7,14 +7,18 @@
   "field": {
     "ragione_sociale": "Ragione Sociale",
     "email_contatto": "Email di Contatto",
+    "mail_from": "Email Mittente",
+    "mail_from_name": "Nome Mittente",
     "partita_iva": "Partita IVA",
     "indirizzo": "Indirizzo",
     "logo": "Logo Aziendale",
+    "mailer_dsn": "DSN Mailer",
     "smtp_host": "Server SMTP (Host)",
     "smtp_port": "Porta SMTP",
     "smtp_user": "Utente SMTP",
     "smtp_password": "Password SMTP",
     "smtp_encryption": "Cifratura SMTP",
+    "test_email_to": "Email destinatario test",
     "api_key": "Chiave API",
     "enabled": "Abilitato"
   },
@@ -24,12 +28,19 @@
     "api": "Integrazione API",
     "diagnostic": "Diagnostica SMTP & DNS"
   },
+  "help": {
+    "mail_from": "Indirizzo che apparirà come mittente delle email inviate",
+    "mail_from_name": "Nome visualizzato accanto all'email mittente"
+  },
   "btn": {
     "upload_logo": "Carica logo",
     "change_logo": "Cambia logo",
     "copy_api_key": "Copia chiave API",
     "regenerate_api_key": "Rigenera chiave API",
-    "diagnose": "Esegui diagnostica"
+    "diagnose": "Esegui diagnostica",
+    "test_smtp": "Test Connessione SMTP",
+    "send_test_email": "Invia Email di Test",
+    "send": "Invia"
   },
   "diagnostic": {
     "smtp": {
@@ -55,6 +66,15 @@
       "tls": "TLS",
       "ssl": "SSL",
       "none": "Nessuna"
+    },
+    "mode": {
+      "dsn": "Modalità DSN diretto",
+      "fields": "Modalità campi separati"
+    },
+    "status": {
+      "not_tested": "Connessione SMTP non testata",
+      "ok": "Connessione SMTP verificata correttamente",
+      "error": "Connessione SMTP fallita: {error}"
     }
   },
   "error": {
@@ -66,6 +86,13 @@
       "required": "L'email di contatto è obbligatoria",
       "invalid": "Formato email non valido"
     },
+    "mail_from": {
+      "required": "L'email del mittente è obbligatoria",
+      "invalid": "Formato email mittente non valido"
+    },
+    "mail_from_name": {
+      "required": "Il nome del mittente è obbligatorio"
+    },
     "not_found": "Account non trovato"
   },
   "success": {
@@ -75,6 +102,7 @@
     "enabled": "Account abilitato",
     "disabled": "Account disabilitato",
     "api_key_copied": "Chiave API copiata negli appunti",
-    "api_key_regenerated": "Chiave API rigenerata con successo"
+    "api_key_regenerated": "Chiave API rigenerata con successo",
+    "test_email_sent": "Email di test inviata con successo"
   }
 }

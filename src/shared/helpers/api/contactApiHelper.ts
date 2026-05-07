@@ -5,6 +5,7 @@ import {
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
 import {Contact, ContactListFilter} from '@/types/models/Contact';
+import {baseUrl} from '@/shared/constants/AppConst';
 
 export type ImportResult = {
   imported: number;
@@ -97,4 +98,26 @@ export const importContacts = async (
   formData.append('csv_file', file);
   const {data} = await oiFetch.post<DetailResult<ImportResult>>(`/lists/${listId}/contacts-import`, formData);
   return data;
+};
+
+export const downloadImportTemplate = async (
+  {listId}: {listId: number},
+): Promise<void> => {
+  const response = await fetch(`${baseUrl}/lists/${listId}/contacts-import-template`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {'Oi-Cookie-Auth': '1'},
+  });
+  if (!response.ok) {
+    throw new Error(`Download failed: ${response.status}`);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `import-template-${listId}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };

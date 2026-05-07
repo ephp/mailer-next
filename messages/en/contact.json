@@ -20,20 +20,26 @@
   },
   "btn": {
     "create": "New contact",
-    "import": "Import CSV",
+    "import": "Import",
+    "taxonomies": "Taxonomies",
     "subscribe": "Re-subscribe",
     "unsubscribe": "Unsubscribe"
+  },
+  "section": {
+    "taxonomies": "Taxonomies"
   },
   "import": {
     "page": {
       "title": "Import contacts"
     },
-    "description": "Import contacts from a CSV file. The first row must be the header with column names.",
-    "format_hint": "Expected format (semicolon separator):",
-    "format_example": "email;nome;cognome;telefono;iscritto\nrossi@example.com;Mario;Rossi;3331234567;1",
+    "description": "Import contacts from a CSV or XLSX file. The first row must be the header with column names. For taxonomies, add one column per category (separate multiple terms with '|'). Missing terms are created automatically.",
+    "format_hint": "Expected CSV format (semicolon separator):",
+    "format_example": "email;nome;cognome;telefono;Settore;Anzianità\nrossi@example.com;Mario;Rossi;3331234567;Tech|Marketing;Senior",
     "btn": {
       "select_file": "Select CSV file",
+      "select_file_csv_xlsx": "Select CSV / XLSX file",
       "import": "Import",
+      "download_template": "Download example CSV",
       "back_to_contacts": "Back to contacts"
     },
     "result": {

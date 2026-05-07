@@ -25,6 +25,7 @@
     "clear_search": "Clear search",
     "advanced_search": "Advanced search",
     "apply": "Apply",
+    "insert": "Insert",
     "filter": "Filter",
     "confirm": "Confirm",
     "edit_validation": "Change validity",
@@ -193,6 +194,7 @@
     "lists": "Contact lists",
     "campaigns": "Campaigns",
     "templates": "Templates",
+    "statistics": "Statistics",
     "admin": "Admin",
     "users": "Users"
   }

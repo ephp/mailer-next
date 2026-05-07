@@ -1,20 +1,16 @@
 import {TagApiHelper} from "@/@oimmei/bundle/tag/helper/api/tagApiHelper";
-import {Tag, TagFilter} from "@/@oimmei/bundle/tag/type/model/Tag";
+import {TaxonomyTerm} from "@/types/models/TaxonomyTerm";
 
-const tagApiHelper = new TagApiHelper<Tag, TagFilter>('/backend/time-type');
+const TAXONOMY_TERMS_BASE_URL = '/list-taxonomy-terms';
 
-// Esporta i metodi per mantenere la compatibilità con il codice esistente
-export const allTimeType =
-  tagApiHelper.allTag.bind(tagApiHelper);
-export const getTimeTypes =
-  tagApiHelper.getTags.bind(tagApiHelper);
-export const findTimeType =
-  tagApiHelper.findTag.bind(tagApiHelper);
-export const createTimeType =
-  tagApiHelper.createTag.bind(tagApiHelper);
-export const autocompleteCreateTimeType =
-  tagApiHelper.autocompleteCreateTag.bind(tagApiHelper);
-export const updateTimeType =
-  tagApiHelper.updateTag.bind(tagApiHelper);
-export const deleteTimeType =
-  tagApiHelper.deleteTag.bind(tagApiHelper);
+/**
+ * Returns a TagApiHelper scoped to a single TaxonomyCategory.
+ * Every request will carry `?category_id=<id>` as a query parameter so the backend
+ * TagSubscriber can attach the term to the correct category.
+ */
+export const taxonomyTermsHelper = (categoryId: number): TagApiHelper<TaxonomyTerm> =>
+  new TagApiHelper<TaxonomyTerm>({
+    baseUrl: TAXONOMY_TERMS_BASE_URL,
+    entityName: 'taxonomy_term',
+    extraParams: {category_id: categoryId},
+  });

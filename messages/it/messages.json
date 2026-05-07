@@ -25,6 +25,7 @@
     "clear_search": "Cancella la ricerca",
     "advanced_search": "Ricerca avanzata",
     "apply": "Applica",
+    "insert": "Inserisci",
     "filter": "Filtra",
     "confirm": "Conferma",
     "edit_validation": "Modifica validità",
@@ -198,6 +199,7 @@
     "lists": "Liste di contatti",
     "campaigns": "Campagne",
     "templates": "Template",
+    "statistics": "Statistiche",
     "admin": "Amministrazione",
     "users": "Utenti"
   }

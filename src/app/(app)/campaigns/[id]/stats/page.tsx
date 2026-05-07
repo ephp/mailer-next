@@ -2,11 +2,9 @@ import React, {ReactElement} from 'react';
 import {getTranslations} from 'next-intl/server';
 import {Metadata} from 'next';
 import AppsSimpleContainer from '@/@oimmei/core/AppsSimpleContainer';
-import {useTranslations} from 'next-intl';
-import Link from 'next/link';
-import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {CAMPAIGN_CRUD_LIST} from '@/shared/constants/AppRoutes';
+import LinkButton from '@/components/common/LinkButton';
 import Content from './content';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -16,19 +14,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function CampaignStatsPage({params}: {params: {id: string}}): ReactElement {
-  const t = useTranslations('campaign');
+export default async function CampaignStatsPage({params}: {params: Promise<{id: string}>}): Promise<ReactElement> {
+  const t = await getTranslations('campaign');
+  const {id} = await params;
 
   return (
     <AppsSimpleContainer
       title={t('page.stats.title')}
       actionWrapper={
-        <Button component={Link} href={CAMPAIGN_CRUD_LIST} startIcon={<ArrowBackIcon/>}>
+        <LinkButton href={CAMPAIGN_CRUD_LIST} startIcon={<ArrowBackIcon/>}>
           {t('btn.back_to_list')}
-        </Button>
+        </LinkButton>
       }
     >
-      <Content campaignId={Number(params.id)}/>
+      <Content campaignId={Number(id)}/>
     </AppsSimpleContainer>
   );
 }

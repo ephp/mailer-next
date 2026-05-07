@@ -10,27 +10,27 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AppSearchBar2 from '@/@oimmei/core/AppSearchBar2';
-import {
-  DetailResult,
-  PaginatedQuery,
-  PaginatedResult
-} from '@Oimmei-Digital-Boutique/crema-components';
+import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
 import {useRouter} from 'next/navigation';
-import {Tag, TagFilter} from "@/@oimmei/bundle/tag/type/model/Tag";
+import {Tag} from "@/@oimmei/bundle/tag/type/model/Tag";
 
-interface TagListComponentProps<T extends Tag = Tag, F extends TagFilter = TagFilter> {
-  getTagsAction: (query: PaginatedQuery<T, F>) => Promise<PaginatedResult<T>>;
+interface TagListComponentProps<T extends Tag = Tag> {
+  /**
+   * Returns every tag in a single shot (uses the bundle `*-all` endpoint).
+   * The component handles label filtering client-side.
+   */
+  getAllTagsAction: () => Promise<DetailResult<T[]>>;
   editRoute?: string;
   deleteTagAction?: (params: { entity: T }) => Promise<DetailResult<T>>;
 }
 
-export default function TagListComponent<T extends Tag = Tag, F extends TagFilter = TagFilter>(
+export default function TagListComponent<T extends Tag = Tag>(
   {
-    getTagsAction,
+    getAllTagsAction,
     editRoute,
     deleteTagAction,
-  }: TagListComponentProps<T, F>): ReactElement {
+  }: TagListComponentProps<T>): ReactElement {
   const t = useTranslations('tag');
   const router = useRouter();
 
@@ -43,22 +43,14 @@ export default function TagListComponent<T extends Tag = Tag, F extends TagFilte
   const fetchTags = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await getTagsAction({
-        page: 1,
-        perPage: 1000,
-        sortBy: 'label' as keyof T,
-        sortDirection: 'asc',
-        filters: {
-          label: searchValue || null,
-        } as F,
-      });
-      setTags(result.items || []);
+      const result = await getAllTagsAction();
+      setTags(result.item ?? []);
     } catch (error) {
       console.error(t('message.error.fetching_tags'), error);
     } finally {
       setLoading(false);
     }
-  }, [t, getTagsAction, searchValue]);
+  }, [t, getAllTagsAction]);
 
   useEffect(() => {
     fetchTags();
@@ -96,7 +88,11 @@ export default function TagListComponent<T extends Tag = Tag, F extends TagFilte
     handleMenuClose();
   };
 
-  const groupedTags = tags.reduce((acc, tag) => {
+  const filteredTags = searchValue.trim() === ''
+    ? tags
+    : tags.filter(tag => tag.label.toLowerCase().includes(searchValue.toLowerCase()));
+
+  const groupedTags = filteredTags.reduce((acc, tag) => {
     const firstLetter = tag.label.charAt(0).toUpperCase();
     if (!acc[firstLetter]) {
       acc[firstLetter] = [];

@@ -9,20 +9,39 @@ import {Tag, TagFilter} from "@/@oimmei/bundle/tag/type/model/Tag";
 interface TagApiHelperConfig {
   baseUrl: string;
   entityName?: string;
+  /**
+   * Optional query parameters appended to every request (GET and POST).
+   * Useful to scope a tag-bundle-backed entity to a parent (e.g. category_id).
+   */
+  extraParams?: Record<string, unknown>;
 }
 
 export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> {
   private readonly baseUrl: string;
   private readonly entityName: string;
+  private readonly extraParams: Record<string, unknown>;
 
   constructor(config: string | TagApiHelperConfig) {
     if (typeof config === 'string') {
       this.baseUrl = config;
       this.entityName = this.extractEntityName(config);
+      this.extraParams = {};
     } else {
       this.baseUrl = config.baseUrl;
       this.entityName = config.entityName || this.extractEntityName(config.baseUrl);
+      this.extraParams = config.extraParams ?? {};
     }
+  }
+
+  /**
+   * Returns a new helper instance with additional query parameters merged into the existing ones.
+   */
+  withExtraParams(params: Record<string, unknown>): TagApiHelper<T, F> {
+    return new TagApiHelper<T, F>({
+      baseUrl: this.baseUrl,
+      entityName: this.entityName,
+      extraParams: {...this.extraParams, ...params},
+    });
   }
 
   private extractEntityName(url: string): string {
@@ -31,8 +50,14 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
     return parts[parts.length - 1].replace(/-/g, '_');
   }
 
+  private mergeParams(params: Record<string, unknown> = {}): Record<string, unknown> {
+    return {...this.extraParams, ...params};
+  }
+
   async allTag(): Promise<DetailResult<T[]>> {
-    const {data} = await oiFetch.get<DetailResult<T[]>>(`${this.baseUrl}-all`);
+    const {data} = await oiFetch.get<DetailResult<T[]>>(`${this.baseUrl}-all`, {
+      params: this.mergeParams(),
+    });
     return data;
   }
 
@@ -45,7 +70,7 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
       filters,
     }: PaginatedQuery<T, F>): Promise<PaginatedResult<T>> {
     const {data} = await oiFetch.get<PaginatedResult<T>>(this.baseUrl, {
-      params: {
+      params: this.mergeParams({
         page: page,
         per_page: perPage,
         [`${this.entityName}_search_form`]: {
@@ -53,14 +78,16 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
           sortMode: sortDirection,
           label: filters?.label,
         },
-      },
+      }),
     });
 
     return data;
   }
 
   async findTag({id}: { id: T['id'] }): Promise<DetailResult<T>> {
-    const {data} = await oiFetch.get<DetailResult<T>>(`${this.baseUrl}/${id}`);
+    const {data} = await oiFetch.get<DetailResult<T>>(`${this.baseUrl}/${id}`, {
+      params: this.mergeParams(),
+    });
     return data;
   }
 
@@ -71,6 +98,8 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
         color: entity.color,
         icon: entity.icon,
       },
+    }, {
+      params: this.mergeParams(),
     });
 
     return data;
@@ -79,6 +108,8 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
   async searchTag({q}: { q: T['label'] }): Promise<DetailResult<T[]>> {
     const {data} = await oiFetch.post<DetailResult<T[]>>(`${this.baseUrl}-search`, {
       q: q,
+    }, {
+      params: this.mergeParams(),
     });
 
     return data;
@@ -87,6 +118,8 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
   async autocompleteCreateTag({label}: { label: T['label'] }): Promise<DetailResult<T>> {
     const {data} = await oiFetch.post<DetailResult<T>>(`${this.baseUrl}-create`, {
       label: label,
+    }, {
+      params: this.mergeParams(),
     });
 
     return data;
@@ -95,6 +128,8 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
   async findManyTag({q}: { q: T['label'] }): Promise<DetailResult<T[]>> {
     const {data} = await oiFetch.post<DetailResult<T[]>>(`${this.baseUrl}-find-many`, {
       q: q,
+    }, {
+      params: this.mergeParams(),
     });
 
     return data;
@@ -109,6 +144,9 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
           color: entity.color,
           icon: entity.icon,
         },
+      },
+      {
+        params: this.mergeParams(),
       }
     );
 
@@ -117,7 +155,11 @@ export class TagApiHelper<T extends Tag = Tag, F extends TagFilter = TagFilter> 
 
   async deleteTag({entity}: { entity: T }): Promise<DetailResult<T>> {
     const {data} = await oiFetch.post<DetailResult<T>>(
-      `${this.baseUrl}/${entity.id}/delete`
+      `${this.baseUrl}/${entity.id}/delete`,
+      undefined,
+      {
+        params: this.mergeParams(),
+      }
     );
 
     return data;

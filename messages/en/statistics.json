@@ -1,0 +1,36 @@
+{
+  "page": {
+    "index": {
+      "title": "Account statistics"
+    },
+    "list": {
+      "title": "List statistics"
+    }
+  },
+  "section": {
+    "overview": "Overview",
+    "contacts": "Contacts",
+    "delivery": "Delivery",
+    "engagement": "Engagement"
+  },
+  "field": {
+    "total_campaigns": "Campaigns",
+    "total_lists": "Lists",
+    "total_contacts": "Total contacts",
+    "total_subscribed": "Active subscribers",
+    "total_sent": "Emails sent",
+    "total_pending": "Queued",
+    "total_failed": "Failed",
+    "total_bounced": "Bounced",
+    "total_opens": "Unique opens",
+    "total_clicks": "Unique clicks",
+    "total_unsubscribes": "Unsubscribes",
+    "open_rate": "Open rate",
+    "click_rate": "Click rate",
+    "unsubscribe_rate": "Unsubscribe rate"
+  },
+  "btn": {
+    "back_to_stats": "Back to statistics",
+    "view_list_stats": "List statistics"
+  }
+}

@@ -1,3 +1,4 @@
+import tag from './src/@oimmei/bundle/tag/messages/it/tag.json';
 import dashboard from './messages/it/dashboard.json';
 import error from './messages/it/error.json';
 import geojson from './messages/it/geojson.json';
@@ -14,6 +15,7 @@ import translation from './messages/it/translation.json';
  * @link https://next-intl.dev/docs/workflows/typescript#messages
  */
 interface Messages {
+  tag: typeof tag;
   dashboard: typeof dashboard;
   error: typeof error;
   geojson: typeof geojson;

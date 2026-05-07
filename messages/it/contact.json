@@ -20,20 +20,26 @@
   },
   "btn": {
     "create": "Nuovo contatto",
-    "import": "Importa CSV",
+    "import": "Importa",
+    "taxonomies": "Tassonomie",
     "subscribe": "Riabilita",
     "unsubscribe": "Disiscriviti"
+  },
+  "section": {
+    "taxonomies": "Tassonomie"
   },
   "import": {
     "page": {
       "title": "Importa contatti"
     },
-    "description": "Importa contatti da un file CSV. La prima riga deve essere l'intestazione con i nomi delle colonne.",
-    "format_hint": "Formato atteso (separatore punto e virgola):",
-    "format_example": "email;nome;cognome;telefono;iscritto\nrossi@example.com;Mario;Rossi;3331234567;1",
+    "description": "Importa contatti da un file CSV o XLSX. La prima riga deve essere l'intestazione con i nomi delle colonne. Per le tassonomie aggiungi una colonna per ogni categoria (separa più termini con '|'). I termini non esistenti vengono creati automaticamente.",
+    "format_hint": "Formato atteso per CSV (separatore punto e virgola):",
+    "format_example": "email;nome;cognome;telefono;Settore;Anzianità\nrossi@example.com;Mario;Rossi;3331234567;Tech|Marketing;Senior",
     "btn": {
       "select_file": "Seleziona file CSV",
+      "select_file_csv_xlsx": "Seleziona file CSV / XLSX",
       "import": "Importa",
+      "download_template": "Scarica CSV di esempio",
       "back_to_contacts": "Torna ai contatti"
     },
     "result": {

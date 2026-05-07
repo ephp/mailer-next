@@ -27,7 +27,7 @@ import {
   subscribeContact,
   unsubscribeContact,
 } from '@/shared/helpers/api/contactApiHelper';
-import {MAIL_LIST_CONTACTS_NEW, MAIL_LIST_CONTACTS_IMPORT} from '@/shared/constants/AppRoutes';
+import {MAIL_LIST_CONTACTS_NEW, MAIL_LIST_CONTACTS_IMPORT, TAXONOMY_CATEGORIES} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
@@ -213,6 +213,13 @@ const ContactContent = (): ReactElement => {
   return (
     <>
       <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 2}}>
+        <Button
+          component={Link}
+          variant="text"
+          href={generatePathStorage(TAXONOMY_CATEGORIES, {id: idParam})}
+        >
+          {t('contact.btn.taxonomies')}
+        </Button>
         <Button
           component={Link}
           variant="outlined"

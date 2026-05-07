@@ -1,3 +1,5 @@
+'use client';
+
 import React, {ReactElement} from 'react';
 import Typography, {TypographyProps} from '@mui/material/Typography';
 import Link from 'next/link';

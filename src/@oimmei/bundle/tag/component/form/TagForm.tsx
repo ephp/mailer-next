@@ -4,7 +4,7 @@ import {useTranslations} from "next-intl";
 import {useAsyncCallHelper2Actions} from "@/@oimmei/services/context/AsyncCallHelper2Provider";
 import {useFormik} from "formik";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import SkeletonWrapper from "@/@oimmei/components/SkeletonWrapper";
 import TextField from "@mui/material/TextField";
 import {generatePathStorage, DetailResult} from "@Oimmei-Digital-Boutique/crema-components";

@@ -7,30 +7,76 @@ import {
 
 export type SmtpEncryption = 'tls' | 'ssl' | 'none';
 
+export interface AccountLogo {
+  url: string;
+  filename: string;
+}
+
 export interface Account {
   id: number;
   ragione_sociale: string;
+  email_contatto: string;
+  mail_from: string;
+  mail_from_name: string;
   partita_iva: string | null;
   indirizzo: string | null;
+  mailer_dsn: string | null;
   smtp_host: string | null;
   smtp_port: number | null;
   smtp_user: string | null;
-  smtp_password: string | null;
   smtp_encryption: SmtpEncryption | null;
+  logo: AccountLogo | null;
+  batch_size: number;
+  send_interval: number;
   api_key: string;
   enabled: boolean;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+export interface AccountUpdateInput {
+  ragione_sociale?: string;
+  email_contatto?: string;
+  mail_from?: string;
+  mail_from_name?: string;
+  partita_iva?: string | null;
+  indirizzo?: string | null;
+  mailer_dsn?: string | null;
+  smtp_host?: string | null;
+  smtp_port?: number | null;
+  smtp_user?: string | null;
+  smtp_password?: string | null;
+  smtp_encryption?: SmtpEncryption | null;
+  batch_size?: number;
+  send_interval?: number;
+}
+
+export interface SmtpTestInput {
+  dsn?: string;
+  smtpHost?: string;
+  smtpPort?: number;
+}
+
+export interface SmtpTestResult {
+  success: boolean;
+  error: string | null;
 }
 
 export const accountSchema = yupObject({
   id: yupNumber().required(),
   ragione_sociale: yupString().required(),
+  email_contatto: yupString().required(),
+  mail_from: yupString().required(),
+  mail_from_name: yupString().required(),
   partita_iva: yupString().nullable().defined(),
   indirizzo: yupString().nullable().defined(),
+  mailer_dsn: yupString().nullable().defined(),
   smtp_host: yupString().nullable().defined(),
   smtp_port: yupNumber().nullable().defined(),
   smtp_user: yupString().nullable().defined(),
-  smtp_password: yupString().nullable().defined(),
   smtp_encryption: yupString().nullable().defined(),
+  batch_size: yupNumber().required(),
+  send_interval: yupNumber().required(),
   api_key: yupString().required(),
   enabled: yupBoolean().required(),
 });
@@ -57,13 +103,21 @@ export interface SmtpDiagnosticResult {
 export const newAccount: Account = {
   id: 0,
   ragione_sociale: '',
+  email_contatto: '',
+  mail_from: '',
+  mail_from_name: '',
   partita_iva: null,
   indirizzo: null,
+  mailer_dsn: null,
   smtp_host: null,
   smtp_port: null,
   smtp_user: null,
-  smtp_password: null,
   smtp_encryption: null,
+  logo: null,
+  batch_size: 50,
+  send_interval: 30,
   api_key: '',
   enabled: true,
+  created_at: null,
+  updated_at: null,
 };

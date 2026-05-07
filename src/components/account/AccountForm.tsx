@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement, useRef, useState} from 'react';
+import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
 import Box from '@mui/material/Box';
@@ -13,15 +13,19 @@ import Tooltip from '@mui/material/Tooltip';
 import Alert from '@mui/material/Alert';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import BusinessIcon from '@mui/icons-material/Business';
-import {Account, newAccount, SmtpDiagnosticResult} from '@/types/models/Account';
+import SendIcon from '@mui/icons-material/Send';
+import EmailIcon from '@mui/icons-material/Email';
+import {Account, newAccount, SmtpDiagnosticResult, SmtpTestResult} from '@/types/models/Account';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
-import {createAccount, updateAccount, updateAccountById, regenerateApiKey, diagnoseSMTP, uploadAccountLogo} from '@/shared/helpers/api/accountApiHelper';
+import {createAccount, updateAccount, updateAccountById, regenerateApiKey, diagnoseSMTP, uploadAccountLogo, testSmtp, sendTestEmail} from '@/shared/helpers/api/accountApiHelper';
 
 type AccountFormValues = Account & { smtp_password: string | null };
 import {useTranslations} from 'next-intl';
@@ -59,10 +63,22 @@ const AccountForm = (
   const [diagnosticResult, setDiagnosticResult] = useState<SmtpDiagnosticResult | null>(null);
   const [logoUploading, setLogoUploading] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
+  const [smtpMode, setSmtpMode] = useState<'dsn' | 'fields'>('fields');
+  const [smtpTesting, setSmtpTesting] = useState(false);
+  const [smtpTestResult, setSmtpTestResult] = useState<SmtpTestResult | null>(null);
+  const [sendingTestEmail, setSendingTestEmail] = useState(false);
+  const [testEmailTo, setTestEmailTo] = useState('');
+  const [showTestEmailInput, setShowTestEmailInput] = useState(false);
+
+  useEffect(() => {
+    if (account?.mailer_dsn) setSmtpMode('dsn');
+  }, [account?.mailer_dsn]);
 
   const validationSchema = yup.object({
     ragione_sociale: yup.string().required(t('account.error.ragione_sociale.required')),
     email_contatto: yup.string().required(t('account.error.email_contatto.required')).email(t('account.error.email_contatto.invalid')),
+    mail_from: yup.string().required(t('account.error.mail_from.required')).email(t('account.error.mail_from.invalid')),
+    mail_from_name: yup.string().required(t('account.error.mail_from_name.required')),
     partita_iva: yup.string().nullable(),
     indirizzo: yup.string().nullable(),
     smtp_host: yup.string().nullable(),
@@ -94,6 +110,8 @@ const AccountForm = (
           promise = updateAccount({
             ragione_sociale: data.ragione_sociale,
             email_contatto: data.email_contatto,
+            mail_from: data.mail_from,
+            mail_from_name: data.mail_from_name,
             partita_iva: data.partita_iva,
             indirizzo: data.indirizzo,
             mailer_dsn: data.mailer_dsn,
@@ -175,6 +193,42 @@ const AccountForm = (
     }
   };
 
+  const handleTestSmtp = async () => {
+    setSmtpTesting(true);
+    setSmtpTestResult(null);
+    try {
+      let result: SmtpTestResult;
+      if (smtpMode === 'dsn') {
+        result = await testSmtp({dsn: values.mailer_dsn ?? ''});
+      } else {
+        result = await testSmtp({
+          smtpHost: values.smtp_host ?? '',
+          smtpPort: values.smtp_port ?? 587,
+        });
+      }
+      setSmtpTestResult(result);
+    } catch {
+      setSmtpTestResult({success: false, error: 'Errore di rete'});
+    } finally {
+      setSmtpTesting(false);
+    }
+  };
+
+  const handleSendTestEmail = async () => {
+    if (!testEmailTo) return;
+    setSendingTestEmail(true);
+    try {
+      await performAsyncCall(sendTestEmail(testEmailTo));
+      enqueueSnackbar({message: t('account.success.test_email_sent'), variant: 'success'});
+      setShowTestEmailInput(false);
+      setTestEmailTo('');
+    } catch {
+      // error handled by performAsyncCall
+    } finally {
+      setSendingTestEmail(false);
+    }
+  };
+
   const wrapping = account === null;
 
   return (
@@ -208,6 +262,39 @@ const AccountForm = (
               onChange={(e) => setValues(v => ({...v, email_contatto: e.target.value}))}
               error={!!errors.email_contatto}
               helperText={errors.email_contatto as string}
+              slotProps={{inputLabel: {shrink: true}}}
+            />
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <TextField
+              name="mail_from"
+              fullWidth
+              required
+              type="email"
+              label={t('account.field.mail_from')}
+              value={values.mail_from}
+              onChange={(e) => setValues(v => ({...v, mail_from: e.target.value}))}
+              error={!!errors.mail_from}
+              helperText={(errors.mail_from as string) ?? t('account.help.mail_from')}
+              slotProps={{inputLabel: {shrink: true}}}
+            />
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <TextField
+              name="mail_from_name"
+              fullWidth
+              required
+              label={t('account.field.mail_from_name')}
+              value={values.mail_from_name}
+              onChange={(e) => setValues(v => ({...v, mail_from_name: e.target.value}))}
+              error={!!errors.mail_from_name}
+              helperText={(errors.mail_from_name as string) ?? t('account.help.mail_from_name')}
               slotProps={{inputLabel: {shrink: true}}}
             />
           </SkeletonWrapper>
@@ -321,96 +408,210 @@ const AccountForm = (
           </Box>
         </Grid>
 
-        <Grid size={{xs: 12, md: 6}}>
-          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="smtp_host"
-              fullWidth
-              label={t('account.field.smtp_host')}
-              value={values.smtp_host ?? ''}
-              onChange={(e) => setValues(v => ({...v, smtp_host: e.target.value || null}))}
-              error={!!errors.smtp_host}
-              helperText={errors.smtp_host as string}
-              slotProps={{inputLabel: {shrink: true}}}
+        {forMyAccount && (
+          <Grid size={12}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={smtpMode === 'dsn'}
+                  onChange={(e) => {
+                    setSmtpMode(e.target.checked ? 'dsn' : 'fields');
+                    setSmtpTestResult(null);
+                  }}
+                />
+              }
+              label={smtpMode === 'dsn' ? t('account.smtp.mode.dsn') : t('account.smtp.mode.fields')}
             />
-          </SkeletonWrapper>
-        </Grid>
+          </Grid>
+        )}
 
-        <Grid size={{xs: 12, md: 6}}>
-          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="smtp_port"
-              fullWidth
-              type="number"
-              label={t('account.field.smtp_port')}
-              value={values.smtp_port ?? ''}
-              onChange={(e) => setValues(v => ({
-                ...v,
-                smtp_port: e.target.value ? parseInt(e.target.value, 10) : null,
-              }))}
-              error={!!errors.smtp_port}
-              helperText={errors.smtp_port as string}
-              slotProps={{inputLabel: {shrink: true}}}
-            />
-          </SkeletonWrapper>
-        </Grid>
+        {smtpMode === 'dsn' && (
+          <Grid size={12}>
+            <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+              <TextField
+                name="mailer_dsn"
+                fullWidth
+                label={t('account.field.mailer_dsn')}
+                value={values.mailer_dsn ?? ''}
+                onChange={(e) => {
+                  setValues(v => ({...v, mailer_dsn: e.target.value || null}));
+                  setSmtpTestResult(null);
+                }}
+                slotProps={{inputLabel: {shrink: true}}}
+              />
+            </SkeletonWrapper>
+          </Grid>
+        )}
 
-        <Grid size={{xs: 12, md: 6}}>
-          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="smtp_user"
-              fullWidth
-              label={t('account.field.smtp_user')}
-              value={values.smtp_user ?? ''}
-              onChange={(e) => setValues(v => ({...v, smtp_user: e.target.value || null}))}
-              error={!!errors.smtp_user}
-              helperText={errors.smtp_user as string}
-              slotProps={{inputLabel: {shrink: true}}}
-            />
-          </SkeletonWrapper>
-        </Grid>
+        {smtpMode === 'fields' && (
+          <>
+            <Grid size={{xs: 12, md: 6}}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <TextField
+                  name="smtp_host"
+                  fullWidth
+                  label={t('account.field.smtp_host')}
+                  value={values.smtp_host ?? ''}
+                  onChange={(e) => {
+                    setValues(v => ({...v, smtp_host: e.target.value || null}));
+                    setSmtpTestResult(null);
+                  }}
+                  error={!!errors.smtp_host}
+                  helperText={errors.smtp_host as string}
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </SkeletonWrapper>
+            </Grid>
 
-        <Grid size={{xs: 12, md: 6}}>
-          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="smtp_password"
-              fullWidth
-              type="password"
-              label={t('account.field.smtp_password')}
-              value={values.smtp_password ?? ''}
-              onChange={(e) => setValues(v => ({...v, smtp_password: e.target.value || null}))}
-              error={!!errors.smtp_password}
-              helperText={errors.smtp_password as string}
-              slotProps={{inputLabel: {shrink: true}}}
-            />
-          </SkeletonWrapper>
-        </Grid>
+            <Grid size={{xs: 12, md: 6}}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <TextField
+                  name="smtp_port"
+                  fullWidth
+                  type="number"
+                  label={t('account.field.smtp_port')}
+                  value={values.smtp_port ?? ''}
+                  onChange={(e) => {
+                    setValues(v => ({
+                      ...v,
+                      smtp_port: e.target.value ? parseInt(e.target.value, 10) : null,
+                    }));
+                    setSmtpTestResult(null);
+                  }}
+                  error={!!errors.smtp_port}
+                  helperText={errors.smtp_port as string}
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </SkeletonWrapper>
+            </Grid>
 
-        <Grid size={{xs: 12, md: 6}}>
-          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="smtp_encryption"
-              fullWidth
-              select
-              label={t('account.field.smtp_encryption')}
-              value={values.smtp_encryption ?? ''}
-              onChange={(e) => setValues(v => ({
-                ...v,
-                smtp_encryption: (e.target.value as Account['smtp_encryption']) || null,
-              }))}
-              error={!!errors.smtp_encryption}
-              helperText={errors.smtp_encryption as string}
-              slotProps={{inputLabel: {shrink: true}}}
-            >
-              <MenuItem value="">{t('messages.common.placeholders.select')}</MenuItem>
-              {SMTP_ENCRYPTION_OPTIONS.map(opt => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {t(opt.labelKey)}
-                </MenuItem>
-              ))}
-            </TextField>
-          </SkeletonWrapper>
-        </Grid>
+            <Grid size={{xs: 12, md: 6}}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <TextField
+                  name="smtp_user"
+                  fullWidth
+                  label={t('account.field.smtp_user')}
+                  value={values.smtp_user ?? ''}
+                  onChange={(e) => setValues(v => ({...v, smtp_user: e.target.value || null}))}
+                  error={!!errors.smtp_user}
+                  helperText={errors.smtp_user as string}
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </SkeletonWrapper>
+            </Grid>
+
+            <Grid size={{xs: 12, md: 6}}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <TextField
+                  name="smtp_password"
+                  fullWidth
+                  type="password"
+                  label={t('account.field.smtp_password')}
+                  value={values.smtp_password ?? ''}
+                  onChange={(e) => setValues(v => ({...v, smtp_password: e.target.value || null}))}
+                  error={!!errors.smtp_password}
+                  helperText={errors.smtp_password as string}
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </SkeletonWrapper>
+            </Grid>
+
+            <Grid size={{xs: 12, md: 6}}>
+              <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                <TextField
+                  name="smtp_encryption"
+                  fullWidth
+                  select
+                  label={t('account.field.smtp_encryption')}
+                  value={values.smtp_encryption ?? ''}
+                  onChange={(e) => setValues(v => ({
+                    ...v,
+                    smtp_encryption: (e.target.value as Account['smtp_encryption']) || null,
+                  }))}
+                  error={!!errors.smtp_encryption}
+                  helperText={errors.smtp_encryption as string}
+                  slotProps={{inputLabel: {shrink: true}}}
+                >
+                  <MenuItem value="">{t('messages.common.placeholders.select')}</MenuItem>
+                  {SMTP_ENCRYPTION_OPTIONS.map(opt => (
+                    <MenuItem key={opt.value} value={opt.value}>
+                      {t(opt.labelKey)}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </SkeletonWrapper>
+            </Grid>
+          </>
+        )}
+
+        {forMyAccount && editing && (
+          <>
+            <Grid size={12}>
+              <Alert
+                severity={
+                  smtpTestResult === null ? 'warning' :
+                  smtpTestResult.success ? 'success' : 'error'
+                }
+                icon={
+                  smtpTestResult === null ? undefined :
+                  smtpTestResult.success ? <CheckCircleIcon /> : <CancelIcon />
+                }
+              >
+                {smtpTestResult === null
+                  ? t('account.smtp.status.not_tested')
+                  : smtpTestResult.success
+                    ? t('account.smtp.status.ok')
+                    : t('account.smtp.status.error', {error: smtpTestResult.error ?? ''})
+                }
+              </Alert>
+            </Grid>
+
+            <Grid size={12}>
+              <Box sx={{display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center'}}>
+                <Button
+                  variant="outlined"
+                  onClick={handleTestSmtp}
+                  disabled={smtpTesting || account === null}
+                  startIcon={smtpTesting ? <CircularProgress size={16} /> : undefined}
+                >
+                  {t('account.btn.test_smtp')}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowTestEmailInput(v => !v)}
+                  startIcon={<EmailIcon />}
+                  disabled={account === null}
+                >
+                  {t('account.btn.send_test_email')}
+                </Button>
+              </Box>
+            </Grid>
+
+            {showTestEmailInput && (
+              <Grid size={12}>
+                <Box sx={{display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap'}}>
+                  <TextField
+                    type="email"
+                    label={t('account.field.test_email_to')}
+                    value={testEmailTo}
+                    onChange={(e) => setTestEmailTo(e.target.value)}
+                    size="small"
+                    sx={{flexGrow: 1, maxWidth: 400}}
+                    slotProps={{inputLabel: {shrink: true}}}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleSendTestEmail}
+                    disabled={sendingTestEmail || !testEmailTo}
+                    startIcon={sendingTestEmail ? <CircularProgress size={16} /> : <SendIcon />}
+                  >
+                    {t('account.btn.send')}
+                  </Button>
+                </Box>
+              </Grid>
+            )}
+          </>
+        )}
 
         {editing && (
           <>

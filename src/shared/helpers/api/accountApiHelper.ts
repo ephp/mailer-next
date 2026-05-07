@@ -4,7 +4,56 @@ import {
   PaginatedQuery,
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
-import {Account, AccountUpdateInput, SmtpDiagnosticResult, SmtpTestInput, SmtpTestResult} from '@/types/models/Account';
+import {Account, AccountLogo, AccountUpdateInput, SmtpDiagnosticResult, SmtpEncryption, SmtpTestInput, SmtpTestResult} from '@/types/models/Account';
+
+type AccountApiPayload = {
+  id: number;
+  ragioneSociale: string;
+  emailContatto: string;
+  mailFrom: string;
+  mailFromName: string;
+  partitaIva: string | null;
+  indirizzo: string | null;
+  mailerDsn: string | null;
+  smtpHost: string | null;
+  smtpPort: number | null;
+  smtpUser: string | null;
+  smtpEncryption: SmtpEncryption | null;
+  logo: AccountLogo | null;
+  batchSize: number;
+  sendInterval: number;
+  apiKey: string;
+  enabled: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
+
+const mapAccountFromApi = (raw: AccountApiPayload): Account => ({
+  id: raw.id,
+  ragione_sociale: raw.ragioneSociale,
+  email_contatto: raw.emailContatto,
+  mail_from: raw.mailFrom,
+  mail_from_name: raw.mailFromName,
+  partita_iva: raw.partitaIva,
+  indirizzo: raw.indirizzo,
+  mailer_dsn: raw.mailerDsn,
+  smtp_host: raw.smtpHost,
+  smtp_port: raw.smtpPort,
+  smtp_user: raw.smtpUser,
+  smtp_encryption: raw.smtpEncryption,
+  logo: raw.logo,
+  batch_size: raw.batchSize,
+  send_interval: raw.sendInterval,
+  api_key: raw.apiKey,
+  enabled: raw.enabled,
+  created_at: raw.createdAt,
+  updated_at: raw.updatedAt,
+});
+
+const mapDetailFromApi = (raw: DetailResult<AccountApiPayload>): DetailResult<Account> => ({
+  ...raw,
+  item: raw.item ? mapAccountFromApi(raw.item) : undefined,
+});
 
 export const getMyAccount = async (): Promise<DetailResult<Account>> => {
   const {data} = await oiFetch.get<DetailResult<Account>>('/account/my-account');
@@ -12,8 +61,8 @@ export const getMyAccount = async (): Promise<DetailResult<Account>> => {
 };
 
 export const getAccount = async (): Promise<DetailResult<Account>> => {
-  const {data} = await oiFetch.get<DetailResult<Account>>('/api/v1/account');
-  return data;
+  const {data} = await oiFetch.get<DetailResult<AccountApiPayload>>('/account');
+  return mapDetailFromApi(data);
 };
 
 export const updateMyAccount = async (
@@ -34,10 +83,12 @@ export const updateMyAccount = async (
 };
 
 export const updateAccount = async (data: AccountUpdateInput): Promise<DetailResult<Account>> => {
-  const {data: response} = await oiFetch.patch<DetailResult<Account>>('/api/v1/account', {
+  const {data: response} = await oiFetch.patch<DetailResult<AccountApiPayload>>('/account', {
     account: {
       ragioneSociale: data.ragione_sociale,
       emailContatto: data.email_contatto,
+      mailFrom: data.mail_from,
+      mailFromName: data.mail_from_name,
       partitaIva: data.partita_iva,
       indirizzo: data.indirizzo,
       mailerDsn: data.mailer_dsn,
@@ -50,23 +101,23 @@ export const updateAccount = async (data: AccountUpdateInput): Promise<DetailRes
       sendInterval: data.send_interval,
     },
   });
-  return response;
+  return mapDetailFromApi(response);
 };
 
 export const uploadAccountLogo = async (file: File): Promise<DetailResult<Account>> => {
   const formData = new FormData();
   formData.append('logo', file);
-  const {data} = await oiFetch.post<DetailResult<Account>>('/api/v1/account/logo', formData);
-  return data;
+  const {data} = await oiFetch.post<DetailResult<AccountApiPayload>>('/account/logo', formData);
+  return mapDetailFromApi(data);
 };
 
 export const testSmtp = async (input: SmtpTestInput): Promise<SmtpTestResult> => {
-  const {data} = await oiFetch.post<SmtpTestResult>('/api/v1/account/test-smtp', input);
+  const {data} = await oiFetch.post<SmtpTestResult>('/account/test-smtp', input);
   return data;
 };
 
 export const sendTestEmail = async (to: string): Promise<DetailResult<null>> => {
-  const {data} = await oiFetch.post<DetailResult<null>>('/api/v1/account/send-test-email', {to});
+  const {data} = await oiFetch.post<DetailResult<null>>('/account/send-test-email', {to});
   return data;
 };
 

@@ -139,7 +139,9 @@ export const getRecipientsCount = async (
 ): Promise<number> => {
   const {data} = await oiFetch.post<DetailResult<RecipientsCountPayload>>('/campaigns/recipients-count', {
     mailListIds,
-    filter: filter ?? {},
+    filter: {
+      taxonomyTermIds: filter?.taxonomy_term_ids ?? [],
+    },
   });
   return data.item?.count ?? 0;
 };

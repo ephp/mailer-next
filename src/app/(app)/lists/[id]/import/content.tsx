@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement, useRef, useState} from "react";
+import React, {ReactElement, useEffect, useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -13,8 +13,11 @@ import {generatePathStorage} from "@Oimmei-Digital-Boutique/crema-components";
 import {useParams, useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {MAIL_LIST_CONTACTS} from '@/shared/constants/AppRoutes';
+import DownloadIcon from "@mui/icons-material/Download";
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
-import {importContacts, ImportResult} from '@/shared/helpers/api/contactApiHelper';
+import {downloadImportTemplate, importContacts, ImportResult} from '@/shared/helpers/api/contactApiHelper';
+import {getTaxonomyCategoryList} from '@/shared/helpers/api/taxonomyApiHelper';
+import {TaxonomyCategory} from '@/types/models/TaxonomyCategory';
 
 const MAX_ERRORS_SHOWN = 20;
 
@@ -29,6 +32,26 @@ const ImportContent = (): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<TaxonomyCategory[]>([]);
+
+  useEffect(() => {
+    getTaxonomyCategoryList({listId})
+      .then((res) => setCategories(res.item ?? []))
+      .catch(console.error);
+  }, [listId]);
+
+  const baseHeaders = ['email', 'nome', 'cognome', 'telefono'];
+  const taxonomyHeaders = categories.map(c => c.name);
+  const formatExample = [
+    [...baseHeaders, ...taxonomyHeaders].join(';'),
+    [
+      'rossi@example.com',
+      'Mario',
+      'Rossi',
+      '3331234567',
+      ...categories.map(() => 'Termine|Altro Termine'),
+    ].join(';'),
+  ].join('\n');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSelectedFile(e.target.files?.[0] ?? null);
@@ -52,6 +75,10 @@ const ImportContent = (): ReactElement => {
     router.push(generatePathStorage(MAIL_LIST_CONTACTS, {id: idParam}));
   };
 
+  const handleDownloadTemplate = (): void => {
+    downloadImportTemplate({listId}).catch(console.error);
+  };
+
   return (
     <Stack spacing={3}>
       <Box>
@@ -69,8 +96,18 @@ const ImportContent = (): ReactElement => {
           borderRadius: 1,
           fontFamily: 'monospace',
         }}>
-          {t('contact.import.format_example')}
+          {formatExample}
         </Typography>
+        <Box sx={{mt: 2}}>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<DownloadIcon/>}
+            onClick={handleDownloadTemplate}
+          >
+            {t('contact.import.btn.download_template')}
+          </Button>
+        </Box>
       </Box>
 
       <Divider/>
@@ -78,14 +115,14 @@ const ImportContent = (): ReactElement => {
       <Box>
         <input
           type="file"
-          accept=".csv,text/csv"
+          accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           ref={fileInputRef}
           style={{display: 'none'}}
           onChange={handleFileChange}
         />
         <Stack direction="row" spacing={2} alignItems="center">
           <Button variant="outlined" onClick={() => fileInputRef.current?.click()}>
-            {t('contact.import.btn.select_file')}
+            {t('contact.import.btn.select_file_csv_xlsx')}
           </Button>
           {selectedFile && (
             <Typography variant="body2">

@@ -3,9 +3,8 @@ import {getTranslations} from 'next-intl/server';
 import {Metadata} from 'next';
 import AppsSimpleContainer from '@/@oimmei/core/AppsSimpleContainer';
 import {useTranslations} from 'next-intl';
-import Link from 'next/link';
 import {USER_CRUD_NEW} from '@/shared/constants/AppRoutes';
-import Button from '@mui/material/Button';
+import LinkButton from '@/components/common/LinkButton';
 import Content from './content';
 
 /**
@@ -31,9 +30,9 @@ export default function UserCrudList(): ReactElement {
     <AppsSimpleContainer
       title={t("user_crud.page.index.title")}
       actionWrapper={
-        <Button component={Link} variant={"contained"} href={USER_CRUD_NEW}>
+        <LinkButton variant={"contained"} href={USER_CRUD_NEW}>
           {t("btn.create_user")}
-        </Button>
+        </LinkButton>
       }
     >
       <Content/>

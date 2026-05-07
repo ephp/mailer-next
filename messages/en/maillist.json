@@ -14,10 +14,27 @@
     "name": "List name",
     "description": "Description",
     "firma_html": "HTML signature",
+    "use_custom_dsn": "Enable custom DSN for this list",
     "mailer_dsn_override": "Custom mailer DSN",
+    "mail_from": "Sender email",
+    "mail_from_name": "Sender name",
+    "mail_from_default": "Sender email (account default)",
+    "mail_from_name_default": "Sender name (account default)",
+    "dsn_default": "SMTP configuration (account default)",
     "permetti_disiscrizione": "Allow unsubscription",
     "unsubscribe_text": "Unsubscribe text",
     "contact_count": "Contacts"
+  },
+  "section": {
+    "smtp": "Sending configuration",
+    "unsubscribe": "Unsubscribe"
+  },
+  "smtp": {
+    "using_account_default": "The SMTP and sender configured in the account will be used."
+  },
+  "help": {
+    "mail_from": "Leave empty to use the account default ({default})",
+    "mail_from_name": "Leave empty to use the account default ({default})"
   },
   "btn": {
     "create": "New list",

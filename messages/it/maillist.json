@@ -14,10 +14,27 @@
     "name": "Nome lista",
     "description": "Descrizione",
     "firma_html": "Firma HTML",
+    "use_custom_dsn": "Abilita DSN personalizzato per questa lista",
     "mailer_dsn_override": "DSN Mailer personalizzato",
+    "mail_from": "Email mittente",
+    "mail_from_name": "Nome mittente",
+    "mail_from_default": "Email mittente (default account)",
+    "mail_from_name_default": "Nome mittente (default account)",
+    "dsn_default": "Configurazione SMTP (default account)",
     "permetti_disiscrizione": "Permetti disiscrizione",
     "unsubscribe_text": "Testo disiscrizione",
     "contact_count": "Contatti"
+  },
+  "section": {
+    "smtp": "Configurazione invio",
+    "unsubscribe": "Disiscrizione"
+  },
+  "smtp": {
+    "using_account_default": "Verranno utilizzati l'SMTP e i dati mittente configurati nell'account."
+  },
+  "help": {
+    "mail_from": "Lascia vuoto per usare quello dell'account ({default})",
+    "mail_from_name": "Lascia vuoto per usare quello dell'account ({default})"
   },
   "btn": {
     "create": "Nuova lista",

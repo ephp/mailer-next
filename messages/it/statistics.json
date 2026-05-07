@@ -1,0 +1,36 @@
+{
+  "page": {
+    "index": {
+      "title": "Statistiche account"
+    },
+    "list": {
+      "title": "Statistiche lista"
+    }
+  },
+  "section": {
+    "overview": "Panoramica",
+    "contacts": "Contatti",
+    "delivery": "Consegna",
+    "engagement": "Engagement"
+  },
+  "field": {
+    "total_campaigns": "Campagne",
+    "total_lists": "Liste",
+    "total_contacts": "Contatti totali",
+    "total_subscribed": "Iscritti attivi",
+    "total_sent": "Email inviate",
+    "total_pending": "In coda",
+    "total_failed": "Fallite",
+    "total_bounced": "Respinte",
+    "total_opens": "Aperture uniche",
+    "total_clicks": "Click unici",
+    "total_unsubscribes": "Disiscrizioni",
+    "open_rate": "Tasso di apertura",
+    "click_rate": "Tasso di click",
+    "unsubscribe_rate": "Tasso di disiscrizione"
+  },
+  "btn": {
+    "back_to_stats": "Torna alle statistiche",
+    "view_list_stats": "Statistiche lista"
+  }
+}

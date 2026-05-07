@@ -7,14 +7,18 @@
   "field": {
     "ragione_sociale": "Company Name",
     "email_contatto": "Contact Email",
+    "mail_from": "Sender Email",
+    "mail_from_name": "Sender Name",
     "partita_iva": "VAT Number",
     "indirizzo": "Address",
     "logo": "Company Logo",
+    "mailer_dsn": "Mailer DSN",
     "smtp_host": "SMTP Server (Host)",
     "smtp_port": "SMTP Port",
     "smtp_user": "SMTP User",
     "smtp_password": "SMTP Password",
     "smtp_encryption": "SMTP Encryption",
+    "test_email_to": "Test recipient email",
     "api_key": "API Key",
     "enabled": "Enabled"
   },
@@ -24,12 +28,19 @@
     "api": "API Integration",
     "diagnostic": "SMTP & DNS Diagnostics"
   },
+  "help": {
+    "mail_from": "Address that will appear as the sender of outgoing emails",
+    "mail_from_name": "Display name shown next to the sender email"
+  },
   "btn": {
     "upload_logo": "Upload logo",
     "change_logo": "Change logo",
     "copy_api_key": "Copy API key",
     "regenerate_api_key": "Regenerate API key",
-    "diagnose": "Run diagnostics"
+    "diagnose": "Run diagnostics",
+    "test_smtp": "Test SMTP Connection",
+    "send_test_email": "Send Test Email",
+    "send": "Send"
   },
   "diagnostic": {
     "smtp": {
@@ -55,6 +66,15 @@
       "tls": "TLS",
       "ssl": "SSL",
       "none": "None"
+    },
+    "mode": {
+      "dsn": "Direct DSN mode",
+      "fields": "Separate fields mode"
+    },
+    "status": {
+      "not_tested": "SMTP connection not tested",
+      "ok": "SMTP connection verified successfully",
+      "error": "SMTP connection failed: {error}"
     }
   },
   "error": {
@@ -66,6 +86,13 @@
       "required": "Contact email is required",
       "invalid": "Invalid email format"
     },
+    "mail_from": {
+      "required": "Sender email is required",
+      "invalid": "Invalid sender email format"
+    },
+    "mail_from_name": {
+      "required": "Sender name is required"
+    },
     "not_found": "Account not found"
   },
   "success": {
@@ -75,6 +102,7 @@
     "enabled": "Account enabled",
     "disabled": "Account disabled",
     "api_key_copied": "API key copied to clipboard",
-    "api_key_regenerated": "API key regenerated successfully"
+    "api_key_regenerated": "API key regenerated successfully",
+    "test_email_sent": "Test email sent successfully"
   }
 }

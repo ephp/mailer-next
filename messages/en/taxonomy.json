@@ -1,0 +1,58 @@
+{
+  "page": {
+    "categories": {
+      "title": "Taxonomies"
+    },
+    "new_category": {
+      "title": "New category"
+    },
+    "edit_category": {
+      "title": "Edit category"
+    },
+    "terms": {
+      "title": "Terms"
+    },
+    "new_term": {
+      "title": "New term"
+    },
+    "edit_term": {
+      "title": "Edit term"
+    }
+  },
+  "field": {
+    "name": "Name"
+  },
+  "btn": {
+    "new_category": "New category",
+    "new_term": "New term",
+    "manage_terms": "Terms"
+  },
+  "label": {
+    "term_count": "{count, plural, =0 {No terms} one {# term} other {# terms}}"
+  },
+  "message": {
+    "no_categories": "No taxonomy categories. Create one to start segmenting contacts.",
+    "no_terms": "No terms in this category.",
+    "delete_category": {
+      "title": "Delete category \"{name}\"?",
+      "description": "All associated terms and contact assignments will be deleted."
+    },
+    "delete_term": {
+      "title": "Delete term \"{name}\"?",
+      "description": "Contact assignments for this term will be deleted."
+    }
+  },
+  "success": {
+    "category_created": "Category created",
+    "category_updated": "Category updated",
+    "category_deleted": "Category deleted",
+    "term_created": "Term created",
+    "term_updated": "Term updated",
+    "term_deleted": "Term deleted",
+    "contact_synced": "Contact taxonomy updated"
+  },
+  "error": {
+    "category_not_found": "Category not found",
+    "term_not_found": "Term not found"
+  }
+}

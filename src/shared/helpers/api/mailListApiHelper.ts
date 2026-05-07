@@ -4,14 +4,21 @@ import {
   PaginatedQuery,
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
-import {MailList, MailListListFilter, MailListUpdateInput} from '@/types/models/MailList';
+import {MailList, MailListListFilter, MailListUpdateInput, SmtpEncryption} from '@/types/models/MailList';
 
 type MailListApiPayload = {
   id: number;
   name: string;
   description: string | null;
   firmaHtml: string | null;
+  useCustomDsn: boolean;
   mailerDsnOverride: string | null;
+  smtpHost: string | null;
+  smtpPort: number | null;
+  smtpUser: string | null;
+  smtpEncryption: SmtpEncryption | null;
+  mailFrom: string | null;
+  mailFromName: string | null;
   permettiDisiscrizione: boolean;
   unsubscribeText: string | null;
   contactCount: number;
@@ -26,7 +33,15 @@ const mapMailListFromApi = (raw: MailListApiPayload): MailList => ({
   name: raw.name,
   description: raw.description,
   firma_html: raw.firmaHtml,
+  use_custom_dsn: raw.useCustomDsn,
   mailer_dsn_override: raw.mailerDsnOverride,
+  smtp_host: raw.smtpHost,
+  smtp_port: raw.smtpPort,
+  smtp_user: raw.smtpUser,
+  smtp_password: null,
+  smtp_encryption: raw.smtpEncryption,
+  mail_from: raw.mailFrom,
+  mail_from_name: raw.mailFromName,
   permetti_disiscrizione: raw.permettiDisiscrizione,
   unsubscribe_text: raw.unsubscribeText,
   contact_count: raw.contactCount,
@@ -82,7 +97,15 @@ export const createMailList = async (
       name: entity.name,
       description: entity.description,
       firmaHtml: entity.firma_html,
+      useCustomDsn: entity.use_custom_dsn,
       mailerDsnOverride: entity.mailer_dsn_override,
+      smtpHost: entity.smtp_host,
+      smtpPort: entity.smtp_port,
+      smtpUser: entity.smtp_user,
+      smtpPassword: entity.smtp_password,
+      smtpEncryption: entity.smtp_encryption,
+      mailFrom: entity.mail_from,
+      mailFromName: entity.mail_from_name,
       permettiDisiscrizione: entity.permetti_disiscrizione,
       unsubscribeText: entity.unsubscribe_text,
     },
@@ -98,7 +121,15 @@ export const updateMailList = async (
       name: entity.name,
       description: entity.description,
       firmaHtml: entity.firma_html,
+      useCustomDsn: entity.use_custom_dsn,
       mailerDsnOverride: entity.mailer_dsn_override,
+      smtpHost: entity.smtp_host,
+      smtpPort: entity.smtp_port,
+      smtpUser: entity.smtp_user,
+      smtpPassword: entity.smtp_password,
+      smtpEncryption: entity.smtp_encryption,
+      mailFrom: entity.mail_from,
+      mailFromName: entity.mail_from_name,
       permettiDisiscrizione: entity.permetti_disiscrizione,
       unsubscribeText: entity.unsubscribe_text,
     },
