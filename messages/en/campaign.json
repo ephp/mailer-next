@@ -25,11 +25,18 @@
     "created_at": "Created at"
   },
   "wizard": {
+    "btn": {
+      "save_and_continue": "Save and Continue"
+    },
     "step1": {
       "title": "Recipient lists",
       "description": "Select the contact lists you want to send this campaign to.",
       "recipient_count": "Total recipients: {count}",
-      "no_lists": "No lists available. Create a contact list first."
+      "no_lists": "No lists available. Create a contact list first.",
+      "contacts": "{count} contacts",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "save_error": "Error while saving"
     },
     "step2": {
       "title": "Email content",

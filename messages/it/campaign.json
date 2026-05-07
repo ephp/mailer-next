@@ -25,11 +25,18 @@
     "created_at": "Creata il"
   },
   "wizard": {
+    "btn": {
+      "save_and_continue": "Salva e Continua"
+    },
     "step1": {
       "title": "Liste destinatari",
       "description": "Seleziona le liste di contatti a cui vuoi inviare la campagna.",
       "recipient_count": "Destinatari totali: {count}",
-      "no_lists": "Nessuna lista disponibile. Crea prima una lista di contatti."
+      "no_lists": "Nessuna lista disponibile. Crea prima una lista di contatti.",
+      "contacts": "{count} contatti",
+      "saving": "Salvataggio in corso...",
+      "saved": "Salvato",
+      "save_error": "Errore durante il salvataggio"
     },
     "step2": {
       "title": "Contenuto email",
