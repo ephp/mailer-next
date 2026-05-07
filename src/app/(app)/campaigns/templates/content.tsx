@@ -23,7 +23,7 @@ import {useTranslations} from 'next-intl';
 import {useRouter} from 'next/navigation';
 import {useSnackbar} from 'notistack';
 import {Campaign} from '@/types/models/Campaign';
-import {deleteCampaign, duplicateCampaign, getTemplateList} from '@/shared/helpers/api/campaignApiHelper';
+import {deleteCampaignLegacy, duplicateCampaign, getTemplateList} from '@/shared/helpers/api/campaignApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
@@ -154,7 +154,7 @@ const CampaignTemplatesContent = (): ReactElement => {
   }, [performAsyncCall, router, enqueueSnackbar, t]);
 
   const confirmDeleteTemplate = (template: Campaign) => {
-    performAsyncCall(deleteCampaign({id: template.id}))
+    performAsyncCall(deleteCampaignLegacy({id: template.id}))
       .then(() => {
         setResult(prev => prev !== null ? {
           ...prev,

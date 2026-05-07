@@ -32,3 +32,15 @@ export const CAMPAIGN_CRUD_NEW = "/campaigns/new";
 export const CAMPAIGN_CRUD_EDIT = "/campaigns/:id/edit";
 export const CAMPAIGN_STATS = "/campaigns/:id/stats";
 export const CAMPAIGN_TEMPLATES = "/campaigns/templates";
+export const WIZARD_STEP_1 = "/campaigns/wizard/:id/step1";
+export const WIZARD_STEP_2 = "/campaigns/wizard/:id/step2";
+export const WIZARD_STEP_3 = "/campaigns/wizard/:id/step3";
+export const WIZARD_STEP_4 = "/campaigns/wizard/:id/step4";
+
+export const STATISTICS = "/statistics";
+export const STATISTICS_LIST = "/statistics/lists/:id";
+
+export const TAXONOMY_CATEGORIES = "/lists/:id/taxonomies";
+export const TAXONOMY_TERMS = "/lists/:id/taxonomies/:categoryId";
+export const TAXONOMY_TERM_NEW = "/lists/:id/taxonomies/:categoryId/new";
+export const TAXONOMY_TERM_EDIT = "/lists/:id/taxonomies/:categoryId/:termId/edit";

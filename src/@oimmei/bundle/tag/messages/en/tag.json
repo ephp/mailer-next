@@ -1,0 +1,34 @@
+{
+  "page": {
+    "index": {
+      "title": "Tag"
+    },
+    "new": {
+      "title": "Add Tag"
+    },
+    "edit": {
+      "title": "Edit Tag"
+    }
+  },
+  "btn": {
+    "edit": "Edit Tag",
+    "create": "Add Tag",
+    "delete": "Delete Tag"
+  },
+  "field": {
+    "label": "Tag",
+    "color": "Color"
+  },
+  "placeholder": {
+    "search": "Search Tag"
+  },
+  "message": {
+    "alert": {
+      "no_results": "No Tags found"
+    },
+    "error": {
+      "fetching_tags": "Error loading Tags:",
+      "delete_tag": "Error deleting Tag:"
+    }
+  }
+}

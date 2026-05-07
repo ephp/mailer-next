@@ -10,7 +10,7 @@ import {useTranslations} from 'next-intl';
 import {Campaign, newCampaign} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
 import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
-import {createCampaign, updateCampaign, sendTestEmail, sendCampaign, saveAsTemplate} from '@/shared/helpers/api/campaignApiHelper';
+import {createCampaignLegacy, updateCampaignLegacy, sendTestEmail, sendCampaign, saveAsTemplate} from '@/shared/helpers/api/campaignApiHelper';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import CampaignWizardStep1 from './CampaignWizardStep1';
@@ -78,7 +78,7 @@ const CampaignWizard = ({
     const isNew = !editing && savedId === null;
     try {
       if (isNew) {
-        const result = await performAsyncCall(createCampaign({entity: data}));
+        const result = await performAsyncCall(createCampaignLegacy({entity: data}));
         if (result?.item) {
           setSavedId(result.item.id);
           setFormData(result.item);
@@ -86,7 +86,7 @@ const CampaignWizard = ({
         }
       } else {
         const entityToSave = savedId ? {...data, id: savedId} : data;
-        await performAsyncCall(updateCampaign({entity: entityToSave}));
+        await performAsyncCall(updateCampaignLegacy({entity: entityToSave}));
         return entityToSave;
       }
     } catch (error) {

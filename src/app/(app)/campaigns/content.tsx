@@ -22,7 +22,7 @@ import {Campaign, CampaignListFilter} from '@/types/models/Campaign';
 import {CAMPAIGN_CRUD_EDIT, CAMPAIGN_STATS, CAMPAIGN_TEMPLATES} from '@/shared/constants/AppRoutes';
 import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
 import {useSnackbar} from 'notistack';
-import {deleteCampaign, duplicateCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
+import {deleteCampaignLegacy, duplicateCampaign, getCampaignList} from '@/shared/helpers/api/campaignApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
@@ -167,7 +167,7 @@ const CampaignContent = (): ReactElement => {
   const closeDeleteModal = () => setDeletingCampaign(null);
 
   const confirmDelete = (campaign: Campaign) => {
-    performAsyncCall(deleteCampaign({id: campaign.id}))
+    performAsyncCall(deleteCampaignLegacy({id: campaign.id}))
       .then(() => {
         setCampaigns(prev => prev !== null ? {
           ...prev,

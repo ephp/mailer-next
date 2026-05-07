@@ -1,0 +1,36 @@
+{
+  "page": {
+    "index": {
+      "title": "Tag"
+    },
+    "new": {
+      "title": "Aggiungi Tag"
+    },
+    "edit": {
+      "title": "Modifica Tag"
+    }
+  },
+  "btn": {
+    "edit": "Modifica Tag",
+    "create": "Aggiungi Tag",
+    "delete": "Elimina Tag"
+  },
+  "field": {
+    "label": "Tag",
+    "color": "Colore"
+  },
+  "placeholder": {
+    "search": "Cerca Tag"
+  },
+  "message": {
+    "create_option": "Clicca qui per creare {value}",
+    "no_options": "Nessun termine trovato",
+    "alert": {
+      "no_results": "Nessun Tag trovato"
+    },
+    "error": {
+      "fetching_tags": "Errore nel caricamento dei Tags:",
+      "delete_tag": "Errore durante la cancellazione del Tag:"
+    }
+  }
+}
