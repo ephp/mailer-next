@@ -36,7 +36,9 @@
       "contacts": "{count} contacts",
       "saving": "Saving...",
       "saved": "Saved",
-      "save_error": "Error while saving"
+      "save_error": "Error while saving",
+      "taxonomy_filter_label": "Taxonomy filters",
+      "no_taxonomy_filters": "No filters available for this list"
     },
     "step2": {
       "title": "Email content",

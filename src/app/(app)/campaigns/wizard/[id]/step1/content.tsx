@@ -1,30 +1,139 @@
 'use client';
 
 import React, {ReactElement, useCallback, useEffect, useRef, useState} from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useParams, useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {useSnackbar} from 'notistack';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
 import {getCampaign, updateCampaign} from '@/shared/helpers/api/campaignApiHelper';
 import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
+import {getTaxonomyCategoryList} from '@/shared/helpers/api/taxonomyApiHelper';
+import {taxonomyTermsHelper} from '@/shared/helpers/api/taxonomyTermApiHelper';
 import {CAMPAIGN_CRUD_LIST, WIZARD_STEP_2} from '@/shared/constants/AppRoutes';
 import {CampaignFilter} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
+import {TaxonomyCategory} from '@/types/models/TaxonomyCategory';
+import {TaxonomyTerm} from '@/types/models/TaxonomyTerm';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 
 const AUTOSAVE_DELAY_MS = 800;
+
+type TaxonomyAccordionProps = {
+  listId: number;
+  selectedTermIds: number[];
+  onTermToggle: (termId: number) => void;
+};
+
+const TaxonomyAccordion = ({listId, selectedTermIds, onTermToggle}: TaxonomyAccordionProps): ReactElement => {
+  const t = useTranslations();
+  const [expanded, setExpanded] = useState(false);
+  const [categories, setCategories] = useState<TaxonomyCategory[] | null>(null);
+  const [terms, setTerms] = useState<Record<number, TaxonomyTerm[]>>({});
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const loadedRef = useRef(false);
+
+  const handleChange = (_: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded);
+    if (!isExpanded || loadedRef.current) return;
+    loadedRef.current = true;
+    setLoadingCategories(true);
+    getTaxonomyCategoryList({listId})
+      .then(async result => {
+        const cats = result.item ?? [];
+        setCategories(cats);
+        const termEntries = await Promise.all(
+          cats.map(async cat => {
+            const termResult = await taxonomyTermsHelper(cat.id).allTag();
+            return [cat.id, termResult.item ?? []] as [number, TaxonomyTerm[]];
+          }),
+        );
+        setTerms(Object.fromEntries(termEntries));
+      })
+      .catch(() => setCategories([]))
+      .finally(() => setLoadingCategories(false));
+  };
+
+  return (
+    <Accordion
+      expanded={expanded}
+      onChange={handleChange}
+      disableGutters
+      elevation={0}
+      sx={{
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        backgroundColor: 'action.hover',
+        '&:before': {display: 'none'},
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon fontSize="small" />}
+        sx={{minHeight: 32, pl: 4, '& .MuiAccordionSummary-content': {my: 0.5}}}
+      >
+        <Typography variant="caption" color="text.secondary">
+          {t('campaign.wizard.step1.taxonomy_filter_label')}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails sx={{pt: 0, pb: 1.5, px: 4}}>
+        {loadingCategories ? (
+          <Box>
+            <Skeleton height={20} width="55%" />
+            <Skeleton height={20} width="38%" />
+            <Skeleton height={20} width="45%" />
+          </Box>
+        ) : categories !== null && categories.length === 0 ? (
+          <Typography variant="caption" color="text.secondary">
+            {t('campaign.wizard.step1.no_taxonomy_filters')}
+          </Typography>
+        ) : (
+          categories?.map(cat => (
+            <Box key={cat.id} sx={{mb: 1.5}}>
+              <Typography
+                variant="caption"
+                fontWeight={600}
+                color="text.secondary"
+                sx={{display: 'block', mb: 0.5, textTransform: 'uppercase', letterSpacing: 0.5}}
+              >
+                {cat.name}
+              </Typography>
+              <Box sx={{display: 'flex', flexWrap: 'wrap', ml: -0.5}}>
+                {(terms[cat.id] ?? []).map(term => (
+                  <FormControlLabel
+                    key={term.id}
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={selectedTermIds.includes(term.id)}
+                        onChange={() => onTermToggle(term.id)}
+                      />
+                    }
+                    label={<Typography variant="caption">{term.label}</Typography>}
+                    sx={{mr: 1, ml: 0}}
+                  />
+                ))}
+              </Box>
+            </Box>
+          ))
+        )}
+      </AccordionDetails>
+    </Accordion>
+  );
+};
 
 const WizardStep1Content = (): ReactElement | null => {
   const router = useRouter();
@@ -119,6 +228,16 @@ const WizardStep1Content = (): ReactElement | null => {
     );
   };
 
+  const handleTermToggle = useCallback((termId: number) => {
+    setFilter(prev => {
+      const currentIds = prev?.taxonomy_term_ids ?? [];
+      const newIds = currentIds.includes(termId)
+        ? currentIds.filter(id => id !== termId)
+        : [...currentIds, termId];
+      return {taxonomy_term_ids: newIds};
+    });
+  }, []);
+
   const handleCancel = () => {
     router.push(CAMPAIGN_CRUD_LIST);
   };
@@ -163,14 +282,16 @@ const WizardStep1Content = (): ReactElement | null => {
       {mailLists.length === 0 ? (
         <Typography color="text.secondary">{t('campaign.wizard.step1.no_lists')}</Typography>
       ) : (
-        <Paper variant="outlined">
-          <List disablePadding>
-            {mailLists.map((list, index) => (
-              <ListItem
-                key={list.id}
-                divider={index < mailLists.length - 1}
-                sx={{px: 2, py: 0.5}}
-              >
+        <Paper variant="outlined" sx={{overflow: 'hidden'}}>
+          {mailLists.map((list, index) => (
+            <Box
+              key={list.id}
+              sx={{
+                borderBottom: index < mailLists.length - 1 ? '1px solid' : 'none',
+                borderColor: 'divider',
+              }}
+            >
+              <Box sx={{px: 2, py: 0.5}}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -190,9 +311,16 @@ const WizardStep1Content = (): ReactElement | null => {
                   }
                   sx={{flex: 1, mr: 0, width: '100%'}}
                 />
-              </ListItem>
-            ))}
-          </List>
+              </Box>
+              {mailListIds.includes(list.id) && (
+                <TaxonomyAccordion
+                  listId={list.id}
+                  selectedTermIds={filter?.taxonomy_term_ids ?? []}
+                  onTermToggle={handleTermToggle}
+                />
+              )}
+            </Box>
+          ))}
         </Paper>
       )}
 

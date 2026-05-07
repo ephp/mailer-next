@@ -36,7 +36,9 @@
       "contacts": "{count} contatti",
       "saving": "Salvataggio in corso...",
       "saved": "Salvato",
-      "save_error": "Errore durante il salvataggio"
+      "save_error": "Errore durante il salvataggio",
+      "taxonomy_filter_label": "Filtri tassonomia",
+      "no_taxonomy_filters": "Nessun filtro disponibile per questa lista"
     },
     "step2": {
       "title": "Contenuto email",
