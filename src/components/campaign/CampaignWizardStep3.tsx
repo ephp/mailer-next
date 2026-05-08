@@ -24,8 +24,11 @@ const TEMPLATES = [
   },
 ];
 
+const FALLBACK_COLORS = {primary: '#556cd6', text: '#333333', background: '#f5f5f5'};
+
 function buildPreviewHtml(formData: Campaign, structure: CampaignStructure): string {
-  const {colors, logo_url} = structure;
+  const colors = structure.colors ?? FALLBACK_COLORS;
+  const logo_url = structure.logo_url;
   const body = formData.body ?? '';
   const subject = formData.email_subject || '(oggetto)';
   const logoHtml = logo_url
@@ -79,9 +82,11 @@ const CampaignWizardStep3 = ({
     onChange({structure: {...structure, ...patch}});
   }, [onChange, structure]);
 
-  const updateColors = useCallback((colorPatch: Partial<CampaignStructure['colors']>) => {
-    updateStructure({colors: {...structure.colors, ...colorPatch}});
-  }, [updateStructure, structure.colors]);
+  const colors = structure.colors ?? FALLBACK_COLORS;
+
+  const updateColors = useCallback((colorPatch: Partial<typeof FALLBACK_COLORS>) => {
+    updateStructure({colors: {...colors, ...colorPatch} as CampaignStructure['colors']});
+  }, [updateStructure, colors]);
 
   const previewHtml = buildPreviewHtml(formData, structure);
 
@@ -120,7 +125,7 @@ const CampaignWizardStep3 = ({
                       <Box
                         sx={{
                           height: 100,
-                          bgcolor: structure.colors.background,
+                          bgcolor: colors.background,
                           border: '1px solid',
                           borderColor: 'divider',
                           borderRadius: 1,
@@ -130,7 +135,7 @@ const CampaignWizardStep3 = ({
                           flexDirection: 'column',
                         }}
                       >
-                        <Box sx={{bgcolor: structure.colors.primary, height: 24}} />
+                        <Box sx={{bgcolor: colors.primary, height: 24}} />
                         <Box sx={{p: 1, flex: 1}}>
                           <Box sx={{height: 8, bgcolor: 'grey.300', borderRadius: 1, mb: 0.5, width: '70%'}} />
                           <Box sx={{height: 6, bgcolor: 'grey.200', borderRadius: 1, mb: 0.5}} />
@@ -162,7 +167,7 @@ const CampaignWizardStep3 = ({
           <Box sx={{display: 'flex', alignItems: 'center', gap: 1.5}}>
             <input
               type="color"
-              value={structure.colors.primary}
+              value={colors.primary}
               onChange={e => updateColors({primary: e.target.value})}
               style={{width: 40, height: 40, padding: 2, cursor: 'pointer', border: '1px solid #ccc', borderRadius: 4}}
             />
@@ -171,7 +176,7 @@ const CampaignWizardStep3 = ({
           <Box sx={{display: 'flex', alignItems: 'center', gap: 1.5}}>
             <input
               type="color"
-              value={structure.colors.text}
+              value={colors.text}
               onChange={e => updateColors({text: e.target.value})}
               style={{width: 40, height: 40, padding: 2, cursor: 'pointer', border: '1px solid #ccc', borderRadius: 4}}
             />
@@ -180,7 +185,7 @@ const CampaignWizardStep3 = ({
           <Box sx={{display: 'flex', alignItems: 'center', gap: 1.5}}>
             <input
               type="color"
-              value={structure.colors.background}
+              value={colors.background}
               onChange={e => updateColors({background: e.target.value})}
               style={{width: 40, height: 40, padding: 2, cursor: 'pointer', border: '1px solid #ccc', borderRadius: 4}}
             />

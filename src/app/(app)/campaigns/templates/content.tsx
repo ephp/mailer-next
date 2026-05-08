@@ -146,7 +146,7 @@ const CampaignTemplatesContent = (): ReactElement => {
   const [deletingTemplate, setDeletingTemplate] = useState<Campaign | null>(null);
 
   const handleUseTemplate = useCallback(async (id: number) => {
-    const res = await performAsyncCall(duplicateCampaign({id}));
+    const res = await performAsyncCall(duplicateCampaign(id));
     if (res?.item?.id) {
       enqueueSnackbar({message: t('template.success.used'), variant: 'success'});
       router.push(generatePathStorage(CAMPAIGN_CRUD_EDIT, {id: res.item.id.toString()}));

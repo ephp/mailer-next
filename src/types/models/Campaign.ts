@@ -13,14 +13,23 @@ export interface CampaignFilter {
 }
 
 export interface CampaignStructure {
-  template_id: string;
-  colors: {
+  template_id?: string;
+  primary_color?: string;
+  text_color?: string;
+  logo_override_id?: number | null;
+  colors?: {
     primary: string;
     text: string;
     background: string;
   };
-  logo_url: string | null;
+  logo_url?: string | null;
 }
+
+const DEFAULT_COLORS = {
+  primary: '#556cd6',
+  text: '#333333',
+  background: '#f5f5f5',
+} as const;
 
 export interface CampaignMailList {
   id: number;
@@ -74,12 +83,11 @@ export const campaignSchema = yupObject({
 });
 
 export const defaultCampaignStructure: CampaignStructure = {
-  template_id: 'classic',
-  colors: {
-    primary: '#556cd6',
-    text: '#333333',
-    background: '#f5f5f5',
-  },
+  template_id: 'newsletter',
+  primary_color: '#1976d2',
+  text_color: '#333333',
+  logo_override_id: null,
+  colors: DEFAULT_COLORS,
   logo_url: null,
 };
 

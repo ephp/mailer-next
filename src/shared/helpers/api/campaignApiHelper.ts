@@ -13,6 +13,7 @@ import {
   CampaignStatus,
   CampaignStructure,
 } from '@/types/models/Campaign';
+import {EmailTemplatePreset, PreviewResponse, TestEmailResponse} from '@/types/models/EmailTemplate';
 
 // ─── V1 API types ────────────────────────────────────────────────────────────
 
@@ -158,6 +159,66 @@ export const getCampaignsPaginated = async ({
   });
 };
 
+// ─── V1 template / preview helpers ───────────────────────────────────────────
+
+type PreviewApiPayload = {html: string; plainText: string};
+type TestEmailApiPayload = {sent: number; failed: number; errors?: string[]};
+type TemplatePresetApiPayload = {id: string; name: string; description: string; thumbnailUrl: string};
+
+export const getCampaignPreview = async (
+  id: number,
+  viewport: 'desktop' | 'mobile' = 'desktop',
+): Promise<DetailResult<PreviewResponse>> => {
+  const {data} = await oiFetch.get<DetailResult<PreviewApiPayload>>(`/campaigns/${id}/preview`, {
+    params: {viewport},
+  });
+  return {
+    ...data,
+    item: data.item ? {html: data.item.html, plain_text: data.item.plainText} : undefined,
+  };
+};
+
+export const sendTestEmail = async (
+  id: number,
+  emails: string[],
+): Promise<DetailResult<TestEmailResponse>> => {
+  const {data} = await oiFetch.post<DetailResult<TestEmailApiPayload>>(`/campaigns/${id}/send-test`, {emails});
+  return {
+    ...data,
+    item: data.item
+      ? {sent: data.item.sent, failed: data.item.failed, errors: data.item.errors}
+      : undefined,
+  };
+};
+
+export const saveAsTemplate = async (
+  id: number,
+  payload: {name: string; description?: string},
+): Promise<DetailResult<Campaign>> => {
+  const {data} = await oiFetch.post<DetailResult<CampaignApiPayload>>(`/campaigns/${id}/save-as-template`, payload);
+  return mapDetailFromApi(data);
+};
+
+export const duplicateCampaign = async (id: number): Promise<DetailResult<Campaign>> => {
+  const {data} = await oiFetch.post<DetailResult<CampaignApiPayload>>(`/campaigns/${id}/duplicate`);
+  return mapDetailFromApi(data);
+};
+
+export const getTemplatePresets = async (): Promise<DetailResult<EmailTemplatePreset[]>> => {
+  const {data} = await oiFetch.get<DetailResult<TemplatePresetApiPayload[]>>('/templates/presets');
+  return {
+    ...data,
+    item: data.item
+      ? data.item.map(p => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          thumbnail_url: p.thumbnailUrl,
+        }))
+      : undefined,
+  };
+};
+
 // ─── Legacy helpers (old API — kept for backwards compatibility) ───────────────
 
 export interface SendCampaignOptions {
@@ -226,7 +287,7 @@ export const deleteCampaignLegacy = async (
   return data;
 };
 
-export const sendTestEmail = async (
+export const sendTestEmailLegacy = async (
   {id, email}: {id: Campaign['id']; email: string},
 ): Promise<DetailResult<null>> => {
   const {data} = await oiFetch.post<DetailResult<null>>(`/campaigns/${id}/test-email`, {email});
@@ -261,14 +322,14 @@ export const getTemplateList = async (
   return data;
 };
 
-export const duplicateCampaign = async (
+export const duplicateCampaignLegacy = async (
   {id}: {id: Campaign['id']},
 ): Promise<DetailResult<Campaign>> => {
   const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/duplicate`);
   return data;
 };
 
-export const saveAsTemplate = async (
+export const saveAsTemplateLegacy = async (
   {id}: {id: Campaign['id']},
 ): Promise<DetailResult<Campaign>> => {
   const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/save-as-template`);
