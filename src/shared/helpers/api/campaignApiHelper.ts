@@ -14,6 +14,7 @@ import {
   CampaignStructure,
 } from '@/types/models/Campaign';
 import {EmailTemplatePreset, PreviewResponse, TestEmailResponse} from '@/types/models/EmailTemplate';
+import {SendCampaignResponse, SendingStatus} from '@/types/models/CampaignEmail';
 
 // ─── V1 API types ────────────────────────────────────────────────────────────
 
@@ -34,7 +35,8 @@ type CampaignApiPayload = {
   clonedFromId: number | null;
   accountId: number | null;
   mailListIds: number[];
-  mailLists: CampaignMailList[];
+  /** Backend exposes the named list as `mailListNames` (id+name pairs). */
+  mailListNames?: CampaignMailList[];
   recipientCount: number;
   createdAt: string | null;
   updatedAt: string | null;
@@ -61,7 +63,7 @@ const mapCampaignFromApi = (raw: CampaignApiPayload): Campaign => ({
   cloned_from_id: raw.clonedFromId,
   account_id: raw.accountId,
   mail_list_ids: raw.mailListIds,
-  mail_lists: raw.mailLists,
+  mail_lists: raw.mailListNames ?? [],
   recipient_count: raw.recipientCount,
   created_at: raw.createdAt,
   updated_at: raw.updatedAt,
@@ -219,6 +221,48 @@ export const getTemplatePresets = async (): Promise<DetailResult<EmailTemplatePr
   };
 };
 
+// ─── V1 send / sending-status helpers ────────────────────────────────────────
+
+type SendCampaignApiPayload = {
+  totalEmails: number;
+};
+
+type SendingStatusApiPayload = {
+  total: number;
+  pending: number;
+  sending: number;
+  sent: number;
+  failed: number;
+  bounced: number;
+  percentComplete: number;
+};
+
+const mapSendingStatusFromApi = (raw: SendingStatusApiPayload): SendingStatus => ({
+  total: raw.total,
+  pending: raw.pending,
+  sending: raw.sending,
+  sent: raw.sent,
+  failed: raw.failed,
+  bounced: raw.bounced,
+  percent_complete: raw.percentComplete,
+});
+
+export const sendCampaign = async (id: number): Promise<DetailResult<SendCampaignResponse>> => {
+  const {data} = await oiFetch.post<DetailResult<SendCampaignApiPayload>>(`/campaigns/${id}/send`);
+  return {
+    ...data,
+    item: data.item ? {total_emails: data.item.totalEmails} : undefined,
+  };
+};
+
+export const getSendingStatus = async (id: number): Promise<DetailResult<SendingStatus>> => {
+  const {data} = await oiFetch.get<DetailResult<SendingStatusApiPayload>>(`/campaigns/${id}/sending-status`);
+  return {
+    ...data,
+    item: data.item ? mapSendingStatusFromApi(data.item) : undefined,
+  };
+};
+
 // ─── Legacy helpers (old API — kept for backwards compatibility) ───────────────
 
 export interface SendCampaignOptions {
@@ -294,7 +338,7 @@ export const sendTestEmailLegacy = async (
   return data;
 };
 
-export const sendCampaign = async (
+export const sendCampaignLegacy = async (
   {id, options}: {id: Campaign['id']; options: SendCampaignOptions},
 ): Promise<DetailResult<Campaign>> => {
   const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/send`, options);

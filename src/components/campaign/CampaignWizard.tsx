@@ -10,7 +10,7 @@ import {useTranslations} from 'next-intl';
 import {Campaign, newCampaign} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
 import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
-import {createCampaignLegacy, updateCampaignLegacy, sendTestEmailLegacy, sendCampaign, saveAsTemplateLegacy} from '@/shared/helpers/api/campaignApiHelper';
+import {createCampaignLegacy, updateCampaignLegacy, sendTestEmailLegacy, sendCampaignLegacy, saveAsTemplateLegacy} from '@/shared/helpers/api/campaignApiHelper';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import CampaignWizardStep1 from './CampaignWizardStep1';
@@ -135,7 +135,7 @@ const CampaignWizard = ({
       const saved = await persistCampaign({...formData, draft: false});
       const id = saved?.id ?? savedId;
       if (id) {
-        await performAsyncCall(sendCampaign({id, options: {scheduled_at: scheduledAt}}));
+        await performAsyncCall(sendCampaignLegacy({id, options: {scheduled_at: scheduledAt}}));
       }
       onOperationCompleted();
     } finally {
@@ -154,7 +154,7 @@ const CampaignWizard = ({
       const saved = await persistCampaign({...formData, draft: false});
       const id = saved?.id ?? savedId;
       if (id) {
-        await performAsyncCall(sendCampaign({id, options: {scheduled_at: null}}));
+        await performAsyncCall(sendCampaignLegacy({id, options: {scheduled_at: null}}));
       }
       onOperationCompleted();
     } finally {
