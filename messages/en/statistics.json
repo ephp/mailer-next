@@ -15,7 +15,9 @@
     "engagement": "Engagement",
     "monthly_trend": "Monthly Trend",
     "recent_campaigns": "Recent Campaigns",
-    "list_health": "List Health"
+    "list_health": "List Health",
+    "subscriber_growth": "Subscriber Growth",
+    "list_campaigns": "Campaigns on List"
   },
   "field": {
     "total_campaigns": "Campaigns",
@@ -40,7 +42,8 @@
   "chart": {
     "emails_sent": "Emails Sent",
     "unique_opens": "Unique Opens",
-    "unique_clicks": "Unique Clicks"
+    "unique_clicks": "Unique Clicks",
+    "coming_soon": "Coming soon"
   },
   "table": {
     "campaign_name": "Campaign Name",
@@ -52,7 +55,8 @@
     "contacts": "Contacts",
     "bounce_pct": "Bounce %",
     "no_campaigns": "No recent campaigns",
-    "no_lists": "No lists"
+    "no_lists": "No lists",
+    "no_list_campaigns": "No campaigns found for this list"
   },
   "btn": {
     "back_to_stats": "Back to statistics",
