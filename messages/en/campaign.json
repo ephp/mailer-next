@@ -110,7 +110,8 @@
       "test_result": "Sent: {sent}, Failed: {failed}",
       "template_dialog_name": "Template name",
       "template_dialog_description": "Description (optional)",
-      "send_now_coming": "Send functionality coming in a future sprint"
+      "send_now_coming": "Send functionality coming in a future sprint",
+      "show_progress": "Show progress"
     }
   },
   "btn": {
@@ -188,7 +189,8 @@
     "ready": "Ready",
     "scheduled": "Scheduled",
     "sending": "Sending",
-    "sent": "Sent"
+    "sent": "Sent",
+    "failed": "Failed"
   },
   "stats": {
     "total_sent": "Emails sent",
@@ -202,7 +204,26 @@
     "click_rate": "Click rate",
     "unsubscribe_rate": "Unsubscribe rate",
     "delivery": "Delivery",
-    "engagement": "Engagement"
+    "engagement": "Engagement",
+    "sent_at": "Sent date",
+    "kpi": "Main KPIs",
+    "kpi_sent": "Emails Sent",
+    "kpi_open_rate": "Open Rate",
+    "kpi_click_rate": "Click Rate",
+    "kpi_unsubscribes": "Unsubscribes",
+    "unique_opens": "Unique opens",
+    "unique_clicks": "Unique clicks",
+    "timeline": "Opens / Clicks Timeline (72h)",
+    "metric_opens": "Opens",
+    "metric_clicks": "Clicks",
+    "incremental": "Incremental",
+    "cumulative": "Cumulative",
+    "links": "Most clicked links",
+    "no_links": "No links clicked",
+    "col_url": "URL",
+    "col_unique_clicks": "Unique Clicks",
+    "col_total_clicks": "Total Clicks",
+    "col_click_rate": "Click Rate"
   },
   "send": {
     "confirm": {
@@ -212,8 +233,14 @@
     },
     "progress": {
       "title": "Sending in progress…",
+      "title_complete": "Send complete!",
       "background_note": "The send will continue in the background even if you close this window.",
-      "btn_close": "Close"
+      "btn_close": "Close",
+      "btn_stats": "View statistics",
+      "sent": "Sent",
+      "pending": "Queued",
+      "failed": "Failed",
+      "bounced": "Bounced"
     }
   }
 }

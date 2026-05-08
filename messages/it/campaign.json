@@ -110,7 +110,8 @@
       "test_result": "Inviate: {sent}, Fallite: {failed}",
       "template_dialog_name": "Nome template",
       "template_dialog_description": "Descrizione (opzionale)",
-      "send_now_coming": "Funzionalità di invio in arrivo nei prossimi sprint"
+      "send_now_coming": "Funzionalità di invio in arrivo nei prossimi sprint",
+      "show_progress": "Mostra progresso"
     }
   },
   "btn": {
@@ -188,7 +189,8 @@
     "ready": "Pronta",
     "scheduled": "Pianificata",
     "sending": "In invio",
-    "sent": "Inviata"
+    "sent": "Inviata",
+    "failed": "Fallita"
   },
   "stats": {
     "total_sent": "Email inviate",
@@ -202,7 +204,26 @@
     "click_rate": "Tasso di click",
     "unsubscribe_rate": "Tasso di disiscrizione",
     "delivery": "Consegna",
-    "engagement": "Engagement"
+    "engagement": "Engagement",
+    "sent_at": "Data invio",
+    "kpi": "KPI Principali",
+    "kpi_sent": "Email Inviate",
+    "kpi_open_rate": "Open Rate",
+    "kpi_click_rate": "Click Rate",
+    "kpi_unsubscribes": "Disiscrizioni",
+    "unique_opens": "Aperture uniche",
+    "unique_clicks": "Click unici",
+    "timeline": "Timeline Aperture / Click (72h)",
+    "metric_opens": "Aperture",
+    "metric_clicks": "Click",
+    "incremental": "Incrementale",
+    "cumulative": "Cumulativo",
+    "links": "Link più cliccati",
+    "no_links": "Nessun link cliccato",
+    "col_url": "URL",
+    "col_unique_clicks": "Click Unici",
+    "col_total_clicks": "Click Totali",
+    "col_click_rate": "Click Rate"
   },
   "send": {
     "confirm": {
@@ -212,8 +233,14 @@
     },
     "progress": {
       "title": "Invio in corso…",
+      "title_complete": "Invio completato!",
       "background_note": "L'invio continuerà in background anche se chiudi questa finestra.",
-      "btn_close": "Chiudi"
+      "btn_close": "Chiudi",
+      "btn_stats": "Vai alle statistiche",
+      "sent": "Inviate",
+      "pending": "In coda",
+      "failed": "Errori",
+      "bounced": "Bounce"
     }
   }
 }
