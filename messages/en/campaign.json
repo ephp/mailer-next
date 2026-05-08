@@ -122,9 +122,12 @@
     },
     "btn": {
       "library": "Template library",
-      "use": "Use template"
+      "use": "Use template",
+      "edit": "Edit",
+      "create_new": "Create new campaign"
     },
     "badge": "Template",
+    "used_count": "Used {count} times",
     "empty": {
       "title": "No templates available",
       "description": "Save a campaign as a template from the wizard to reuse it in the future."

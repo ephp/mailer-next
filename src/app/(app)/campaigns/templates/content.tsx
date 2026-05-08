@@ -15,27 +15,28 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Chip from '@mui/material/Chip';
-import SubjectIcon from '@mui/icons-material/Subject';
+import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import ArticleIcon from '@mui/icons-material/Article';
 import {useTranslations} from 'next-intl';
 import {useRouter} from 'next/navigation';
 import {useSnackbar} from 'notistack';
 import {Campaign} from '@/types/models/Campaign';
-import {deleteCampaignLegacy, duplicateCampaign, getTemplateList} from '@/shared/helpers/api/campaignApiHelper';
-import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
-import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
+import {createCampaign, deleteCampaign, getCampaigns} from '@/shared/helpers/api/campaignApiHelper';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
-import {CAMPAIGN_CRUD_EDIT} from '@/shared/constants/AppRoutes';
+import {WIZARD_STEP_1} from '@/shared/constants/AppRoutes';
 
 const TemplateCard = ({
   template,
   onUse,
+  onEdit,
   onDelete,
 }: {
   template: Campaign;
   onUse: (id: number) => void;
+  onEdit: (id: number) => void;
   onDelete: (template: Campaign) => void;
 }): ReactElement => {
   const t = useTranslations('campaign');
@@ -70,11 +71,11 @@ const TemplateCard = ({
                 whiteSpace: 'nowrap',
               }}
             >
-              {template.email_subject}
+              {template.name ?? template.email_subject}
             </Typography>
-            {template.name && (
-              <Typography variant="caption" color="text.secondary">
-                {template.name}
+            {template.email_subject && (
+              <Typography variant="caption" color="text.secondary" sx={{display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
+                {template.email_subject}
               </Typography>
             )}
           </Box>
@@ -97,18 +98,22 @@ const TemplateCard = ({
           </Typography>
         )}
 
-        <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5, mt: 1}}>
-          <SubjectIcon fontSize="small" color="action"/>
+        <Box sx={{display: 'flex', alignItems: 'center', gap: 0.5, mt: 1, flexWrap: 'wrap'}}>
           <Chip
             label={t('template.badge')}
             size="small"
             color="secondary"
             variant="outlined"
           />
+          <Chip
+            label={t('template.used_count', {count: 0})}
+            size="small"
+            variant="outlined"
+          />
         </Box>
       </CardContent>
 
-      <CardActions sx={{justifyContent: 'flex-end', gap: 1, px: 2, pb: 2}}>
+      <CardActions sx={{justifyContent: 'flex-end', gap: 0.5, px: 2, pb: 2, flexWrap: 'wrap'}}>
         <Button
           size="small"
           color="error"
@@ -116,6 +121,13 @@ const TemplateCard = ({
           onClick={() => onDelete(template)}
         >
           {tMsg('btn.delete')}
+        </Button>
+        <Button
+          size="small"
+          startIcon={<EditOutlinedIcon/>}
+          onClick={() => onEdit(template.id)}
+        >
+          {t('template.btn.edit')}
         </Button>
         <Button
           size="small"
@@ -135,88 +147,114 @@ const CampaignTemplatesContent = (): ReactElement => {
   const tMsg = useTranslations('messages');
   const router = useRouter();
   const {enqueueSnackbar} = useSnackbar();
-  const {performAsyncCall} = useAsyncCallHelper2Actions();
 
-  const {result, setResult, loading, perform: fetchTemplates} = useAsyncLoader(getTemplateList, true);
+  const [templates, setTemplates] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deletingTemplate, setDeletingTemplate] = useState<Campaign | null>(null);
+  const [creatingNew, setCreatingNew] = useState(false);
 
   useEffect(() => {
-    fetchTemplates({page: 1, perPage: 50, sortBy: 'id', sortDirection: 'desc'}).catch(console.error);
-  }, [fetchTemplates]);
+    getCampaigns({page: 1, perPage: 50, filter: {template: true}})
+      .then(res => setTemplates(res.items ?? []))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
-  const [deletingTemplate, setDeletingTemplate] = useState<Campaign | null>(null);
+  const handleCreateNew = useCallback(async () => {
+    setCreatingNew(true);
+    try {
+      const res = await createCampaign();
+      if (res?.item?.id) {
+        router.push(generatePathStorage(WIZARD_STEP_1, {id: res.item.id.toString()}));
+      }
+    } catch {
+      enqueueSnackbar({message: tMsg('common.error.unknown'), variant: 'error'});
+    } finally {
+      setCreatingNew(false);
+    }
+  }, [router, enqueueSnackbar, tMsg]);
 
   const handleUseTemplate = useCallback(async (id: number) => {
-    const res = await performAsyncCall(duplicateCampaign(id));
-    if (res?.item?.id) {
-      enqueueSnackbar({message: t('template.success.used'), variant: 'success'});
-      router.push(generatePathStorage(CAMPAIGN_CRUD_EDIT, {id: res.item.id.toString()}));
+    try {
+      const res = await createCampaign({fromTemplateId: id});
+      if (res?.item?.id) {
+        enqueueSnackbar({message: t('template.success.used'), variant: 'success'});
+        router.push(generatePathStorage(WIZARD_STEP_1, {id: res.item.id.toString()}));
+      }
+    } catch {
+      // silent
     }
-  }, [performAsyncCall, router, enqueueSnackbar, t]);
+  }, [router, enqueueSnackbar, t]);
+
+  const handleEditTemplate = useCallback((id: number) => {
+    router.push(generatePathStorage(WIZARD_STEP_1, {id: id.toString()}));
+  }, [router]);
 
   const confirmDeleteTemplate = (template: Campaign) => {
-    performAsyncCall(deleteCampaignLegacy({id: template.id}))
+    setDeletingTemplate(null);
+    deleteCampaign(template.id)
       .then(() => {
-        setResult(prev => prev !== null ? {
-          ...prev,
-          items: prev.items?.filter(c => c.id !== template.id) ?? prev.items,
-        } : prev);
+        setTemplates(prev => prev.filter(c => c.id !== template.id));
         enqueueSnackbar({message: t('success.deleted'), variant: 'success'});
       })
       .catch(console.error);
-    setDeletingTemplate(null);
   };
-
-  const templates = result?.items ?? [];
-
-  if (loading) {
-    return (
-      <Grid container spacing={2}>
-        {Array.from({length: 6}).map((_, i) => (
-          <Grid size={{xs: 12, sm: 6, md: 4}} key={i}>
-            <Skeleton variant="rectangular" height={180} sx={{borderRadius: 1}}/>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  }
-
-  if (templates.length === 0) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          py: 8,
-          gap: 2,
-          color: 'text.secondary',
-        }}
-      >
-        <ArticleIcon sx={{fontSize: 64, opacity: 0.3}}/>
-        <Typography variant="h6" color="text.secondary">
-          {t('template.empty.title')}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" textAlign="center">
-          {t('template.empty.description')}
-        </Typography>
-      </Box>
-    );
-  }
 
   return (
     <>
-      <Grid container spacing={2}>
-        {templates.map(template => (
-          <Grid size={{xs: 12, sm: 6, md: 4}} key={template.id}>
-            <TemplateCard
-              template={template}
-              onUse={handleUseTemplate}
-              onDelete={setDeletingTemplate}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{display: 'flex', justifyContent: 'flex-end', mb: 2}}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon/>}
+          onClick={handleCreateNew}
+          disabled={creatingNew}
+        >
+          {t('template.btn.create_new')}
+        </Button>
+      </Box>
+
+      {loading ? (
+        <Grid container spacing={2}>
+          {Array.from({length: 6}).map((_, i) => (
+            <Grid size={{xs: 12, sm: 6, md: 4}} key={i}>
+              <Skeleton variant="rectangular" height={180} sx={{borderRadius: 1}}/>
+            </Grid>
+          ))}
+        </Grid>
+      ) : templates.length === 0 ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: 8,
+            gap: 2,
+            color: 'text.secondary',
+          }}
+        >
+          <ArticleIcon sx={{fontSize: 64, opacity: 0.3}}/>
+          <Typography variant="h6" color="text.secondary">
+            {t('template.empty.title')}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" textAlign="center">
+            {t('template.empty.description')}
+          </Typography>
+        </Box>
+      ) : (
+        <Grid container spacing={2}>
+          {templates.map(template => (
+            <Grid size={{xs: 12, sm: 6, md: 4}} key={template.id}>
+              <TemplateCard
+                template={template}
+                onUse={handleUseTemplate}
+                onEdit={handleEditTemplate}
+                onDelete={setDeletingTemplate}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
       <Dialog
         open={deletingTemplate !== null}
@@ -224,7 +262,7 @@ const CampaignTemplatesContent = (): ReactElement => {
         aria-labelledby="delete-template-dialog-title"
       >
         <DialogTitle id="delete-template-dialog-title">
-          {deletingTemplate !== null && t('template.message.delete.title', {name: deletingTemplate.email_subject})}
+          {deletingTemplate !== null && t('template.message.delete.title', {name: deletingTemplate.name ?? deletingTemplate.email_subject})}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
