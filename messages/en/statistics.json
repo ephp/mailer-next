@@ -8,10 +8,14 @@
     }
   },
   "section": {
+    "kpi": "Main KPIs",
     "overview": "Overview",
     "contacts": "Contacts",
     "delivery": "Delivery",
-    "engagement": "Engagement"
+    "engagement": "Engagement",
+    "monthly_trend": "Monthly Trend",
+    "recent_campaigns": "Recent Campaigns",
+    "list_health": "List Health"
   },
   "field": {
     "total_campaigns": "Campaigns",
@@ -27,10 +31,32 @@
     "total_unsubscribes": "Unsubscribes",
     "open_rate": "Open rate",
     "click_rate": "Click rate",
-    "unsubscribe_rate": "Unsubscribe rate"
+    "unsubscribe_rate": "Unsubscribe rate",
+    "emails_sent": "Emails Sent",
+    "avg_open_rate": "Avg Open Rate",
+    "avg_click_rate": "Avg Click Rate",
+    "bounce_rate": "Bounce Rate"
+  },
+  "chart": {
+    "emails_sent": "Emails Sent",
+    "unique_opens": "Unique Opens",
+    "unique_clicks": "Unique Clicks"
+  },
+  "table": {
+    "campaign_name": "Campaign Name",
+    "sent_at": "Sent Date",
+    "open_rate": "Open Rate",
+    "click_rate": "Click Rate",
+    "actions": "Actions",
+    "list_name": "List",
+    "contacts": "Contacts",
+    "bounce_pct": "Bounce %",
+    "no_campaigns": "No recent campaigns",
+    "no_lists": "No lists"
   },
   "btn": {
     "back_to_stats": "Back to statistics",
-    "view_list_stats": "List statistics"
+    "view_list_stats": "List statistics",
+    "view_stats": "View statistics"
   }
 }
