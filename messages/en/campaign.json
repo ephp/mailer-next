@@ -223,7 +223,24 @@
     "col_url": "URL",
     "col_unique_clicks": "Unique Clicks",
     "col_total_clicks": "Total Clicks",
-    "col_click_rate": "Click Rate"
+    "col_click_rate": "Click Rate",
+    "recipients": "Recipients",
+    "recipients_filter_all": "All",
+    "recipients_filter_sent": "Sent",
+    "recipients_filter_opened": "Opened",
+    "recipients_filter_clicked": "Clicked",
+    "recipients_filter_unsubscribed": "Unsubscribed",
+    "recipients_col_email": "Email",
+    "recipients_col_name": "Name",
+    "recipients_col_list": "List",
+    "recipients_col_status": "Status",
+    "recipients_col_opened": "Opened",
+    "recipients_col_open_count": "Opens",
+    "recipients_col_clicked": "Clicked",
+    "recipients_col_click_count": "Clicks",
+    "recipients_col_unsubscribed": "Unsub.",
+    "recipients_no_data": "No recipients found",
+    "recipients_export_csv": "Export CSV"
   },
   "send": {
     "confirm": {

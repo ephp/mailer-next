@@ -12,14 +12,22 @@ import Tooltip from '@mui/material/Tooltip';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import UnsubscribeIcon from '@mui/icons-material/Unsubscribe';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import {useTranslations} from 'next-intl';
 import {
   LineChart,
@@ -35,10 +43,19 @@ import {
   getCampaignStats,
   getCampaignTimeline,
   getCampaignLinks,
+  getCampaignRecipients,
+  getCampaignRecipientsCsv,
 } from '@/shared/helpers/api/statisticsApiHelper';
 import {getCampaign} from '@/shared/helpers/api/campaignApiHelper';
-import {CampaignStats, TimelinePoint, LinkStats} from '@/types/models/Statistics';
+import {CampaignStats, TimelinePoint, LinkStats, CampaignRecipient} from '@/types/models/Statistics';
 import {Campaign} from '@/types/models/Campaign';
+
+interface RecipientsResult {
+  items: CampaignRecipient[];
+  currentPage: number;
+  itemCount: number;
+  itemsPerPage: number;
+}
 
 interface StatCardProps {
   label: string;
@@ -95,6 +112,21 @@ interface Props {
   campaignId: number;
 }
 
+type RecipientStatusFilter = 'sent' | 'opened' | 'clicked' | 'unsubscribed';
+
+const statusChipColor = (
+  status: string,
+): 'default' | 'primary' | 'success' | 'secondary' | 'error' => {
+  switch (status) {
+    case 'sent': return 'primary';
+    case 'opened': return 'success';
+    case 'clicked': return 'secondary';
+    case 'failed':
+    case 'bounced': return 'error';
+    default: return 'default';
+  }
+};
+
 const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
   const t = useTranslations('campaign');
 
@@ -106,6 +138,12 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
   const [cumulative, setCumulative] = useState(false);
   const [loadingMain, setLoadingMain] = useState(true);
   const [loadingTimeline, setLoadingTimeline] = useState(true);
+
+  const [recipientStatus, setRecipientStatus] = useState<RecipientStatusFilter | undefined>(undefined);
+  const [recipientPage, setRecipientPage] = useState(1);
+  const [recipients, setRecipients] = useState<RecipientsResult | null>(null);
+  const [loadingRecipients, setLoadingRecipients] = useState(true);
+  const [exportingCsv, setExportingCsv] = useState(false);
 
   useEffect(() => {
     setLoadingMain(true);
@@ -130,6 +168,21 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
       .catch(console.error)
       .finally(() => setLoadingTimeline(false));
   }, [campaignId, metric, cumulative]);
+
+  useEffect(() => {
+    setLoadingRecipients(true);
+    getCampaignRecipients({id: campaignId, page: recipientPage, perPage: 50, status: recipientStatus})
+      .then(result => setRecipients(result as unknown as RecipientsResult))
+      .catch(console.error)
+      .finally(() => setLoadingRecipients(false));
+  }, [campaignId, recipientPage, recipientStatus]);
+
+  const handleExportCsv = (): void => {
+    setExportingCsv(true);
+    getCampaignRecipientsCsv(campaignId, recipientStatus)
+      .catch(console.error)
+      .finally(() => setExportingCsv(false));
+  };
 
   const fmt = (n: number): string => n.toLocaleString('it-IT');
   const fmtPct = (n: number): string => `${n.toFixed(2)}%`;
@@ -319,6 +372,102 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
             </TableBody>
           </Table>
         </Box>
+      )}
+
+      {/* Recipients */}
+      <SectionTitle>{t('stats.recipients')}</SectionTitle>
+      <Box sx={{mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between'}}>
+        <ToggleButtonGroup
+          value={recipientStatus ?? ''}
+          exclusive
+          size="small"
+          onChange={(_, v: string | null) => {
+            const next = v && v !== '' ? v as RecipientStatusFilter : undefined;
+            setRecipientStatus(next);
+            setRecipientPage(1);
+          }}
+        >
+          <ToggleButton value="">{t('stats.recipients_filter_all')}</ToggleButton>
+          <ToggleButton value="sent">{t('stats.recipients_filter_sent')}</ToggleButton>
+          <ToggleButton value="opened">{t('stats.recipients_filter_opened')}</ToggleButton>
+          <ToggleButton value="clicked">{t('stats.recipients_filter_clicked')}</ToggleButton>
+          <ToggleButton value="unsubscribed">{t('stats.recipients_filter_unsubscribed')}</ToggleButton>
+        </ToggleButtonGroup>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={exportingCsv ? <CircularProgress size={14}/> : <FileDownloadIcon/>}
+          onClick={handleExportCsv}
+          disabled={exportingCsv}
+        >
+          {t('stats.recipients_export_csv')}
+        </Button>
+      </Box>
+      {loadingRecipients ? (
+        <Skeleton variant="rectangular" height={260} sx={{borderRadius: 1}}/>
+      ) : !recipients || recipients.items.length === 0 ? (
+        <Typography color="text.secondary" sx={{py: 2}}>
+          {t('stats.recipients_no_data')}
+        </Typography>
+      ) : (
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>{t('stats.recipients_col_email')}</TableCell>
+                <TableCell>{t('stats.recipients_col_name')}</TableCell>
+                <TableCell>{t('stats.recipients_col_list')}</TableCell>
+                <TableCell>{t('stats.recipients_col_status')}</TableCell>
+                <TableCell>{t('stats.recipients_col_opened')}</TableCell>
+                <TableCell align="right">{t('stats.recipients_col_open_count')}</TableCell>
+                <TableCell>{t('stats.recipients_col_clicked')}</TableCell>
+                <TableCell align="right">{t('stats.recipients_col_click_count')}</TableCell>
+                <TableCell>{t('stats.recipients_col_unsubscribed')}</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {recipients.items.map(r => (
+                <TableRow key={r.id} hover>
+                  <TableCell sx={{maxWidth: 200}}>
+                    <Typography variant="body2" noWrap>{r.email}</Typography>
+                  </TableCell>
+                  <TableCell sx={{whiteSpace: 'nowrap'}}>
+                    {[r.contact_cognome, r.contact_nome].filter(Boolean).join(' ') || '—'}
+                  </TableCell>
+                  <TableCell sx={{maxWidth: 140}}>
+                    <Typography variant="body2" noWrap>{r.mail_list_name ?? '—'}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Chip label={r.status} color={statusChipColor(r.status)} size="small"/>
+                  </TableCell>
+                  <TableCell sx={{whiteSpace: 'nowrap'}}>
+                    {r.opened ? fmtDate(r.opened_at) : <CancelIcon fontSize="small" color="disabled"/>}
+                  </TableCell>
+                  <TableCell align="right">{r.open_count}</TableCell>
+                  <TableCell>
+                    {r.clicked
+                      ? <CheckCircleIcon fontSize="small" color="success"/>
+                      : <CancelIcon fontSize="small" color="disabled"/>}
+                  </TableCell>
+                  <TableCell align="right">{r.click_count}</TableCell>
+                  <TableCell>
+                    {r.unsubscribed
+                      ? <CheckCircleIcon fontSize="small" color="error"/>
+                      : <CancelIcon fontSize="small" color="disabled"/>}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            component="div"
+            count={recipients.itemCount}
+            page={recipients.currentPage - 1}
+            rowsPerPage={recipients.itemsPerPage}
+            rowsPerPageOptions={[50]}
+            onPageChange={(_, p) => setRecipientPage(p + 1)}
+          />
+        </TableContainer>
       )}
     </Box>
   );

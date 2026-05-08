@@ -223,7 +223,24 @@
     "col_url": "URL",
     "col_unique_clicks": "Click Unici",
     "col_total_clicks": "Click Totali",
-    "col_click_rate": "Click Rate"
+    "col_click_rate": "Click Rate",
+    "recipients": "Destinatari",
+    "recipients_filter_all": "Tutti",
+    "recipients_filter_sent": "Inviati",
+    "recipients_filter_opened": "Aperti",
+    "recipients_filter_clicked": "Cliccati",
+    "recipients_filter_unsubscribed": "Disiscritti",
+    "recipients_col_email": "Email",
+    "recipients_col_name": "Nome",
+    "recipients_col_list": "Lista",
+    "recipients_col_status": "Stato",
+    "recipients_col_opened": "Aperto",
+    "recipients_col_open_count": "N° Aperture",
+    "recipients_col_clicked": "Cliccato",
+    "recipients_col_click_count": "N° Click",
+    "recipients_col_unsubscribed": "Disiscr.",
+    "recipients_no_data": "Nessun destinatario trovato",
+    "recipients_export_csv": "Esporta CSV"
   },
   "send": {
     "confirm": {
