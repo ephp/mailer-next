@@ -29,6 +29,7 @@ import {useTranslations} from 'next-intl';
 const CampaignWizardStep4 = ({
   formData,
   isSaving,
+  sendingStarted,
   onSaveDraft,
   onSendTest,
   onSchedule,
@@ -37,6 +38,7 @@ const CampaignWizardStep4 = ({
 }: {
   formData: Campaign;
   isSaving: boolean;
+  sendingStarted: boolean;
   onSaveDraft: () => void;
   onSendTest: (email: string) => void;
   onSchedule: (scheduledAt: string) => void;
@@ -220,26 +222,28 @@ const CampaignWizardStep4 = ({
           </Paper>
 
           {/* Send now */}
-          <Paper variant="outlined" sx={{p: 2, borderColor: 'primary.main'}}>
-            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1}}>
-              <Box>
-                <Typography variant="body1" fontWeight="medium" color="primary.main">
-                  {t('wizard.step4.send_now_title')}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {t('wizard.step4.send_now_desc')}
-                </Typography>
+          {!sendingStarted && (
+            <Paper variant="outlined" sx={{p: 2, borderColor: 'primary.main'}}>
+              <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1}}>
+                <Box>
+                  <Typography variant="body1" fontWeight="medium" color="primary.main">
+                    {t('wizard.step4.send_now_title')}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('wizard.step4.send_now_desc')}
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  startIcon={<SendIcon />}
+                  onClick={() => setSendNowOpen(true)}
+                  disabled={isSaving || formData.recipient_count === 0}
+                >
+                  {t('btn.send_now')}
+                </Button>
               </Box>
-              <Button
-                variant="contained"
-                startIcon={<SendIcon />}
-                onClick={() => setSendNowOpen(true)}
-                disabled={isSaving || formData.recipient_count === 0}
-              >
-                {t('btn.send_now')}
-              </Button>
-            </Box>
-          </Paper>
+            </Paper>
+          )}
         </Box>
       </Box>
 
@@ -288,10 +292,13 @@ const CampaignWizardStep4 = ({
 
       {/* Send now confirmation dialog */}
       <Dialog open={sendNowOpen} onClose={() => setSendNowOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{t('wizard.step4.send_now_dialog_title')}</DialogTitle>
+        <DialogTitle>{t('send.confirm.title')}</DialogTitle>
         <DialogContent>
           <Typography>
-            {t('wizard.step4.send_now_dialog_desc', {count: formData.recipient_count})}
+            {t('send.confirm.body', {
+              name: formData.name ?? formData.email_subject,
+              count: formData.recipient_count,
+            })}
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -300,7 +307,7 @@ const CampaignWizardStep4 = ({
             variant="contained"
             onClick={() => { setSendNowOpen(false); onSendNow(); }}
           >
-            {t('btn.send_now')}
+            {t('send.confirm.btn')}
           </Button>
         </DialogActions>
       </Dialog>

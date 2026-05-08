@@ -54,10 +54,20 @@
       "template_label": "Layout template",
       "template_classic": "Newsletter classica",
       "template_classic_desc": "Header con logo, colonne di testo, footer.",
+      "global_style": "Personalizzazione globale",
+      "global_style_help": "Attiva per impostare colori e font diversi dai default delle liste selezionate.",
+      "no_lists_selected": "Nessuna lista selezionata: aggiungi una lista nello step 1 per vedere i default applicati.",
+      "using_single_list_defaults": "Verranno usati i colori e i font configurati nella lista selezionata.",
+      "multi_list_strategy": "Hai selezionato più liste: scegli quale stile applicare.",
+      "use_first_list": "Default della prima lista",
+      "use_per_list": "Default di ogni lista (per destinatario)",
       "colors_label": "Colori",
       "color_primary": "Colore primario",
       "color_text": "Colore testo",
       "color_background": "Colore sfondo",
+      "fonts_label": "Font",
+      "heading_font": "Font titoli",
+      "body_font": "Font testo",
       "logo_url": "URL logo",
       "logo_url_helper": "URL dell'immagine del logo da mostrare nell'header. Lascia vuoto per usare il testo del logo.",
       "preview_label": "Anteprima",
@@ -193,5 +203,17 @@
     "unsubscribe_rate": "Tasso di disiscrizione",
     "delivery": "Consegna",
     "engagement": "Engagement"
+  },
+  "send": {
+    "confirm": {
+      "title": "Conferma invio campagna",
+      "body": "Stai per inviare la campagna \"{name}\" a {count} destinatari. L'invio non può essere annullato.",
+      "btn": "Invia ora"
+    },
+    "progress": {
+      "title": "Invio in corso…",
+      "background_note": "L'invio continuerà in background anche se chiudi questa finestra.",
+      "btn_close": "Chiudi"
+    }
   }
 }

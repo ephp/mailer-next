@@ -54,10 +54,20 @@
       "template_label": "Template layout",
       "template_classic": "Classic newsletter",
       "template_classic_desc": "Logo header, text columns, footer.",
+      "global_style": "Global customization",
+      "global_style_help": "Turn on to override the defaults from the selected list(s).",
+      "no_lists_selected": "No list selected: add a list in step 1 to see its defaults applied.",
+      "using_single_list_defaults": "Colors and fonts from the selected list will be used.",
+      "multi_list_strategy": "You selected multiple lists: choose which style to apply.",
+      "use_first_list": "First list defaults",
+      "use_per_list": "Per-recipient list defaults",
       "colors_label": "Colors",
       "color_primary": "Primary color",
       "color_text": "Text color",
       "color_background": "Background color",
+      "fonts_label": "Fonts",
+      "heading_font": "Heading font",
+      "body_font": "Body font",
       "logo_url": "Logo URL",
       "logo_url_helper": "URL of the logo image to display in the header. Leave empty to use text logo.",
       "preview_label": "Preview",
@@ -193,5 +203,17 @@
     "unsubscribe_rate": "Unsubscribe rate",
     "delivery": "Delivery",
     "engagement": "Engagement"
+  },
+  "send": {
+    "confirm": {
+      "title": "Confirm campaign send",
+      "body": "You are about to send campaign \"{name}\" to {count} recipients. This action cannot be undone.",
+      "btn": "Send now"
+    },
+    "progress": {
+      "title": "Sending in progress…",
+      "background_note": "The send will continue in the background even if you close this window.",
+      "btn_close": "Close"
+    }
   }
 }

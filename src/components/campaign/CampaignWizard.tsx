@@ -10,13 +10,14 @@ import {useTranslations} from 'next-intl';
 import {Campaign, newCampaign} from '@/types/models/Campaign';
 import {MailList} from '@/types/models/MailList';
 import {getMailLists} from '@/shared/helpers/api/mailListApiHelper';
-import {createCampaignLegacy, updateCampaignLegacy, sendTestEmailLegacy, sendCampaignLegacy, saveAsTemplateLegacy} from '@/shared/helpers/api/campaignApiHelper';
+import {createCampaignLegacy, updateCampaignLegacy, sendTestEmailLegacy, sendCampaignLegacy, saveAsTemplateLegacy, sendCampaign} from '@/shared/helpers/api/campaignApiHelper';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import CampaignWizardStep1 from './CampaignWizardStep1';
 import CampaignWizardStep2 from './CampaignWizardStep2';
 import CampaignWizardStep3 from './CampaignWizardStep3';
 import CampaignWizardStep4 from './CampaignWizardStep4';
+import SendingProgressModal from './SendingProgressModal';
 
 const CampaignWizard = ({
   campaign,
@@ -34,6 +35,9 @@ const CampaignWizard = ({
   const [subjectError, setSubjectError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [savedId, setSavedId] = useState<number | null>(null);
+  const [sendingStarted, setSendingStarted] = useState(false);
+  const [sendingProgressOpen, setSendingProgressOpen] = useState(false);
+  const [sendingCampaignId, setSendingCampaignId] = useState<number | null>(null);
 
   const {
     result: mailListsResult,
@@ -154,9 +158,13 @@ const CampaignWizard = ({
       const saved = await persistCampaign({...formData, draft: false});
       const id = saved?.id ?? savedId;
       if (id) {
-        await performAsyncCall(sendCampaignLegacy({id, options: {scheduled_at: null}}));
+        await performAsyncCall(sendCampaign(id));
+        setSendingCampaignId(id);
+        setSendingStarted(true);
+        setSendingProgressOpen(true);
       }
-      onOperationCompleted();
+    } catch {
+      // Error shown automatically by performAsyncCall via Snackbar
     } finally {
       setIsSubmitting(false);
     }
@@ -221,11 +229,20 @@ const CampaignWizard = ({
         <CampaignWizardStep4
           formData={formData}
           isSaving={isSubmitting}
+          sendingStarted={sendingStarted}
           onSaveDraft={handleSaveDraft}
           onSendTest={handleSendTest}
           onSchedule={handleSchedule}
           onSendNow={handleSendNow}
           onSaveAsTemplate={handleSaveAsTemplate}
+        />
+      )}
+
+      {sendingCampaignId !== null && (
+        <SendingProgressModal
+          campaignId={sendingCampaignId}
+          open={sendingProgressOpen}
+          onClose={() => setSendingProgressOpen(false)}
         />
       )}
 
