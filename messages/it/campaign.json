@@ -87,7 +87,20 @@
       "send_now_title": "Invia ora",
       "send_now_desc": "Avvia immediatamente l'invio della campagna a tutti i destinatari.",
       "send_now_dialog_title": "Conferma invio",
-      "send_now_dialog_desc": "Stai per inviare la campagna a {count} destinatari. Questa operazione non può essere annullata."
+      "send_now_dialog_desc": "Stai per inviare la campagna a {count} destinatari. Questa operazione non può essere annullata.",
+      "summary_subject": "Oggetto email",
+      "summary_template": "Template",
+      "summary_lists": "Liste destinatari",
+      "summary_recipients": "Destinatari",
+      "email_input_placeholder": "es. mario@example.com",
+      "add_email": "Aggiungi",
+      "send_test_btn": "Invia Test",
+      "max_emails_error": "Puoi aggiungere al massimo 5 email",
+      "invalid_email_error": "Indirizzo email non valido",
+      "test_result": "Inviate: {sent}, Fallite: {failed}",
+      "template_dialog_name": "Nome template",
+      "template_dialog_description": "Descrizione (opzionale)",
+      "send_now_coming": "Funzionalità di invio in arrivo nei prossimi sprint"
     }
   },
   "btn": {

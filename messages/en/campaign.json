@@ -87,7 +87,20 @@
       "send_now_title": "Send now",
       "send_now_desc": "Immediately start sending the campaign to all recipients.",
       "send_now_dialog_title": "Confirm send",
-      "send_now_dialog_desc": "You are about to send the campaign to {count} recipients. This action cannot be undone."
+      "send_now_dialog_desc": "You are about to send the campaign to {count} recipients. This action cannot be undone.",
+      "summary_subject": "Email subject",
+      "summary_template": "Template",
+      "summary_lists": "Recipient lists",
+      "summary_recipients": "Recipients",
+      "email_input_placeholder": "e.g. mario@example.com",
+      "add_email": "Add",
+      "send_test_btn": "Send Test",
+      "max_emails_error": "You can add up to 5 email addresses",
+      "invalid_email_error": "Invalid email address",
+      "test_result": "Sent: {sent}, Failed: {failed}",
+      "template_dialog_name": "Template name",
+      "template_dialog_description": "Description (optional)",
+      "send_now_coming": "Send functionality coming in a future sprint"
     }
   },
   "btn": {
