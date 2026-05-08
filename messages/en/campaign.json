@@ -62,7 +62,10 @@
       "logo_url_helper": "URL of the logo image to display in the header. Leave empty to use text logo.",
       "preview_label": "Preview",
       "preview_desktop": "Desktop",
-      "preview_mobile": "Mobile"
+      "preview_mobile": "Mobile",
+      "saving": "Saving...",
+      "saved": "Saved",
+      "save_error": "Error while saving"
     },
     "step4": {
       "title": "Final actions",
@@ -122,6 +125,11 @@
     "success": {
       "used": "Campaign created from template. Edit the details and proceed with sending."
     }
+  },
+  "preview": {
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "empty": "No preview available"
   },
   "error": {
     "not_found": "Campaign not found",

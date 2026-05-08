@@ -62,7 +62,10 @@
       "logo_url_helper": "URL dell'immagine del logo da mostrare nell'header. Lascia vuoto per usare il testo del logo.",
       "preview_label": "Anteprima",
       "preview_desktop": "Desktop",
-      "preview_mobile": "Mobile"
+      "preview_mobile": "Mobile",
+      "saving": "Salvataggio in corso...",
+      "saved": "Salvato",
+      "save_error": "Errore durante il salvataggio"
     },
     "step4": {
       "title": "Azioni finali",
@@ -122,6 +125,11 @@
     "success": {
       "used": "Campagna creata dal template. Modifica i dettagli e procedi con l'invio."
     }
+  },
+  "preview": {
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "empty": "Nessuna anteprima disponibile"
   },
   "error": {
     "not_found": "Campagna non trovata",
