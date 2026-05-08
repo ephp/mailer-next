@@ -28,6 +28,26 @@
   "section": {
     "taxonomies": "Tassonomie"
   },
+  "tab": {
+    "data": "Dati",
+    "history": "Storico"
+  },
+  "history": {
+    "section_kpi": "Metriche Personali",
+    "kpi_open_rate": "Open Rate",
+    "kpi_click_rate": "Click Rate",
+    "kpi_engagement": "Engagement Score",
+    "section_campaigns": "Campagne Ricevute",
+    "no_campaigns": "Nessuna campagna ricevuta da questo contatto.",
+    "col_campaign": "Campagna",
+    "col_sent_at": "Data invio",
+    "col_opened": "Aperto",
+    "col_open_count": "N° aperture",
+    "col_clicked": "Cliccato",
+    "col_click_count": "N° click",
+    "col_links": "Link cliccati",
+    "col_unsubscribed": "Disiscr."
+  },
   "import": {
     "page": {
       "title": "Importa contatti"
