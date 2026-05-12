@@ -3,6 +3,7 @@
 import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
+import {resolveMediaUrl} from '@/shared/constants/AppConst';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -15,6 +16,11 @@ import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -59,6 +65,7 @@ const AccountForm = (
   const {performAsyncCall} = useAsyncCallHelper2Actions();
   const {enqueueSnackbar} = useSnackbar();
   const [regenerating, setRegenerating] = useState(false);
+  const [confirmRegenerateOpen, setConfirmRegenerateOpen] = useState(false);
   const [diagnosing, setDiagnosing] = useState(false);
   const [diagnosticResult, setDiagnosticResult] = useState<SmtpDiagnosticResult | null>(null);
   const [logoUploading, setLogoUploading] = useState(false);
@@ -120,6 +127,8 @@ const AccountForm = (
             smtp_user: data.smtp_user,
             smtp_password: data.smtp_password,
             smtp_encryption: data.smtp_encryption,
+            api_rate_limit: data.api_rate_limit,
+            privacy_policy: data.privacy_policy,
           });
         } else {
           promise = updateAccountById({entity: {...data}});
@@ -332,6 +341,27 @@ const AccountForm = (
           </SkeletonWrapper>
         </Grid>
 
+        <Grid size={12}>
+          <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
+            {t('account.section.privacy')}
+          </Box>
+        </Grid>
+        <Grid size={12}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <TextField
+              name="privacy_policy"
+              fullWidth
+              multiline
+              minRows={8}
+              label={t('account.field.privacy_policy')}
+              helperText={t('account.help.privacy_policy')}
+              value={values.privacy_policy ?? ''}
+              onChange={(e) => setValues(v => ({...v, privacy_policy: e.target.value || null}))}
+              slotProps={{inputLabel: {shrink: true}}}
+            />
+          </SkeletonWrapper>
+        </Grid>
+
         {forMyAccount && (
           <>
             <Grid size={12}>
@@ -345,7 +375,7 @@ const AccountForm = (
                   {values.logo ? (
                     <Box
                       component="img"
-                      src={values.logo.url}
+                      src={resolveMediaUrl(values.logo.url) ?? ''}
                       alt={t('account.field.logo')}
                       sx={{
                         width: 80,
@@ -639,7 +669,7 @@ const AccountForm = (
                   </Tooltip>
                   {forMyAccount && (
                     <Tooltip title={t('account.btn.regenerate_api_key')}>
-                      <IconButton onClick={handleRegenerateApiKey} disabled={regenerating} size="large">
+                      <IconButton onClick={() => setConfirmRegenerateOpen(true)} disabled={regenerating} size="large">
                         <RefreshIcon />
                       </IconButton>
                     </Tooltip>
@@ -647,6 +677,25 @@ const AccountForm = (
                 </Box>
               </SkeletonWrapper>
             </Grid>
+            {forMyAccount && (
+              <Grid size={{xs: 12, md: 4}}>
+                <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+                  <TextField
+                    name="api_rate_limit"
+                    fullWidth
+                    type="number"
+                    label={t('account.field.api_rate_limit')}
+                    helperText={t('account.help.api_rate_limit')}
+                    value={values.api_rate_limit}
+                    onChange={(e) => setValues(v => ({...v, api_rate_limit: parseInt(e.target.value, 10) || 1}))}
+                    slotProps={{
+                      input: {inputProps: {min: 1, max: 1000}},
+                      inputLabel: {shrink: true},
+                    }}
+                  />
+                </SkeletonWrapper>
+              </Grid>
+            )}
           </>
         )}
 
@@ -760,6 +809,28 @@ const AccountForm = (
           </Box>
         </Grid>
       </Grid>
+
+      <Dialog open={confirmRegenerateOpen} onClose={() => setConfirmRegenerateOpen(false)}>
+        <DialogTitle>{t('account.dialog.regenerate_api_key.title')}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{t('account.dialog.regenerate_api_key.message')}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmRegenerateOpen(false)}>
+            {t('messages.btn.cancel')}
+          </Button>
+          <Button
+            color="warning"
+            variant="contained"
+            onClick={() => {
+              setConfirmRegenerateOpen(false);
+              handleRegenerateApiKey();
+            }}
+          >
+            {t('account.btn.regenerate_anyway')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

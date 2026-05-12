@@ -29,7 +29,9 @@ export interface Account {
   batch_size: number;
   send_interval: number;
   api_key: string;
+  api_rate_limit: number;
   enabled: boolean;
+  privacy_policy: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -49,6 +51,8 @@ export interface AccountUpdateInput {
   smtp_encryption?: SmtpEncryption | null;
   batch_size?: number;
   send_interval?: number;
+  api_rate_limit?: number;
+  privacy_policy?: string | null;
 }
 
 export interface SmtpTestInput {
@@ -78,7 +82,9 @@ export const accountSchema = yupObject({
   batch_size: yupNumber().required(),
   send_interval: yupNumber().required(),
   api_key: yupString().required(),
+  api_rate_limit: yupNumber().required().min(1).max(1000),
   enabled: yupBoolean().required(),
+  privacy_policy: yupString().nullable().defined(),
 });
 
 export interface SmtpCheckResult {
@@ -117,7 +123,9 @@ export const newAccount: Account = {
   batch_size: 50,
   send_interval: 30,
   api_key: '',
+  api_rate_limit: 60,
   enabled: true,
+  privacy_policy: null,
   created_at: null,
   updated_at: null,
 };

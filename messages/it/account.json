@@ -20,23 +20,29 @@
     "smtp_encryption": "Cifratura SMTP",
     "test_email_to": "Email destinatario test",
     "api_key": "Chiave API",
-    "enabled": "Abilitato"
+    "api_rate_limit": "Rate limit API (richieste/minuto)",
+    "enabled": "Abilitato",
+    "privacy_policy": "Testo dell'informativa sulla privacy"
   },
   "section": {
     "logo": "Logo Aziendale",
     "smtp": "Configurazione SMTP",
     "api": "Integrazione API",
-    "diagnostic": "Diagnostica SMTP & DNS"
+    "diagnostic": "Diagnostica SMTP & DNS",
+    "privacy": "Informativa sulla privacy"
   },
   "help": {
     "mail_from": "Indirizzo che apparirà come mittente delle email inviate",
-    "mail_from_name": "Nome visualizzato accanto all'email mittente"
+    "mail_from_name": "Nome visualizzato accanto all'email mittente",
+    "privacy_policy": "Lascia vuoto per usare il testo predefinito. Placeholder disponibili: [[nome_account]], [[email_contatto_account]], [[indirizzo_account]], [[partita_iva_account]], [[mail_from_account]], [[mail_from_name_account]]",
+    "api_rate_limit": "Numero massimo di richieste API al minuto per questo account (min 1, max 1000)"
   },
   "btn": {
     "upload_logo": "Carica logo",
     "change_logo": "Cambia logo",
     "copy_api_key": "Copia chiave API",
     "regenerate_api_key": "Rigenera chiave API",
+    "regenerate_anyway": "Rigenera comunque",
     "diagnose": "Esegui diagnostica",
     "test_smtp": "Test Connessione SMTP",
     "send_test_email": "Invia Email di Test",
@@ -94,6 +100,12 @@
       "required": "Il nome del mittente è obbligatorio"
     },
     "not_found": "Account non trovato"
+  },
+  "dialog": {
+    "regenerate_api_key": {
+      "title": "Rigenera chiave API",
+      "message": "Sei sicuro di voler rigenerare la chiave API? Tutti i client installati (plugin WordPress, bundle Symfony e altri) smetteranno di funzionare e dovranno essere riconfigurati con la nuova chiave."
+    }
   },
   "success": {
     "created": "Account creato con successo",

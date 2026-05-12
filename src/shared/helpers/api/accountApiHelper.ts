@@ -23,7 +23,9 @@ type AccountApiPayload = {
   batchSize: number;
   sendInterval: number;
   apiKey: string;
+  apiRateLimit: number;
   enabled: boolean;
+  privacyPolicy: string | null;
   createdAt: string | null;
   updatedAt: string | null;
 };
@@ -45,7 +47,9 @@ const mapAccountFromApi = (raw: AccountApiPayload): Account => ({
   batch_size: raw.batchSize,
   send_interval: raw.sendInterval,
   api_key: raw.apiKey,
+  api_rate_limit: raw.apiRateLimit,
   enabled: raw.enabled,
+  privacy_policy: raw.privacyPolicy ?? null,
   created_at: raw.createdAt,
   updated_at: raw.updatedAt,
 });
@@ -99,6 +103,8 @@ export const updateAccount = async (data: AccountUpdateInput): Promise<DetailRes
       smtpEncryption: data.smtp_encryption,
       batchSize: data.batch_size,
       sendInterval: data.send_interval,
+      apiRateLimit: data.api_rate_limit,
+      privacyPolicy: data.privacy_policy,
     },
   });
   return mapDetailFromApi(response);

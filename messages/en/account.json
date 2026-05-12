@@ -20,23 +20,29 @@
     "smtp_encryption": "SMTP Encryption",
     "test_email_to": "Test recipient email",
     "api_key": "API Key",
-    "enabled": "Enabled"
+    "api_rate_limit": "API rate limit (requests/minute)",
+    "enabled": "Enabled",
+    "privacy_policy": "Privacy policy text"
   },
   "section": {
     "logo": "Company Logo",
     "smtp": "SMTP Configuration",
     "api": "API Integration",
-    "diagnostic": "SMTP & DNS Diagnostics"
+    "diagnostic": "SMTP & DNS Diagnostics",
+    "privacy": "Privacy policy"
   },
   "help": {
     "mail_from": "Address that will appear as the sender of outgoing emails",
-    "mail_from_name": "Display name shown next to the sender email"
+    "mail_from_name": "Display name shown next to the sender email",
+    "privacy_policy": "Leave empty to use the default template. Available placeholders: [[nome_account]], [[email_contatto_account]], [[indirizzo_account]], [[partita_iva_account]], [[mail_from_account]], [[mail_from_name_account]]",
+    "api_rate_limit": "Maximum number of API requests per minute for this account (min 1, max 1000)"
   },
   "btn": {
     "upload_logo": "Upload logo",
     "change_logo": "Change logo",
     "copy_api_key": "Copy API key",
     "regenerate_api_key": "Regenerate API key",
+    "regenerate_anyway": "Regenerate anyway",
     "diagnose": "Run diagnostics",
     "test_smtp": "Test SMTP Connection",
     "send_test_email": "Send Test Email",
@@ -94,6 +100,12 @@
       "required": "Sender name is required"
     },
     "not_found": "Account not found"
+  },
+  "dialog": {
+    "regenerate_api_key": {
+      "title": "Regenerate API Key",
+      "message": "Are you sure you want to regenerate the API key? All installed clients (WordPress plugin, Symfony bundle, and others) will stop working and must be reconfigured with the new key."
+    }
   },
   "success": {
     "created": "Account created successfully",
