@@ -196,6 +196,7 @@
     "templates": "Templates",
     "statistics": "Statistics",
     "admin": "Admin",
-    "users": "Users"
+    "users": "Users",
+    "api_docs": "API Integration"
   }
 }

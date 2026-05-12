@@ -9,8 +9,10 @@ import ListIcon from '@mui/icons-material/List';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import ArticleIcon from '@mui/icons-material/Article';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import IntegrationInstructionsIcon from '@mui/icons-material/IntegrationInstructions';
 import {
   ACCOUNT_SETTINGS,
+  API_DOCS,
   CAMPAIGN_CRUD_LIST,
   CAMPAIGN_TEMPLATES,
   MAIL_LIST_CRUD_LIST,
@@ -100,6 +102,15 @@ const routesConfig: RouterConfigData[] = [
     icon: <SettingsIcon/>,
     permittedRole: RoutePermittedRole.User,
     url: ACCOUNT_SETTINGS,
+  },
+
+  {
+    id: "api_docs",
+    type: "item",
+    messageId: "messages.sidebar.api_docs",
+    icon: <IntegrationInstructionsIcon/>,
+    permittedRole: RoutePermittedRole.User,
+    url: API_DOCS,
   },
 
   {

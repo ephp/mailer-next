@@ -11,6 +11,7 @@ export default getRequestConfig(async () => {
     messages: {
       tag: (await import(`../@oimmei/bundle/tag/messages/${locale}/tag.json`)).default,
       account: (await import(`../../messages/${locale}/account.json`)).default,
+      api_docs: (await import(`../../messages/${locale}/api_docs.json`)).default,
       campaign: (await import(`../../messages/${locale}/campaign.json`)).default,
       contact: (await import(`../../messages/${locale}/contact.json`)).default,
       dashboard: (await import(`../../messages/${locale}/dashboard.json`)).default,

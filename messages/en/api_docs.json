@@ -1,0 +1,91 @@
+{
+  "page": {
+    "title": "API Integration"
+  },
+  "intro": {
+    "title": "Introduction",
+    "body": "Mailflow provides a public REST API authenticated via API key. You can subscribe and unsubscribe contacts, create and send email campaigns, and read statistics — all via simple HTTP calls from any programming language."
+  },
+  "auth": {
+    "title": "Authentication",
+    "body": "Every request must include the HTTP header X-API-Key with your API key. The key is visible (and can be regenerated) in the Account Settings page, under the «API Integration» section.",
+    "example_title": "Example header",
+    "account_link": "Account Settings"
+  },
+  "rate_limit": {
+    "title": "Rate Limit",
+    "body": "Each account has a configurable per-minute request limit (default: 60 req/min). If you exceed the limit, the API responds with HTTP 429 and the Retry-After header indicating the seconds to wait before retrying.",
+    "table_code": "HTTP",
+    "table_desc": "Meaning",
+    "429_desc": "Rate limit exceeded — wait the number of seconds indicated in the Retry-After header"
+  },
+  "endpoints": {
+    "title": "Available Endpoints",
+    "base_url_note": "The base URL is your Mailflow server URL. Replace https://mailflow.example.com with your domain.",
+    "subscribe": {
+      "title": "Subscribe a contact",
+      "desc": "Creates or updates a contact in a list. If the contact already exists it is updated; if previously unsubscribed it is re-subscribed. Requires privacy_accepted: true.",
+      "method": "POST",
+      "path": "/api/public/v1/lists/{listId}/contacts"
+    },
+    "unsubscribe": {
+      "title": "Unsubscribe a contact",
+      "desc": "Unsubscribes a contact from a list by setting iscritto=false. The operation is idempotent: if the contact does not exist it responds with 404.",
+      "method": "DELETE",
+      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+    },
+    "lookup": {
+      "title": "Look up a contact",
+      "desc": "Retrieves a contact's data in a specific list. Useful for pre-filling subscription forms.",
+      "method": "GET",
+      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+    },
+    "lists": {
+      "title": "List available lists",
+      "desc": "Returns all lists available for your account. Useful for populating client-side selection dropdowns.",
+      "method": "GET",
+      "path": "/api/public/v1/lists"
+    },
+    "privacy_policy": {
+      "title": "Get privacy policy",
+      "desc": "Retrieves the account's privacy policy text, already rendered with substituted placeholders. Use this endpoint to show the policy before subscription.",
+      "method": "GET",
+      "path": "/api/public/v1/lists/{listId}/privacy-policy"
+    },
+    "create_campaign": {
+      "title": "Create a campaign",
+      "desc": "Creates a new email campaign in draft status. You can specify subject, body, target lists, and taxonomy filters.",
+      "method": "POST",
+      "path": "/api/public/v1/campaigns"
+    },
+    "send_campaign": {
+      "title": "Send a campaign",
+      "desc": "Triggers sending of a campaign in draft or scheduled status. After the call the status becomes sending.",
+      "method": "POST",
+      "path": "/api/public/v1/campaigns/{id}/send"
+    },
+    "campaign_stats": {
+      "title": "Campaign statistics",
+      "desc": "Reads a campaign's statistics: opens, clicks, bounces, unsubscribes and their percentage rates.",
+      "method": "GET",
+      "path": "/api/public/v1/campaigns/{id}/stats"
+    }
+  },
+  "errors": {
+    "title": "Error Handling",
+    "body": "All errors return a JSON with fields error (string code) and message (human-readable description).",
+    "table_code": "HTTP",
+    "table_desc": "Meaning",
+    "401_desc": "Missing or invalid API Key",
+    "403_desc": "Account disabled",
+    "404_desc": "Resource not found",
+    "409_desc": "State conflict (e.g. campaign already sent or sending)",
+    "422_desc": "Invalid data (see message for details)",
+    "429_desc": "Rate limit exceeded"
+  },
+  "swagger": {
+    "title": "Interactive Documentation (Swagger UI)",
+    "body": "Explore and test all endpoints directly in the browser with the Swagger UI interface. You can authenticate with your API Key by clicking «Authorize».",
+    "btn": "Open Swagger UI"
+  }
+}

@@ -18,6 +18,7 @@ export const USER_CRUD_NEW = "/backend/user/new";
 export const USER_CRUD_EDIT = "/backend/user/:id/edit";
 
 export const ACCOUNT_SETTINGS = "/account/settings";
+export const API_DOCS = "/api-docs";
 
 export const MAIL_LIST_CRUD_LIST = "/lists";
 export const MAIL_LIST_CRUD_NEW = "/lists/new";

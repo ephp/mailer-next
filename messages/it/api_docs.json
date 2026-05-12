@@ -1,0 +1,91 @@
+{
+  "page": {
+    "title": "Integrazione API"
+  },
+  "intro": {
+    "title": "Introduzione",
+    "body": "Mailflow mette a disposizione un'API REST pubblica autenticata tramite chiave API. Puoi iscrivere e disiscrivere contatti, creare e inviare campagne email e leggere le statistiche — tutto tramite semplici chiamate HTTP da qualsiasi linguaggio di programmazione."
+  },
+  "auth": {
+    "title": "Autenticazione",
+    "body": "Ogni richiesta deve includere l'header HTTP X-API-Key con la tua chiave API. La chiave è visibile (e rigenerabile) nella pagina Impostazioni Account, nella sezione «Integrazione API».",
+    "example_title": "Esempio header",
+    "account_link": "Impostazioni Account"
+  },
+  "rate_limit": {
+    "title": "Rate Limit",
+    "body": "Ogni account ha un limite di richieste al minuto configurabile (default: 60 req/min). Se superi il limite, l'API risponde con HTTP 429 e l'header Retry-After che indica i secondi da attendere prima di ritentare.",
+    "table_code": "HTTP",
+    "table_desc": "Significato",
+    "429_desc": "Rate limit superato — attendi il numero di secondi indicato nell'header Retry-After"
+  },
+  "endpoints": {
+    "title": "Endpoint Disponibili",
+    "base_url_note": "La base URL è quella del tuo server Mailflow. Sostituisci https://mailflow.example.com con il tuo dominio.",
+    "subscribe": {
+      "title": "Iscrivere un contatto",
+      "desc": "Crea o aggiorna un contatto in una lista. Se il contatto esiste già viene aggiornato; se era precedentemente disiscritto viene re-iscritto. Richiede privacy_accepted: true.",
+      "method": "POST",
+      "path": "/api/public/v1/lists/{listId}/contacts"
+    },
+    "unsubscribe": {
+      "title": "Disiscrivere un contatto",
+      "desc": "Disiscrive un contatto da una lista impostando iscritto=false. L'operazione è idempotente: se il contatto non esiste risponde comunque 404.",
+      "method": "DELETE",
+      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+    },
+    "lookup": {
+      "title": "Verificare un contatto",
+      "desc": "Recupera i dati di un contatto in una lista specifica. Utile per pre-compilare form di iscrizione.",
+      "method": "GET",
+      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+    },
+    "lists": {
+      "title": "Elencare le liste",
+      "desc": "Restituisce tutte le liste disponibili per il tuo account. Utile per popolare dropdown di selezione lato client.",
+      "method": "GET",
+      "path": "/api/public/v1/lists"
+    },
+    "privacy_policy": {
+      "title": "Ottenere la privacy policy",
+      "desc": "Recupera il testo della privacy policy dell'account, già renderizzato con i placeholder sostituiti. Usa questo endpoint per mostrare la policy prima dell'iscrizione.",
+      "method": "GET",
+      "path": "/api/public/v1/lists/{listId}/privacy-policy"
+    },
+    "create_campaign": {
+      "title": "Creare una campagna",
+      "desc": "Crea una nuova campagna email in stato draft. Puoi specificare oggetto, corpo, liste destinatarie e filtri per tassonomia.",
+      "method": "POST",
+      "path": "/api/public/v1/campaigns"
+    },
+    "send_campaign": {
+      "title": "Inviare una campagna",
+      "desc": "Avvia l'invio di una campagna in stato draft o scheduled. Dopo la chiamata lo stato diventa sending.",
+      "method": "POST",
+      "path": "/api/public/v1/campaigns/{id}/send"
+    },
+    "campaign_stats": {
+      "title": "Statistiche campagna",
+      "desc": "Legge le statistiche di una campagna: aperture, click, bounce, disiscrizioni e relative percentuali.",
+      "method": "GET",
+      "path": "/api/public/v1/campaigns/{id}/stats"
+    }
+  },
+  "errors": {
+    "title": "Gestione Errori",
+    "body": "Tutti gli errori restituiscono un JSON con i campi error (codice stringa) e message (descrizione leggibile).",
+    "table_code": "HTTP",
+    "table_desc": "Significato",
+    "401_desc": "API Key mancante o non valida",
+    "403_desc": "Account disabilitato",
+    "404_desc": "Risorsa non trovata",
+    "409_desc": "Conflitto di stato (es. campagna già inviata o in sending)",
+    "422_desc": "Dati non validi (vedi message per dettagli)",
+    "429_desc": "Rate limit superato"
+  },
+  "swagger": {
+    "title": "Documentazione Interattiva (Swagger UI)",
+    "body": "Esplora e testa tutti gli endpoint direttamente dal browser con l'interfaccia Swagger UI. Puoi autenticarti con la tua API Key cliccando su «Authorize».",
+    "btn": "Apri Swagger UI"
+  }
+}
