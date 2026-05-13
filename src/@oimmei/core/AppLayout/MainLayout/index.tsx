@@ -1,3 +1,5 @@
+'use client';
+
 import React, {ReactElement, useState} from 'react';
 import Stack from '@mui/material/Stack';
 import {useTranslations} from 'next-intl';

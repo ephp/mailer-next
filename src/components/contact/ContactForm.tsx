@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Alert from '@mui/material/Alert';
 import {Contact, newContact} from '@/types/models/Contact';
 import {TaxonomyCategory} from '@/types/models/TaxonomyCategory';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
@@ -192,6 +193,14 @@ const ContactForm = (
             />
           </SkeletonWrapper>
         </Grid>
+
+        {!values.iscritto && values.unsubscribe_reason && (
+          <Grid size={12}>
+            <Alert severity="warning" variant="outlined" sx={{whiteSpace: 'pre-wrap'}}>
+              <strong>{t('contact.field.unsubscribe_reason')}:</strong> {values.unsubscribe_reason}
+            </Alert>
+          </Grid>
+        )}
 
         {categories.length > 0 && (
           <Grid size={12}>

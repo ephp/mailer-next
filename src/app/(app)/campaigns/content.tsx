@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement, useCallback, useMemo, useState} from 'react';
+import React, {ReactElement, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ControlledDataGridProps,
   NextControlledDataGrid,
@@ -8,11 +8,13 @@ import {
   generatePathStorage,
 } from '@Oimmei-Digital-Boutique/crema-components';
 import Box from '@mui/material/Box';
+import AppSearchBar2 from '../../../@oimmei/core/AppSearchBar2';
 import Dialog from '@mui/material/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -27,18 +29,34 @@ import {useSnackbar} from 'notistack';
 import {
   createCampaign,
   deleteCampaign,
+  duplicateCampaign,
   getCampaignsPaginated,
+  getSendingStatus,
 } from '@/shared/helpers/api/campaignApiHelper';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
 import GridActionsLinkCellItem from '@/@oimmei/components/Mui/GridActionsLinkCellItem';
+import SendingProgressModal from '@/components/campaign/SendingProgressModal';
+import {SendingStatus} from '@/types/models/CampaignEmail';
 
-const statusColor: Record<CampaignStatus, 'warning' | 'info' | 'success'> = {
+const SENDING_POLL_INTERVAL_MS = 10000;
+
+const statusColor: Record<CampaignStatus, 'warning' | 'info' | 'success' | 'error'> = {
   draft: 'warning',
   scheduled: 'info',
   sending: 'info',
   sent: 'success',
+  failed: 'error',
+};
+
+const sendingChipSx = {
+  '@keyframes sending-pulse': {
+    '0%': {opacity: 1},
+    '50%': {opacity: 0.55},
+    '100%': {opacity: 1},
+  },
+  animation: 'sending-pulse 1.5s ease-in-out infinite',
 };
 
 const defaultParameters = {
@@ -50,6 +68,7 @@ const CampaignFilterComponent = (
   {filterValues, onFilterChanged}: FilterComponentProps<CampaignListFilter>,
 ) => {
   const t = useTranslations('campaign');
+  const tm = useTranslations('messages');
 
   const handleStatusChange = (_: React.MouseEvent, value: string | null) => {
     const status = value && value !== '' ? value as CampaignStatus : undefined;
@@ -57,7 +76,7 @@ const CampaignFilterComponent = (
   };
 
   return (
-    <Box sx={{display: 'flex', justifyContent: 'flex-start', marginBottom: 2}}>
+    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, marginBottom: 2, flexWrap: 'wrap'}}>
       <ToggleButtonGroup
         value={filterValues.status ?? ''}
         exclusive
@@ -69,6 +88,11 @@ const CampaignFilterComponent = (
         <ToggleButton value="scheduled">{t('status.scheduled')}</ToggleButton>
         <ToggleButton value="sent">{t('status.sent')}</ToggleButton>
       </ToggleButtonGroup>
+      <AppSearchBar2
+        value={filterValues.fts ?? ''}
+        onChange={(e) => onFilterChanged({fts: e.target.value})}
+        placeholder={tm('common.placeholders.search')}
+      />
     </Box>
   );
 };
@@ -87,9 +111,52 @@ const CampaignContent = (): ReactElement => {
   } = useAsyncLoader(getCampaignsPaginated, true);
 
   const [deletingCampaign, setDeletingCampaign] = useState<Campaign | null>(null);
+  const [sendingStatuses, setSendingStatuses] = useState<Record<number, SendingStatus>>({});
+  const [progressModalId, setProgressModalId] = useState<number | null>(null);
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handleDuplicate = useCallback((id: number) => {
-    performAsyncCall(createCampaign({fromTemplateId: id}))
+  useEffect(() => {
+    const sendingIds = campaigns?.items?.filter(c => c.status === 'sending').map(c => c.id) ?? [];
+
+    if (pollingRef.current !== null) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+
+    if (sendingIds.length === 0) return;
+
+    const fetchStatuses = async () => {
+      for (const id of sendingIds) {
+        try {
+          const result = await getSendingStatus(id);
+          if (result.item) {
+            setSendingStatuses(prev => ({...prev, [id]: result.item!}));
+          }
+        } catch {
+          // ignore network errors, retry on next poll
+        }
+      }
+    };
+
+    void fetchStatuses();
+    pollingRef.current = setInterval(() => { void fetchStatuses(); }, SENDING_POLL_INTERVAL_MS);
+
+    return () => {
+      if (pollingRef.current !== null) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [campaigns]);
+
+  const handleDuplicate = useCallback((id: number, fromTemplate: boolean) => {
+    // Templates use createCampaign({fromTemplateId}) to spawn a new draft
+    // from the template; regular campaigns use duplicateCampaign which
+    // clones every field plus mail-list associations.
+    const call = fromTemplate
+      ? createCampaign({fromTemplateId: id})
+      : duplicateCampaign(id);
+    performAsyncCall(call)
       .then((res) => {
         if (res?.item?.id) {
           enqueueSnackbar({message: t('campaign.success.duplicated'), variant: 'success'});
@@ -99,6 +166,18 @@ const CampaignContent = (): ReactElement => {
       .catch(console.error);
   }, [performAsyncCall, router, enqueueSnackbar, t]);
 
+  const handleRowClick = useCallback((row: Campaign) => {
+    if (row.status === 'sending') {
+      setProgressModalId(row.id);
+    } else if (row.status === 'sent') {
+      router.push(generatePathStorage(CAMPAIGN_STATS, {id: row.id.toString()}));
+    }
+  }, [router]);
+
+  const getRowClassName = useCallback(({row}: {row: Campaign}) =>
+    row.status === 'sending' || row.status === 'sent' ? 'row-clickable' : '',
+  []);
+
   const columns = useMemo<GridColDef<Campaign>[]>(
     () => {
       const statusLabels: Record<CampaignStatus, string> = {
@@ -106,6 +185,7 @@ const CampaignContent = (): ReactElement => {
         scheduled: t('campaign.status.scheduled'),
         sending: t('campaign.status.sending'),
         sent: t('campaign.status.sent'),
+        failed: t('campaign.status.failed'),
       };
 
       return [
@@ -136,15 +216,58 @@ const CampaignContent = (): ReactElement => {
         {
           field: 'status',
           headerName: t('campaign.field.draft'),
-          width: 130,
+          width: 140,
           sortable: false,
           renderCell: ({row}) => (
-            <Chip
-              label={statusLabels[row.status]}
-              size="small"
-              color={statusColor[row.status]}
-            />
+            row.status === 'sending' ? (
+              <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', gap: 0.5}}>
+                <Chip
+                  label={statusLabels[row.status]}
+                  size="small"
+                  color={statusColor[row.status]}
+                  sx={sendingChipSx}
+                />
+                <LinearProgress
+                  variant={sendingStatuses[row.id] !== undefined ? 'determinate' : 'indeterminate'}
+                  value={sendingStatuses[row.id]?.percent_complete ?? 0}
+                  sx={{height: 3, borderRadius: 2}}
+                />
+              </Box>
+            ) : (
+              <Chip
+                label={statusLabels[row.status]}
+                size="small"
+                color={statusColor[row.status]}
+              />
+            )
           ),
+        },
+        {
+          field: 'stats_sent',
+          headerName: t('campaign.field.stats_sent'),
+          width: 90,
+          sortable: false,
+          align: 'right',
+          headerAlign: 'right',
+          renderCell: ({row}) => row.stats_sent ?? '—',
+        },
+        {
+          field: 'stats_unique_opens',
+          headerName: t('campaign.field.stats_unique_opens'),
+          width: 90,
+          sortable: false,
+          align: 'right',
+          headerAlign: 'right',
+          renderCell: ({row}) => row.stats_unique_opens ?? '—',
+        },
+        {
+          field: 'stats_unique_clicks',
+          headerName: t('campaign.field.stats_unique_clicks'),
+          width: 90,
+          sortable: false,
+          align: 'right',
+          headerAlign: 'right',
+          renderCell: ({row}) => row.stats_unique_clicks ?? '—',
         },
         {
           field: 'created_at',
@@ -184,8 +307,7 @@ const CampaignContent = (): ReactElement => {
             <GridActionsCellItem
               key="duplicate"
               label={t('campaign.btn.duplicate')}
-              onClick={() => handleDuplicate(row.id)}
-              disabled={!row.template}
+              onClick={() => handleDuplicate(row.id, row.template)}
               showInMenu
             />,
             ...(row.status === 'draft' ? [
@@ -200,7 +322,7 @@ const CampaignContent = (): ReactElement => {
         },
       ];
     },
-    [t, handleDuplicate],
+    [t, handleDuplicate, sendingStatuses],
   );
 
   const onParametersChanged =
@@ -242,6 +364,11 @@ const CampaignContent = (): ReactElement => {
         slotProps={{
           loadingOverlay: {variant: 'skeleton', noRowsVariant: 'skeleton'},
         }}
+        onRowClick={({row}) => handleRowClick(row)}
+        getRowClassName={getRowClassName}
+        sx={{
+          '& .MuiDataGrid-row.row-clickable': {cursor: 'pointer'},
+        }}
         noPadding
       />
 
@@ -265,6 +392,14 @@ const CampaignContent = (): ReactElement => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {progressModalId !== null && (
+        <SendingProgressModal
+          campaignId={progressModalId}
+          open={progressModalId !== null}
+          onClose={() => setProgressModalId(null)}
+        />
+      )}
     </>
   );
 };

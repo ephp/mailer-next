@@ -4,10 +4,12 @@ import {
   PaginatedQuery,
   PaginatedResult,
 } from '@Oimmei-Digital-Boutique/crema-components';
+import {baseUrl} from '@/shared/constants/AppConst';
 import {
   Campaign,
   CampaignFilter,
   CampaignListFilter,
+  CampaignAttachment,
   CampaignMailList,
   CampaignStats,
   CampaignStatus,
@@ -40,6 +42,10 @@ type CampaignApiPayload = {
   recipientCount: number;
   createdAt: string | null;
   updatedAt: string | null;
+  statsSent?: number | null;
+  statsUniqueOpens?: number | null;
+  statsUniqueClicks?: number | null;
+  attachments?: CampaignAttachment[];
 };
 
 type RecipientsCountPayload = {
@@ -64,9 +70,13 @@ const mapCampaignFromApi = (raw: CampaignApiPayload): Campaign => ({
   account_id: raw.accountId,
   mail_list_ids: raw.mailListIds,
   mail_lists: raw.mailListNames ?? [],
+  attachments: raw.attachments ?? [],
   recipient_count: raw.recipientCount,
   created_at: raw.createdAt,
   updated_at: raw.updatedAt,
+  stats_sent: raw.statsSent ?? null,
+  stats_unique_opens: raw.statsUniqueOpens ?? null,
+  stats_unique_clicks: raw.statsUniqueClicks ?? null,
 });
 
 const mapDetailFromApi = (raw: DetailResult<CampaignApiPayload>): DetailResult<Campaign> => ({
@@ -88,7 +98,7 @@ export const getCampaigns = async ({
 }: {
   page?: number;
   perPage?: number;
-  filter?: {status?: CampaignStatus; template?: boolean; sort?: string; direction?: string};
+  filter?: {status?: CampaignStatus; template?: boolean; sort?: string; direction?: string; fts?: string};
 }): Promise<PaginatedResult<Campaign>> => {
   const {data} = await oiFetch.get<PaginatedResult<CampaignApiPayload>>('/campaigns', {
     params: {
@@ -98,9 +108,20 @@ export const getCampaigns = async ({
       template: filter?.template ?? false,
       sort: filter?.sort ?? 'createdAt',
       direction: filter?.direction ?? 'desc',
+      fts: filter?.fts ?? undefined,
     },
   });
   return mapPaginatedFromApi(data);
+};
+
+export const scheduleCampaign = async (
+  id: number,
+  scheduledAt: string | null,
+): Promise<DetailResult<Campaign>> => {
+  const {data} = await oiFetch.post<DetailResult<CampaignApiPayload>>(`/campaigns/${id}/schedule`, {
+    scheduled_at: scheduledAt,
+  });
+  return mapDetailFromApi(data);
 };
 
 export const getCampaign = async (id: number): Promise<DetailResult<Campaign>> => {
@@ -133,7 +154,16 @@ export const updateCampaign = async (
 };
 
 export const deleteCampaign = async (id: number): Promise<void> => {
-  await oiFetch.delete(`/campaigns/${id}`);
+  // Bypass OiFetch: it always tries `await response.json()`, which throws on
+  // an empty body (the backend returns 204 No Content for successful deletes).
+  const response = await fetch(`${baseUrl}/campaigns/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {'Oi-Cookie-Auth': '1'},
+  });
+  if (!response.ok && response.status !== 204) {
+    throw new Error(`Delete failed: ${response.status}`);
+  }
 };
 
 export const getRecipientsCount = async (
@@ -157,7 +187,11 @@ export const getCampaignsPaginated = async ({
   return getCampaigns({
     page,
     perPage,
-    filter: {status: filters?.status, template: false},
+    filter: {
+      status: filters?.status,
+      template: false,
+      fts: filters?.fts && filters.fts.trim() !== '' ? filters.fts.trim() : undefined,
+    },
   });
 };
 
@@ -378,4 +412,35 @@ export const saveAsTemplateLegacy = async (
 ): Promise<DetailResult<Campaign>> => {
   const {data} = await oiFetch.post<DetailResult<Campaign>>(`/campaigns/${id}/save-as-template`);
   return data;
+};
+
+export const uploadCampaignAttachment = async (
+  campaignId: number,
+  file: File,
+): Promise<CampaignAttachment> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const {data} = await oiFetch.post<DetailResult<CampaignAttachment>>(
+    `/campaigns/${campaignId}/attachments`,
+    formData,
+  );
+  if (!data.item) {
+    throw new Error('Upload failed: missing item in response');
+  }
+  return data.item;
+};
+
+export const deleteCampaignAttachment = async (
+  campaignId: number,
+  attachmentId: number,
+): Promise<void> => {
+  // OiFetch always parses JSON, but the endpoint returns 204 No Content.
+  const response = await fetch(`${baseUrl}/campaigns/${campaignId}/attachments/${attachmentId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {'Oi-Cookie-Auth': '1'},
+  });
+  if (!response.ok && response.status !== 204) {
+    throw new Error(`Delete failed: ${response.status}`);
+  }
 };

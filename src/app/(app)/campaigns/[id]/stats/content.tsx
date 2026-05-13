@@ -184,8 +184,10 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
       .finally(() => setExportingCsv(false));
   };
 
-  const fmt = (n: number): string => n.toLocaleString('it-IT');
-  const fmtPct = (n: number): string => `${n.toFixed(2)}%`;
+  const fmt = (n: number | null | undefined): string =>
+    n == null ? '—' : n.toLocaleString('it-IT');
+  const fmtPct = (n: number | null | undefined): string =>
+    n == null ? '—' : `${n.toFixed(2)}%`;
   const fmtDate = (s: string | null): string => {
     if (!s) return '—';
     return new Date(s).toLocaleString('it-IT', {

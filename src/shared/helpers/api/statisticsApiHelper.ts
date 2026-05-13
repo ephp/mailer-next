@@ -16,154 +16,28 @@ import {baseUrl} from '@/shared/constants/AppConst';
 
 // ─── API payload types (camelCase from Symfony serializer) ────────────────────
 
-type CampaignStatsApiPayload = {
-  total: number;
-  sent: number;
-  failed: number;
-  bounced: number;
-  uniqueOpens: number;
-  totalOpens: number;
-  uniqueClicks: number;
-  totalClicks: number;
-  unsubscribes: number;
-  openRate: number;
-  clickRate: number;
-  clickToOpenRate: number;
-  unsubscribeRate: number;
-};
+// The backend returns plain PHP arrays, so the keys are already snake_case
+// (Symfony Serializer doesn't reformat raw arrays). The mappers below are
+// effectively identity maps but kept explicit for type safety.
 
-type TimelinePointApiPayload = {
-  timestamp: string;
-  value: number;
-};
+type CampaignStatsApiPayload = CampaignStats;
+type TimelinePointApiPayload = TimelinePoint;
+type LinkStatsApiPayload = LinkStats;
+type AccountMonthlyPointApiPayload = AccountMonthlyPoint;
+type CampaignRecipientApiPayload = CampaignRecipient;
+type ContactHistoryCampaignApiPayload = ContactHistoryCampaign;
+type ContactHistoryKpiApiPayload = ContactHistoryKpi;
+type ContactHistoryApiPayload = ContactHistory;
 
-type LinkStatsApiPayload = {
-  originalUrl: string;
-  uniqueClicks: number;
-  totalClicks: number;
-  clickRate: number;
-};
+// ─── Mappers (snake_case → snake_case, identity for type safety) ─────────────
 
-type AccountMonthlyPointApiPayload = {
-  month: string;
-  emailsSent: number;
-  uniqueOpens: number;
-  uniqueClicks: number;
-  averageOpenRate: number;
-  averageClickRate: number;
-};
-
-type CampaignRecipientApiPayload = {
-  id: number;
-  email: string;
-  contactNome: string | null;
-  contactCognome: string | null;
-  mailListName: string | null;
-  status: string;
-  opened: boolean;
-  openedAt: string | null;
-  openCount: number;
-  clicked: boolean;
-  clickCount: number;
-  unsubscribed: boolean;
-};
-
-type ContactHistoryCampaignApiPayload = {
-  campaignId: number;
-  campaignName: string | null;
-  sentAt: string | null;
-  opened: boolean;
-  openedAt: string | null;
-  openCount: number;
-  clicked: boolean;
-  clickCount: number;
-  linksClicked: string[];
-  unsubscribed: boolean;
-};
-
-type ContactHistoryKpiApiPayload = {
-  personalOpenRate: number;
-  personalClickRate: number;
-  engagementScore: number;
-};
-
-type ContactHistoryApiPayload = {
-  campaigns: ContactHistoryCampaignApiPayload[];
-  kpi: ContactHistoryKpiApiPayload;
-};
-
-// ─── Mappers (camelCase → snake_case) ────────────────────────────────────────
-
-const mapCampaignStatsFromApi = (raw: CampaignStatsApiPayload): CampaignStats => ({
-  total: raw.total,
-  sent: raw.sent,
-  failed: raw.failed,
-  bounced: raw.bounced,
-  unique_opens: raw.uniqueOpens,
-  total_opens: raw.totalOpens,
-  unique_clicks: raw.uniqueClicks,
-  total_clicks: raw.totalClicks,
-  unsubscribes: raw.unsubscribes,
-  open_rate: raw.openRate,
-  click_rate: raw.clickRate,
-  click_to_open_rate: raw.clickToOpenRate,
-  unsubscribe_rate: raw.unsubscribeRate,
-});
-
-const mapTimelinePointFromApi = (raw: TimelinePointApiPayload): TimelinePoint => ({
-  timestamp: raw.timestamp,
-  value: raw.value,
-});
-
-const mapLinkStatsFromApi = (raw: LinkStatsApiPayload): LinkStats => ({
-  original_url: raw.originalUrl,
-  unique_clicks: raw.uniqueClicks,
-  total_clicks: raw.totalClicks,
-  click_rate: raw.clickRate,
-});
-
-const mapAccountMonthlyPointFromApi = (raw: AccountMonthlyPointApiPayload): AccountMonthlyPoint => ({
-  month: raw.month,
-  emails_sent: raw.emailsSent,
-  unique_opens: raw.uniqueOpens,
-  unique_clicks: raw.uniqueClicks,
-  average_open_rate: raw.averageOpenRate,
-  average_click_rate: raw.averageClickRate,
-});
-
-const mapCampaignRecipientFromApi = (raw: CampaignRecipientApiPayload): CampaignRecipient => ({
-  id: raw.id,
-  email: raw.email,
-  contact_nome: raw.contactNome,
-  contact_cognome: raw.contactCognome,
-  mail_list_name: raw.mailListName,
-  status: raw.status,
-  opened: raw.opened,
-  opened_at: raw.openedAt,
-  open_count: raw.openCount,
-  clicked: raw.clicked,
-  click_count: raw.clickCount,
-  unsubscribed: raw.unsubscribed,
-});
-
-const mapContactHistoryCampaignFromApi = (raw: ContactHistoryCampaignApiPayload): ContactHistoryCampaign => ({
-  campaign_id: raw.campaignId,
-  campaign_name: raw.campaignName,
-  sent_at: raw.sentAt,
-  opened: raw.opened,
-  opened_at: raw.openedAt,
-  open_count: raw.openCount,
-  clicked: raw.clicked,
-  click_count: raw.clickCount,
-  links_clicked: raw.linksClicked,
-  unsubscribed: raw.unsubscribed,
-});
-
-const mapContactHistoryKpiFromApi = (raw: ContactHistoryKpiApiPayload): ContactHistoryKpi => ({
-  personal_open_rate: raw.personalOpenRate,
-  personal_click_rate: raw.personalClickRate,
-  engagement_score: raw.engagementScore,
-});
+const mapCampaignStatsFromApi = (raw: CampaignStatsApiPayload): CampaignStats => ({...raw});
+const mapTimelinePointFromApi = (raw: TimelinePointApiPayload): TimelinePoint => ({...raw});
+const mapLinkStatsFromApi = (raw: LinkStatsApiPayload): LinkStats => ({...raw});
+const mapAccountMonthlyPointFromApi = (raw: AccountMonthlyPointApiPayload): AccountMonthlyPoint => ({...raw});
+const mapCampaignRecipientFromApi = (raw: CampaignRecipientApiPayload): CampaignRecipient => ({...raw});
+const mapContactHistoryCampaignFromApi = (raw: ContactHistoryCampaignApiPayload): ContactHistoryCampaign => ({...raw});
+const mapContactHistoryKpiFromApi = (raw: ContactHistoryKpiApiPayload): ContactHistoryKpi => ({...raw});
 
 const mapContactHistoryFromApi = (raw: ContactHistoryApiPayload): ContactHistory => ({
   campaigns: raw.campaigns.map(mapContactHistoryCampaignFromApi),

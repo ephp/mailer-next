@@ -25,6 +25,7 @@ import {deleteMailList, getMailLists} from '@/shared/helpers/api/mailListApiHelp
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
 import {useTranslations} from 'next-intl';
+import MailListQRDialog from '@/components/maillist/MailListQRDialog';
 import GridActionsLinkCellItem from '@/@oimmei/components/Mui/GridActionsLinkCellItem';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -74,6 +75,7 @@ const MailListContent = () => {
   } = useAsyncLoader(getMailLists, true);
 
   const [deletingMailList, setDeletingMailList] = useState<MailList | null>(null);
+  const [qrMailList, setQrMailList] = useState<MailList | null>(null);
 
   const columns = useMemo<GridColDef<MailList>[]>(
     () => ([
@@ -96,10 +98,49 @@ const MailListContent = () => {
         },
       },
       {
-        field: "contact_count",
-        headerName: t("maillist.field.contact_count"),
-        width: 120,
+        field: "stats_campaigns_sent",
+        headerName: t("maillist.field.stats_campaigns_sent"),
+        width: 90,
         sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.stats_campaigns_sent ?? 0,
+      },
+      {
+        field: "active_count",
+        headerName: t("maillist.field.active_count"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => `${row.active_count} / ${row.contact_count}`,
+      },
+      {
+        field: "stats_emails_sent",
+        headerName: t("maillist.field.stats_emails_sent"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.stats_emails_sent ?? 0,
+      },
+      {
+        field: "stats_emails_opened",
+        headerName: t("maillist.field.stats_emails_opened"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.stats_emails_opened ?? 0,
+      },
+      {
+        field: "stats_emails_clicked",
+        headerName: t("maillist.field.stats_emails_clicked"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.stats_emails_clicked ?? 0,
       },
       {
         field: "permetti_disiscrizione",
@@ -126,6 +167,12 @@ const MailListContent = () => {
             label={t("statistics.btn.view_list_stats")}
             component={Link}
             href={generatePathStorage(STATISTICS_LIST, {id: row.id.toString()})}
+            showInMenu
+          />,
+          <GridActionsCellItem
+            key="qr"
+            label={t("maillist.btn.qr")}
+            onClick={() => setQrMailList({...row})}
             showInMenu
           />,
           <GridActionsLinkCellItem
@@ -210,6 +257,12 @@ const MailListContent = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <MailListQRDialog
+        mailList={qrMailList}
+        open={qrMailList !== null}
+        onClose={() => setQrMailList(null)}
+      />
     </>
   );
 };

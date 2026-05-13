@@ -20,6 +20,7 @@ import Typography from '@mui/material/Typography';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import SaveIcon from '@mui/icons-material/Save';
 import SendIcon from '@mui/icons-material/Send';
+import InsightsIcon from '@mui/icons-material/Insights';
 import {useParams, useRouter} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 import {useSnackbar} from 'notistack';
@@ -29,11 +30,20 @@ import {
   getRecipientsCount,
   getTemplatePresets,
   saveAsTemplate,
+  scheduleCampaign,
+  sendCampaign,
   sendTestEmail,
 } from '@/shared/helpers/api/campaignApiHelper';
-import {CAMPAIGN_CRUD_LIST, CAMPAIGN_TEMPLATES, WIZARD_STEP_3} from '@/shared/constants/AppRoutes';
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/it';
+import dayjs, {Dayjs} from 'dayjs';
+import EventIcon from '@mui/icons-material/Event';
+import {CAMPAIGN_CRUD_LIST, CAMPAIGN_STATS, CAMPAIGN_TEMPLATES, WIZARD_STEP_3} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {EmailTemplatePreset} from '@/types/models/EmailTemplate';
+import SendingProgressModal from '@/components/campaign/SendingProgressModal';
 
 const WizardStep4Content = (): ReactElement | null => {
   const router = useRouter();
@@ -77,6 +87,10 @@ const WizardStep4Content = (): ReactElement | null => {
     getRecipientsCount(mailListIds, campaign.filter ?? undefined)
       .then(count => setRecipientCount(count))
       .catch(() => setRecipientCount(0));
+    // Reflect persisted scheduling state on the button label.
+    if (campaign.status === 'scheduled' && campaign.scheduled_at) {
+      setScheduledAtIso(campaign.scheduled_at);
+    }
   }, [campaignResult]);
 
   const campaign = campaignResult?.item;
@@ -150,8 +164,51 @@ const WizardStep4Content = (): ReactElement | null => {
     }
   };
 
-  const handleSendNow = () => {
-    enqueueSnackbar(t('campaign.wizard.step4.send_now_coming'), {variant: 'info'});
+  const [confirmSendOpen, setConfirmSendOpen] = useState(false);
+  const [progressOpen, setProgressOpen] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendingStarted, setSendingStarted] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [scheduleAt, setScheduleAt] = useState<Dayjs | null>(null);
+  const [scheduling, setScheduling] = useState(false);
+  const [scheduledAtIso, setScheduledAtIso] = useState<string | null>(null);
+
+  const handleConfirmSchedule = async () => {
+    if (!scheduleAt) return;
+    if (!scheduleAt.isAfter(dayjs())) {
+      enqueueSnackbar(t('campaign.error.scheduled_past'), {variant: 'error'});
+      return;
+    }
+    setScheduling(true);
+    try {
+      const iso = scheduleAt.toISOString();
+      await scheduleCampaign(campaignId, iso);
+      setScheduledAtIso(iso);
+      setScheduleOpen(false);
+      enqueueSnackbar(t('campaign.wizard.step4.scheduled_ok'), {variant: 'success'});
+    } catch (e) {
+      const err = e as {message?: {message?: string}; error?: {message?: string}};
+      const msg = err?.message?.message ?? err?.error?.message ?? t('messages.common.error.unknown');
+      enqueueSnackbar(msg, {variant: 'error'});
+    } finally {
+      setScheduling(false);
+    }
+  };
+
+  const handleConfirmSend = async () => {
+    setSending(true);
+    try {
+      await sendCampaign(campaignId);
+      setConfirmSendOpen(false);
+      setSendingStarted(true);
+      setProgressOpen(true);
+    } catch (e) {
+      const err = e as {message?: {message?: string}; error?: {message?: string}};
+      const msg = err?.message?.message ?? err?.error?.message ?? t('messages.common.error.unknown');
+      enqueueSnackbar(msg, {variant: 'error'});
+    } finally {
+      setSending(false);
+    }
   };
 
   const steps = [
@@ -296,9 +353,46 @@ const WizardStep4Content = (): ReactElement | null => {
         <Button variant="outlined" startIcon={<BookmarkIcon />} onClick={handleOpenDialog}>
           {t('campaign.wizard.step4.template_title')}
         </Button>
-        <Button variant="contained" color="success" startIcon={<SendIcon />} onClick={handleSendNow}>
-          {t('campaign.wizard.step4.send_now_title')}
-        </Button>
+        {!sendingStarted && (
+          <>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<EventIcon />}
+              onClick={() => {
+                setScheduleAt(scheduledAtIso ? dayjs(scheduledAtIso) : dayjs().add(1, 'hour'));
+                setScheduleOpen(true);
+              }}
+            >
+              {scheduledAtIso
+                ? t('campaign.wizard.step4.scheduled_for', {when: dayjs(scheduledAtIso).format('DD/MM/YYYY HH:mm')})
+                : t('campaign.wizard.step4.schedule_title')}
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<SendIcon />}
+              onClick={() => setConfirmSendOpen(true)}
+            >
+              {t('campaign.wizard.step4.send_now_title')}
+            </Button>
+          </>
+        )}
+        {sendingStarted && (
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<InsightsIcon />}
+              onClick={() => router.push(generatePathStorage(CAMPAIGN_STATS, {id: idParam}))}
+            >
+              {t('campaign.wizard.step4.view_stats')}
+            </Button>
+            <Button variant="outlined" color="info" onClick={() => setProgressOpen(true)}>
+              {t('campaign.wizard.step4.show_progress')}
+            </Button>
+          </>
+        )}
       </Stack>
 
       <Box
@@ -352,6 +446,101 @@ const WizardStep4Content = (): ReactElement | null => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={confirmSendOpen}
+        onClose={() => !sending && setConfirmSendOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>{t('campaign.wizard.step4.send_now_dialog_title')}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t('campaign.wizard.step4.send_now_dialog_desc', {count: recipientCount ?? 0})}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmSendOpen(false)} disabled={sending}>
+            {t('messages.btn.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={sending ? <CircularProgress size={16} color="inherit" /> : <SendIcon />}
+            onClick={handleConfirmSend}
+            disabled={sending}
+          >
+            {t('campaign.wizard.step4.send_now_title')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={scheduleOpen}
+        onClose={() => !scheduling && setScheduleOpen(false)}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle>{t('campaign.wizard.step4.schedule_title')}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{mb: 2}} color="text.secondary">
+            {t('campaign.wizard.step4.schedule_desc')}
+          </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
+            <DateTimePicker
+              value={scheduleAt}
+              onChange={setScheduleAt}
+              minDateTime={dayjs()}
+              ampm={false}
+              format="DD/MM/YYYY HH:mm"
+              sx={{width: '100%'}}
+            />
+          </LocalizationProvider>
+        </DialogContent>
+        <DialogActions>
+          {scheduledAtIso && (
+            <Button
+              color="warning"
+              onClick={async () => {
+                setScheduling(true);
+                try {
+                  await scheduleCampaign(campaignId, null);
+                  setScheduledAtIso(null);
+                  setScheduleAt(null);
+                  setScheduleOpen(false);
+                  enqueueSnackbar(t('campaign.wizard.step4.unscheduled_ok'), {variant: 'info'});
+                } catch (e) {
+                  const err = e as {message?: {message?: string}; error?: {message?: string}};
+                  enqueueSnackbar(err?.message?.message ?? err?.error?.message ?? '', {variant: 'error'});
+                } finally {
+                  setScheduling(false);
+                }
+              }}
+              disabled={scheduling}
+            >
+              {t('campaign.wizard.step4.unschedule')}
+            </Button>
+          )}
+          <Button onClick={() => setScheduleOpen(false)} disabled={scheduling}>
+            {t('messages.btn.cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={scheduling ? <CircularProgress size={16} color="inherit" /> : <EventIcon />}
+            onClick={handleConfirmSchedule}
+            disabled={scheduling || !scheduleAt}
+          >
+            {t('campaign.wizard.step4.schedule_confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <SendingProgressModal
+        campaignId={campaignId}
+        open={progressOpen}
+        onClose={() => setProgressOpen(false)}
+      />
     </Box>
   );
 };

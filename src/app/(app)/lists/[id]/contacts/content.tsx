@@ -34,6 +34,7 @@ import {useTranslations} from 'next-intl';
 import GridActionsLinkCellItem from '@/@oimmei/components/Mui/GridActionsLinkCellItem';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+import ContactBouncesDialog from '@/components/contact/ContactBouncesDialog';
 
 const defaultSortField = "email";
 
@@ -82,6 +83,7 @@ const ContactContent = (): ReactElement => {
   } = useAsyncLoader(getContactList, true);
 
   const [deletingContact, setDeletingContact] = useState<Contact | null>(null);
+  const [bouncesContact, setBouncesContact] = useState<Contact | null>(null);
 
   const columns = useMemo<GridColDef<Contact>[]>(
     () => ([
@@ -109,10 +111,53 @@ const ContactContent = (): ReactElement => {
           : <ClearIcon titleAccess={t("contact.iscritto.no")}/>,
       },
       {
-        field: "bounce_count",
-        headerName: t("contact.field.bounce_count"),
-        width: 100,
+        field: "sent_count",
+        headerName: t("contact.field.sent_count"),
+        width: 90,
         sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.sent_count ?? 0,
+      },
+      {
+        field: "opened_count",
+        headerName: t("contact.field.opened_count"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.opened_count ?? 0,
+      },
+      {
+        field: "clicked_count",
+        headerName: t("contact.field.clicked_count"),
+        width: 90,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => row.clicked_count ?? 0,
+      },
+      {
+        field: "bounced_failed_count",
+        headerName: t("contact.field.bounce_count"),
+        width: 110,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: ({row}) => {
+          const n = row.bounced_failed_count;
+          if (!n) return 0;
+          return (
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => setBouncesContact(row)}
+              sx={{minWidth: 0, padding: '0 6px', fontWeight: 700}}
+            >
+              {n}
+            </Button>
+          );
+        },
       },
       {
         field: 'actions',
@@ -273,6 +318,13 @@ const ContactContent = (): ReactElement => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ContactBouncesDialog
+        listId={listId}
+        contact={bouncesContact}
+        open={bouncesContact !== null}
+        onClose={() => setBouncesContact(null)}
+      />
     </>
   );
 };

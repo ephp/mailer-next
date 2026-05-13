@@ -5,7 +5,24 @@ import {EditorContent, useEditor} from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
+import TiptapImage from '@tiptap/extension-image';
+
+// Extend the default Image extension so it round-trips a `style` attribute.
+// Inserted images get `style="width: 100%"` so they render full-width in
+// the email body — matches what we want from the email template.
+const Image = TiptapImage.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      style: {
+        default: 'width: 100%',
+        parseHTML: (el: HTMLElement) => el.getAttribute('style') || null,
+        renderHTML: (attrs: Record<string, unknown>) =>
+          attrs.style ? {style: attrs.style as string} : {},
+      },
+    };
+  },
+});
 import CodeMirror from '@uiw/react-codemirror';
 import {html as cmHtml} from '@codemirror/lang-html';
 import Box from '@mui/material/Box';
@@ -99,6 +116,8 @@ const RichHtmlEditor = ({value, onChange, label, minHeight = 200}: Props): React
       setImageDialogOpen(false);
       return;
     }
+    // `style: 'width: 100%'` is set as default in the extended Image extension,
+    // so we don't need to pass it here.
     editor.chain().focus().setImage({src: imageUrl, alt: imageAlt || undefined}).run();
     setImageDialogOpen(false);
     setImageUrl('');

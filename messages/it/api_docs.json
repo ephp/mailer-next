@@ -26,19 +26,19 @@
       "title": "Iscrivere un contatto",
       "desc": "Crea o aggiorna un contatto in una lista. Se il contatto esiste già viene aggiornato; se era precedentemente disiscritto viene re-iscritto. Richiede privacy_accepted: true.",
       "method": "POST",
-      "path": "/api/public/v1/lists/{listId}/contacts"
+      "path": "/api/public/v1/lists/'{listId}'/contacts"
     },
     "unsubscribe": {
       "title": "Disiscrivere un contatto",
       "desc": "Disiscrive un contatto da una lista impostando iscritto=false. L'operazione è idempotente: se il contatto non esiste risponde comunque 404.",
       "method": "DELETE",
-      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+      "path": "/api/public/v1/lists/'{listId}'/contacts/'{email}'"
     },
     "lookup": {
       "title": "Verificare un contatto",
       "desc": "Recupera i dati di un contatto in una lista specifica. Utile per pre-compilare form di iscrizione.",
       "method": "GET",
-      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+      "path": "/api/public/v1/lists/'{listId}'/contacts/'{email}'"
     },
     "lists": {
       "title": "Elencare le liste",
@@ -50,7 +50,7 @@
       "title": "Ottenere la privacy policy",
       "desc": "Recupera il testo della privacy policy dell'account, già renderizzato con i placeholder sostituiti. Usa questo endpoint per mostrare la policy prima dell'iscrizione.",
       "method": "GET",
-      "path": "/api/public/v1/lists/{listId}/privacy-policy"
+      "path": "/api/public/v1/lists/'{listId}'/privacy-policy"
     },
     "create_campaign": {
       "title": "Creare una campagna",
@@ -62,13 +62,13 @@
       "title": "Inviare una campagna",
       "desc": "Avvia l'invio di una campagna in stato draft o scheduled. Dopo la chiamata lo stato diventa sending.",
       "method": "POST",
-      "path": "/api/public/v1/campaigns/{id}/send"
+      "path": "/api/public/v1/campaigns/'{id}'/send"
     },
     "campaign_stats": {
       "title": "Statistiche campagna",
       "desc": "Legge le statistiche di una campagna: aperture, click, bounce, disiscrizioni e relative percentuali.",
       "method": "GET",
-      "path": "/api/public/v1/campaigns/{id}/stats"
+      "path": "/api/public/v1/campaigns/'{id}'/stats"
     }
   },
   "errors": {

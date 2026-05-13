@@ -16,7 +16,11 @@
     "cognome": "Cognome",
     "telefono": "Telefono",
     "iscritto": "Iscritto",
-    "bounce_count": "Bounce"
+    "bounce_count": "Bounce",
+    "unsubscribe_reason": "Motivo disiscrizione",
+    "sent_count": "Inviate",
+    "opened_count": "Aperte",
+    "clicked_count": "Cliccate"
   },
   "btn": {
     "create": "Nuovo contatto",
@@ -31,6 +35,15 @@
   "tab": {
     "data": "Dati",
     "history": "Storico"
+  },
+  "bounces": {
+    "title": "Tentativi falliti / bounce",
+    "col_sent_at": "Data",
+    "col_campaign": "Campagna",
+    "col_status": "Esito",
+    "col_retry": "Tentativi",
+    "col_error": "Errore SMTP",
+    "empty": "Nessun bounce o errore registrato per questo contatto."
   },
   "history": {
     "section_kpi": "Metriche Personali",

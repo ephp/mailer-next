@@ -20,6 +20,7 @@ import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
 import {useSnackbar} from 'notistack';
 import RichHtmlEditor from '@/components/editor/RichHtmlEditor';
+import GoogleFontAutocomplete from '@/components/common/GoogleFontAutocomplete';
 
 const SMTP_ENCRYPTION_OPTIONS = [
   {value: 'tls', labelKey: 'account.smtp.encryption.tls'},
@@ -352,6 +353,89 @@ const MailListForm = (
             </Grid>
           </>
         )}
+
+        <Grid size={12}>
+          <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
+            {t('maillist.section.email_defaults')}
+          </Box>
+          <Box sx={{fontSize: '0.85em', color: 'text.secondary', mb: 1}}>
+            {t('maillist.help.email_defaults')}
+          </Box>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <Box>
+              <Box sx={{fontSize: '0.75em', color: 'text.secondary', mb: 0.5}}>
+                {t('maillist.field.default_primary_color')}
+              </Box>
+              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                <input
+                  type="color"
+                  value={values.default_primary_color ?? '#1976d2'}
+                  onChange={(e) => setValues(v => ({...v, default_primary_color: e.target.value}))}
+                  style={{width: 56, height: 40, cursor: 'pointer', border: 'none', padding: 0, background: 'transparent'}}
+                />
+                <TextField
+                  size="small"
+                  fullWidth
+                  value={values.default_primary_color ?? ''}
+                  onChange={(e) => setValues(v => ({...v, default_primary_color: e.target.value || null}))}
+                  placeholder="#1976d2"
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </Box>
+            </Box>
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <Box>
+              <Box sx={{fontSize: '0.75em', color: 'text.secondary', mb: 0.5}}>
+                {t('maillist.field.default_text_color')}
+              </Box>
+              <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                <input
+                  type="color"
+                  value={values.default_text_color ?? '#333333'}
+                  onChange={(e) => setValues(v => ({...v, default_text_color: e.target.value}))}
+                  style={{width: 56, height: 40, cursor: 'pointer', border: 'none', padding: 0, background: 'transparent'}}
+                />
+                <TextField
+                  size="small"
+                  fullWidth
+                  value={values.default_text_color ?? ''}
+                  onChange={(e) => setValues(v => ({...v, default_text_color: e.target.value || null}))}
+                  placeholder="#333333"
+                  slotProps={{inputLabel: {shrink: true}}}
+                />
+              </Box>
+            </Box>
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <GoogleFontAutocomplete
+              value={values.default_heading_font}
+              onChange={(v) => setValues(prev => ({...prev, default_heading_font: v}))}
+              label={t('maillist.field.default_heading_font')}
+              helperText={t('maillist.help.default_heading_font')}
+            />
+          </SkeletonWrapper>
+        </Grid>
+
+        <Grid size={{xs: 12, md: 6}}>
+          <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
+            <GoogleFontAutocomplete
+              value={values.default_body_font}
+              onChange={(v) => setValues(prev => ({...prev, default_body_font: v}))}
+              label={t('maillist.field.default_body_font')}
+              helperText={t('maillist.help.default_body_font')}
+            />
+          </SkeletonWrapper>
+        </Grid>
 
         <Grid size={12}>
           <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>

@@ -22,7 +22,10 @@
     "draft": "Bozza",
     "mail_list_ids": "Liste destinatari",
     "recipient_count": "Destinatari",
-    "created_at": "Creata il"
+    "created_at": "Creata il",
+    "stats_sent": "Inviate",
+    "stats_unique_opens": "Aperte",
+    "stats_unique_clicks": "Cliccate"
   },
   "wizard": {
     "btn": {
@@ -111,7 +114,13 @@
       "template_dialog_name": "Nome template",
       "template_dialog_description": "Descrizione (opzionale)",
       "send_now_coming": "Funzionalità di invio in arrivo nei prossimi sprint",
-      "show_progress": "Mostra progresso"
+      "show_progress": "Mostra progresso",
+      "view_stats": "Vai alle statistiche",
+      "schedule_confirm": "Pianifica",
+      "scheduled_for": "Pianificata per {when}",
+      "scheduled_ok": "Campagna pianificata con successo",
+      "unscheduled_ok": "Pianificazione rimossa",
+      "unschedule": "Rimuovi pianificazione"
     }
   },
   "btn": {
@@ -158,8 +167,18 @@
     "mobile": "Mobile",
     "empty": "Nessuna anteprima disponibile"
   },
+  "attachments": {
+    "title": "Allegati",
+    "helper": "Trascina o seleziona uno o più file da allegare alle email di questa campagna.",
+    "add": "Aggiungi allegato",
+    "uploading": "Caricamento…",
+    "uploaded": "{count} allegato/i caricato/i",
+    "upload_error": "Errore nel caricamento dell'allegato",
+    "delete_error": "Errore nella rimozione dell'allegato"
+  },
   "error": {
     "not_found": "Campagna non trovata",
+    "scheduled_past": "La data di pianificazione deve essere nel futuro",
     "email_subject": {
       "required": "L'oggetto email è obbligatorio"
     },

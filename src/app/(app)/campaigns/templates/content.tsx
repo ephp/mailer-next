@@ -15,7 +15,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Chip from '@mui/material/Chip';
-import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -151,7 +150,6 @@ const CampaignTemplatesContent = (): ReactElement => {
   const [templates, setTemplates] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingTemplate, setDeletingTemplate] = useState<Campaign | null>(null);
-  const [creatingNew, setCreatingNew] = useState(false);
 
   useEffect(() => {
     getCampaigns({page: 1, perPage: 50, filter: {template: true}})
@@ -159,20 +157,6 @@ const CampaignTemplatesContent = (): ReactElement => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
-
-  const handleCreateNew = useCallback(async () => {
-    setCreatingNew(true);
-    try {
-      const res = await createCampaign();
-      if (res?.item?.id) {
-        router.push(generatePathStorage(WIZARD_STEP_1, {id: res.item.id.toString()}));
-      }
-    } catch {
-      enqueueSnackbar({message: tMsg('common.error.unknown'), variant: 'error'});
-    } finally {
-      setCreatingNew(false);
-    }
-  }, [router, enqueueSnackbar, tMsg]);
 
   const handleUseTemplate = useCallback(async (id: number) => {
     try {
@@ -202,17 +186,6 @@ const CampaignTemplatesContent = (): ReactElement => {
 
   return (
     <>
-      <Box sx={{display: 'flex', justifyContent: 'flex-end', mb: 2}}>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon/>}
-          onClick={handleCreateNew}
-          disabled={creatingNew}
-        >
-          {t('template.btn.create_new')}
-        </Button>
-      </Box>
-
       {loading ? (
         <Grid container spacing={2}>
           {Array.from({length: 6}).map((_, i) => (

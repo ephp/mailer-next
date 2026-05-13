@@ -12,7 +12,7 @@
     "post-update": "echo \"codesandbox preview only, need an update\" && pnpm update --latest"
   },
   "dependencies": {
-    "@Oimmei-Digital-Boutique/crema-components": "^0.10.0",
+    "@codemirror/lang-html": "^6.4.9",
     "@emotion/cache": "^11",
     "@emotion/react": "^11",
     "@emotion/styled": "^11.14.1",
@@ -22,12 +22,12 @@
     "@mui/system": "^7.3.6",
     "@mui/x-data-grid": "^8.23.0",
     "@mui/x-date-pickers": "^8.23.0",
+    "@Oimmei-Digital-Boutique/crema-components": "^0.10.0",
     "@tiptap/extension-image": "^2.10.3",
     "@tiptap/extension-link": "^2.10.3",
     "@tiptap/extension-underline": "^2.10.3",
     "@tiptap/react": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
-    "@codemirror/lang-html": "^6.4.9",
     "@uiw/react-codemirror": "^4.23.7",
     "csstype": "^3.2.3",
     "dayjs": "^1.11.19",
@@ -36,6 +36,7 @@
     "notistack": "^3.0.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-qr-code": "^2.0.21",
     "recharts": "^2.15.0"
   },
   "devDependencies": {

@@ -1,3 +1,5 @@
+'use client';
+
 import React, {ReactElement} from "react";
 import {useFormik} from "formik";
 import * as yup from "yup";

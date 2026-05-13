@@ -21,6 +21,10 @@ export interface MailList {
   smtp_encryption: SmtpEncryption | null;
   mail_from: string | null;
   mail_from_name: string | null;
+  default_primary_color: string | null;
+  default_text_color: string | null;
+  default_heading_font: string | null;
+  default_body_font: string | null;
   permetti_disiscrizione: boolean;
   unsubscribe_text: string | null;
   contact_count: number;
@@ -28,6 +32,12 @@ export interface MailList {
   account_id: number | null;
   created_at: string | null;
   updated_at: string | null;
+  subscribe_token: string;
+  /** Stats populated by the list endpoint; null when not yet computed. */
+  stats_campaigns_sent: number | null;
+  stats_emails_sent: number | null;
+  stats_emails_opened: number | null;
+  stats_emails_clicked: number | null;
 }
 
 export interface MailListUpdateInput {
@@ -43,6 +53,10 @@ export interface MailListUpdateInput {
   smtp_encryption?: SmtpEncryption | null;
   mail_from?: string | null;
   mail_from_name?: string | null;
+  default_primary_color?: string | null;
+  default_text_color?: string | null;
+  default_heading_font?: string | null;
+  default_body_font?: string | null;
   permetti_disiscrizione?: boolean;
   unsubscribe_text?: string | null;
 }
@@ -67,6 +81,11 @@ export const mailListSchema = yupObject({
   account_id: yupNumber().nullable().defined(),
   created_at: yupString().nullable().defined(),
   updated_at: yupString().nullable().defined(),
+  subscribe_token: yupString().required(),
+  stats_campaigns_sent: yupNumber().nullable().defined(),
+  stats_emails_sent: yupNumber().nullable().defined(),
+  stats_emails_opened: yupNumber().nullable().defined(),
+  stats_emails_clicked: yupNumber().nullable().defined(),
 });
 
 export const newMailList: MailList = {
@@ -83,6 +102,10 @@ export const newMailList: MailList = {
   smtp_encryption: null,
   mail_from: null,
   mail_from_name: null,
+  default_primary_color: null,
+  default_text_color: null,
+  default_heading_font: null,
+  default_body_font: null,
   permetti_disiscrizione: true,
   unsubscribe_text: null,
   contact_count: 0,
@@ -90,6 +113,11 @@ export const newMailList: MailList = {
   account_id: null,
   created_at: null,
   updated_at: null,
+  subscribe_token: '',
+  stats_campaigns_sent: null,
+  stats_emails_sent: null,
+  stats_emails_opened: null,
+  stats_emails_clicked: null,
 };
 
 export interface MailListListFilter {

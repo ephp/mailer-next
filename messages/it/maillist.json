@@ -21,12 +21,30 @@
     "mail_from_default": "Email mittente (default account)",
     "mail_from_name_default": "Nome mittente (default account)",
     "dsn_default": "Configurazione SMTP (default account)",
+    "default_primary_color": "Colore primario",
+    "default_text_color": "Colore testo",
+    "default_heading_font": "Font titoli",
+    "default_body_font": "Font testo",
     "permetti_disiscrizione": "Permetti disiscrizione",
     "unsubscribe_text": "Testo disiscrizione",
-    "contact_count": "Contatti"
+    "contact_count": "Contatti",
+    "active_count": "Attivi/Totali",
+    "stats_campaigns_sent": "Campagne",
+    "stats_emails_sent": "Inviate",
+    "stats_emails_opened": "Aperte",
+    "stats_emails_clicked": "Cliccate"
+  },
+  "qr": {
+    "title": "QR code di iscrizione",
+    "url_label": "Link di iscrizione",
+    "taxonomies_label": "Tassonomie pre-applicate",
+    "no_taxonomies": "Nessuna tassonomia disponibile per questa lista.",
+    "copy_url": "Copia link",
+    "download_svg": "Scarica SVG"
   },
   "section": {
     "smtp": "Configurazione invio",
+    "email_defaults": "Stile email predefinito",
     "unsubscribe": "Disiscrizione"
   },
   "smtp": {
@@ -34,11 +52,15 @@
   },
   "help": {
     "mail_from": "Lascia vuoto per usare quello dell'account ({default})",
-    "mail_from_name": "Lascia vuoto per usare quello dell'account ({default})"
+    "mail_from_name": "Lascia vuoto per usare quello dell'account ({default})",
+    "email_defaults": "Questi valori vengono pre-compilati nelle nuove campagne create per questa lista. Possono sempre essere sovrascritti nel wizard.",
+    "default_heading_font": "Font usato per titoli ed header",
+    "default_body_font": "Font usato per il corpo del testo"
   },
   "btn": {
     "create": "Nuova lista",
-    "contacts": "Vedi contatti"
+    "contacts": "Vedi contatti",
+    "qr": "Genera QR iscrizione"
   },
   "error": {
     "not_found": "Lista non trovata",

@@ -26,19 +26,19 @@
       "title": "Subscribe a contact",
       "desc": "Creates or updates a contact in a list. If the contact already exists it is updated; if previously unsubscribed it is re-subscribed. Requires privacy_accepted: true.",
       "method": "POST",
-      "path": "/api/public/v1/lists/{listId}/contacts"
+      "path": "/api/public/v1/lists/'{listId}'/contacts"
     },
     "unsubscribe": {
       "title": "Unsubscribe a contact",
       "desc": "Unsubscribes a contact from a list by setting iscritto=false. The operation is idempotent: if the contact does not exist it responds with 404.",
       "method": "DELETE",
-      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+      "path": "/api/public/v1/lists/'{listId}'/contacts/'{email}'"
     },
     "lookup": {
       "title": "Look up a contact",
       "desc": "Retrieves a contact's data in a specific list. Useful for pre-filling subscription forms.",
       "method": "GET",
-      "path": "/api/public/v1/lists/{listId}/contacts/{email}"
+      "path": "/api/public/v1/lists/'{listId}'/contacts/'{email}'"
     },
     "lists": {
       "title": "List available lists",
@@ -50,7 +50,7 @@
       "title": "Get privacy policy",
       "desc": "Retrieves the account's privacy policy text, already rendered with substituted placeholders. Use this endpoint to show the policy before subscription.",
       "method": "GET",
-      "path": "/api/public/v1/lists/{listId}/privacy-policy"
+      "path": "/api/public/v1/lists/'{listId}'/privacy-policy"
     },
     "create_campaign": {
       "title": "Create a campaign",
@@ -62,13 +62,13 @@
       "title": "Send a campaign",
       "desc": "Triggers sending of a campaign in draft or scheduled status. After the call the status becomes sending.",
       "method": "POST",
-      "path": "/api/public/v1/campaigns/{id}/send"
+      "path": "/api/public/v1/campaigns/'{id}'/send"
     },
     "campaign_stats": {
       "title": "Campaign statistics",
       "desc": "Reads a campaign's statistics: opens, clicks, bounces, unsubscribes and their percentage rates.",
       "method": "GET",
-      "path": "/api/public/v1/campaigns/{id}/stats"
+      "path": "/api/public/v1/campaigns/'{id}'/stats"
     }
   },
   "errors": {

@@ -21,12 +21,22 @@
     "mail_from_default": "Sender email (account default)",
     "mail_from_name_default": "Sender name (account default)",
     "dsn_default": "SMTP configuration (account default)",
+    "default_primary_color": "Primary color",
+    "default_text_color": "Text color",
+    "default_heading_font": "Heading font",
+    "default_body_font": "Body font",
     "permetti_disiscrizione": "Allow unsubscription",
     "unsubscribe_text": "Unsubscribe text",
-    "contact_count": "Contacts"
+    "contact_count": "Contacts",
+    "active_count": "Active/Total",
+    "stats_campaigns_sent": "Campaigns",
+    "stats_emails_sent": "Sent",
+    "stats_emails_opened": "Opened",
+    "stats_emails_clicked": "Clicked"
   },
   "section": {
     "smtp": "Sending configuration",
+    "email_defaults": "Email default style",
     "unsubscribe": "Unsubscribe"
   },
   "smtp": {
@@ -34,11 +44,23 @@
   },
   "help": {
     "mail_from": "Leave empty to use the account default ({default})",
-    "mail_from_name": "Leave empty to use the account default ({default})"
+    "mail_from_name": "Leave empty to use the account default ({default})",
+    "email_defaults": "These values pre-fill new campaigns created for this list. They can always be overridden in the wizard.",
+    "default_heading_font": "Font used for headings and headers",
+    "default_body_font": "Font used for body text"
   },
   "btn": {
     "create": "New list",
-    "contacts": "View contacts"
+    "contacts": "View contacts",
+    "qr": "Generate subscribe QR"
+  },
+  "qr": {
+    "title": "Subscribe QR code",
+    "url_label": "Subscribe URL",
+    "taxonomies_label": "Pre-applied taxonomies",
+    "no_taxonomies": "No taxonomy available for this list.",
+    "copy_url": "Copy URL",
+    "download_svg": "Download SVG"
   },
   "error": {
     "not_found": "List not found",

@@ -1,3 +1,5 @@
+'use client';
+
 import React, {ReactElement} from 'react';
 import {useTranslations} from 'next-intl';
 import ErrorWrapper from '@/components/error/ErrorWrapper';

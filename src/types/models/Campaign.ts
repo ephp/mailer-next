@@ -6,7 +6,7 @@ import {
   array as yupArray,
 } from "yup";
 
-export type CampaignStatus = 'draft' | 'scheduled' | 'sending' | 'sent';
+export type CampaignStatus = 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed';
 
 export interface CampaignFilter {
   taxonomy_term_ids?: number[];
@@ -14,8 +14,14 @@ export interface CampaignFilter {
 
 export interface CampaignStructure {
   template_id?: string;
+  /** When true the structure values below override list defaults. */
+  global_style?: boolean;
+  /** Considered only when global_style is false and there are 2+ mail lists. */
+  style_per_list?: boolean;
   primary_color?: string;
   text_color?: string;
+  heading_font?: string;
+  body_font?: string;
   logo_override_id?: number | null;
   colors?: {
     primary: string;
@@ -36,6 +42,14 @@ export interface CampaignMailList {
   name: string;
 }
 
+export interface CampaignAttachment {
+  id: number;
+  filename: string;
+  size: number;
+  mimetype: string | null;
+  url: string;
+}
+
 export interface Campaign {
   id: number;
   name: string | null;
@@ -54,9 +68,14 @@ export interface Campaign {
   account_id: number | null;
   mail_list_ids: number[];
   mail_lists: CampaignMailList[];
+  attachments: CampaignAttachment[];
   recipient_count: number;
   created_at: string | null;
   updated_at: string | null;
+  /** Only populated by the list endpoint; null when not yet computed. */
+  stats_sent: number | null;
+  stats_unique_opens: number | null;
+  stats_unique_clicks: number | null;
 }
 
 export const campaignSchema = yupObject({
@@ -70,22 +89,30 @@ export const campaignSchema = yupObject({
   filter: yupObject().nullable().defined(),
   draft: yupBoolean().required(),
   template: yupBoolean().required(),
-  status: yupString().oneOf(['draft', 'scheduled', 'sending', 'sent'] as const).required(),
+  status: yupString().oneOf(['draft', 'scheduled', 'sending', 'sent', 'failed'] as const).required(),
   scheduled_at: yupString().nullable().defined(),
   sent_at: yupString().nullable().defined(),
   cloned_from_id: yupNumber().nullable().defined(),
   account_id: yupNumber().nullable().defined(),
   mail_list_ids: yupArray(yupNumber().required()).required(),
   mail_lists: yupArray(yupObject()).required(),
+  attachments: yupArray(yupObject()).required(),
   recipient_count: yupNumber().required(),
   created_at: yupString().nullable().defined(),
   updated_at: yupString().nullable().defined(),
+  stats_sent: yupNumber().nullable().defined(),
+  stats_unique_opens: yupNumber().nullable().defined(),
+  stats_unique_clicks: yupNumber().nullable().defined(),
 });
 
 export const defaultCampaignStructure: CampaignStructure = {
   template_id: 'newsletter',
+  global_style: false,
+  style_per_list: false,
   primary_color: '#1976d2',
   text_color: '#333333',
+  heading_font: 'Roboto',
+  body_font: 'Inter',
   logo_override_id: null,
   colors: DEFAULT_COLORS,
   logo_url: null,
@@ -109,9 +136,13 @@ export const newCampaign: Campaign = {
   account_id: null,
   mail_list_ids: [],
   mail_lists: [],
+  attachments: [],
   recipient_count: 0,
   created_at: null,
   updated_at: null,
+  stats_sent: null,
+  stats_unique_opens: null,
+  stats_unique_clicks: null,
 };
 
 export interface CampaignListFilter {

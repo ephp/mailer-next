@@ -1,3 +1,5 @@
+'use client';
+
 import React, {ReactElement, useMemo} from "react";
 import {
   object as yupObject,

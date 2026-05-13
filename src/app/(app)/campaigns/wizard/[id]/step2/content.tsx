@@ -15,9 +15,10 @@ import {useTranslations} from 'next-intl';
 import {useSnackbar} from 'notistack';
 import {generatePathStorage} from '@Oimmei-Digital-Boutique/crema-components';
 import {getCampaign, updateCampaign} from '@/shared/helpers/api/campaignApiHelper';
-import {CAMPAIGN_CRUD_LIST, WIZARD_STEP_1} from '@/shared/constants/AppRoutes';
+import {CAMPAIGN_CRUD_LIST, WIZARD_STEP_1, WIZARD_STEP_3} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import RichHtmlEditor from '@/components/editor/RichHtmlEditor';
+import CampaignAttachmentsBlock from '@/components/campaign/CampaignAttachmentsBlock';
 
 const AUTOSAVE_DELAY_MS = 30_000;
 const PLACEHOLDERS = ['[[nome]]', '[[cognome]]', '[[email]]'];
@@ -118,7 +119,7 @@ const WizardStep2Content = (): ReactElement | null => {
   const handleContinue = async () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     await doSave(name, emailSubject, snippet, body);
-    router.push(CAMPAIGN_CRUD_LIST);
+    router.push(generatePathStorage(WIZARD_STEP_3, {id: idParam}));
   };
 
   const steps = [
@@ -200,6 +201,13 @@ const WizardStep2Content = (): ReactElement | null => {
           label={t('campaign.field.body')}
           minHeight={300}
         />
+
+        {campaignResult?.item && (
+          <CampaignAttachmentsBlock
+            campaignId={campaignId}
+            initialAttachments={campaignResult.item.attachments ?? []}
+          />
+        )}
       </Box>
 
       <Box sx={{mt: 2, minHeight: 24, display: 'flex', alignItems: 'center', gap: 1}}>

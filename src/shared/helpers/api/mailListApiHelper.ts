@@ -19,6 +19,10 @@ type MailListApiPayload = {
   smtpEncryption: SmtpEncryption | null;
   mailFrom: string | null;
   mailFromName: string | null;
+  defaultPrimaryColor: string | null;
+  defaultTextColor: string | null;
+  defaultHeadingFont: string | null;
+  defaultBodyFont: string | null;
   permettiDisiscrizione: boolean;
   unsubscribeText: string | null;
   contactCount: number;
@@ -26,6 +30,11 @@ type MailListApiPayload = {
   accountId: number | null;
   createdAt: string | null;
   updatedAt: string | null;
+  subscribeToken: string;
+  statsCampaignsSent?: number | null;
+  statsEmailsSent?: number | null;
+  statsEmailsOpened?: number | null;
+  statsEmailsClicked?: number | null;
 };
 
 const mapMailListFromApi = (raw: MailListApiPayload): MailList => ({
@@ -42,6 +51,10 @@ const mapMailListFromApi = (raw: MailListApiPayload): MailList => ({
   smtp_encryption: raw.smtpEncryption,
   mail_from: raw.mailFrom,
   mail_from_name: raw.mailFromName,
+  default_primary_color: raw.defaultPrimaryColor,
+  default_text_color: raw.defaultTextColor,
+  default_heading_font: raw.defaultHeadingFont,
+  default_body_font: raw.defaultBodyFont,
   permetti_disiscrizione: raw.permettiDisiscrizione,
   unsubscribe_text: raw.unsubscribeText,
   contact_count: raw.contactCount,
@@ -49,6 +62,11 @@ const mapMailListFromApi = (raw: MailListApiPayload): MailList => ({
   account_id: raw.accountId,
   created_at: raw.createdAt,
   updated_at: raw.updatedAt,
+  subscribe_token: raw.subscribeToken,
+  stats_campaigns_sent: raw.statsCampaignsSent ?? null,
+  stats_emails_sent: raw.statsEmailsSent ?? null,
+  stats_emails_opened: raw.statsEmailsOpened ?? null,
+  stats_emails_clicked: raw.statsEmailsClicked ?? null,
 });
 
 const mapMailListDetailFromApi = (raw: DetailResult<MailListApiPayload>): DetailResult<MailList> => ({
@@ -106,6 +124,10 @@ export const createMailList = async (
       smtpEncryption: entity.smtp_encryption,
       mailFrom: entity.mail_from,
       mailFromName: entity.mail_from_name,
+      defaultPrimaryColor: entity.default_primary_color,
+      defaultTextColor: entity.default_text_color,
+      defaultHeadingFont: entity.default_heading_font,
+      defaultBodyFont: entity.default_body_font,
       permettiDisiscrizione: entity.permetti_disiscrizione,
       unsubscribeText: entity.unsubscribe_text,
     },
@@ -130,6 +152,10 @@ export const updateMailList = async (
       smtpEncryption: entity.smtp_encryption,
       mailFrom: entity.mail_from,
       mailFromName: entity.mail_from_name,
+      defaultPrimaryColor: entity.default_primary_color,
+      defaultTextColor: entity.default_text_color,
+      defaultHeadingFont: entity.default_heading_font,
+      defaultBodyFont: entity.default_body_font,
       permettiDisiscrizione: entity.permetti_disiscrizione,
       unsubscribeText: entity.unsubscribe_text,
     },

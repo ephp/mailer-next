@@ -22,7 +22,10 @@
     "draft": "Draft",
     "mail_list_ids": "Recipient lists",
     "recipient_count": "Recipients",
-    "created_at": "Created at"
+    "created_at": "Created at",
+    "stats_sent": "Sent",
+    "stats_unique_opens": "Opened",
+    "stats_unique_clicks": "Clicked"
   },
   "wizard": {
     "btn": {
@@ -111,7 +114,13 @@
       "template_dialog_name": "Template name",
       "template_dialog_description": "Description (optional)",
       "send_now_coming": "Send functionality coming in a future sprint",
-      "show_progress": "Show progress"
+      "show_progress": "Show progress",
+      "view_stats": "View statistics",
+      "schedule_confirm": "Schedule",
+      "scheduled_for": "Scheduled for {when}",
+      "scheduled_ok": "Campaign scheduled successfully",
+      "unscheduled_ok": "Scheduling removed",
+      "unschedule": "Remove scheduling"
     }
   },
   "btn": {
@@ -158,8 +167,18 @@
     "mobile": "Mobile",
     "empty": "No preview available"
   },
+  "attachments": {
+    "title": "Attachments",
+    "helper": "Drag or pick one or more files to attach to this campaign's emails.",
+    "add": "Add attachment",
+    "uploading": "Uploading…",
+    "uploaded": "{count} attachment(s) uploaded",
+    "upload_error": "Attachment upload failed",
+    "delete_error": "Attachment removal failed"
+  },
   "error": {
     "not_found": "Campaign not found",
+    "scheduled_past": "Scheduling date must be in the future",
     "email_subject": {
       "required": "Email subject is required"
     },
