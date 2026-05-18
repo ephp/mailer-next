@@ -43,3 +43,9 @@ certificates
 # IDE
 .idea/
 .vscode/
+/analysis/
+/ralph.sh
+/.claude/
+/tasks/
+/.ralph/
+/screenshot/

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' NODE_TLS_REJECT_UNAUTHORIZED=0 next dev --experimental-https",
+    "dev": "NODE_OPTIONS='--inspect' NODE_TLS_REJECT_UNAUTHORIZED=0 dotenv -e .env.local -e .env -- next dev --experimental-https",
     "build": "next build",
-    "start": "next start",
+    "start": "dotenv -e .env.local -e .env -- next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "echo \"No tests configured\" && exit 0",
@@ -43,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
     "typescript": "^5.9.3"
