@@ -36,6 +36,8 @@ import {createAccount, updateAccount, updateAccountById, regenerateApiKey, diagn
 type AccountFormValues = Account & { smtp_password: string | null };
 import {useTranslations} from 'next-intl';
 import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
+import RichHtmlEditor from '@/components/editor/RichHtmlEditor';
+import FormHelperText from '@mui/material/FormHelperText';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
 import {useSnackbar} from 'notistack';
 
@@ -348,17 +350,13 @@ const AccountForm = (
         </Grid>
         <Grid size={12}>
           <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <TextField
-              name="privacy_policy"
-              fullWidth
-              multiline
-              minRows={8}
+            <RichHtmlEditor
               label={t('account.field.privacy_policy')}
-              helperText={t('account.help.privacy_policy')}
               value={values.privacy_policy ?? ''}
-              onChange={(e) => setValues(v => ({...v, privacy_policy: e.target.value || null}))}
-              slotProps={{inputLabel: {shrink: true}}}
+              onChange={(html) => setValues(v => ({...v, privacy_policy: html || null}))}
+              minHeight={220}
             />
+            <FormHelperText>{t('account.help.privacy_policy')}</FormHelperText>
           </SkeletonWrapper>
         </Grid>
 

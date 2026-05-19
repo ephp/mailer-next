@@ -232,9 +232,11 @@ const SubscribePageContent = (): ReactElement => {
       <Dialog open={privacyOpen} onClose={() => setPrivacyOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>Informativa sulla privacy</DialogTitle>
         <DialogContent dividers>
-          <Typography component="div" sx={{whiteSpace: 'pre-wrap', fontSize: '0.9rem', lineHeight: 1.6}}>
-            {info?.privacy_policy ?? ''}
-          </Typography>
+          <Typography
+            component="div"
+            sx={{fontSize: '0.9rem', lineHeight: 1.6, '& p': {mt: 0, mb: 1}, '& a': {color: 'primary.main'}}}
+            dangerouslySetInnerHTML={{__html: info?.privacy_policy ?? ''}}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setPrivacyOpen(false)}>Chiudi</Button>
