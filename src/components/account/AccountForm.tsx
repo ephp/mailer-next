@@ -38,6 +38,11 @@ import {useTranslations} from 'next-intl';
 import SkeletonWrapper from '@/@oimmei/components/SkeletonWrapper';
 import RichHtmlEditor from '@/components/editor/RichHtmlEditor';
 import FormHelperText from '@mui/material/FormHelperText';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import {DEFAULT_PRIVACY_POLICY, renderPrivacyPlaceholders} from '@/shared/constants/PrivacyPolicy';
 import {DetailResult} from '@Oimmei-Digital-Boutique/crema-components';
 import {useSnackbar} from 'notistack';
 
@@ -78,6 +83,8 @@ const AccountForm = (
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
   const [testEmailTo, setTestEmailTo] = useState('');
   const [showTestEmailInput, setShowTestEmailInput] = useState(false);
+  const [privacyPreviewOpen, setPrivacyPreviewOpen] = useState(false);
+  const [privacyPreviewTab, setPrivacyPreviewTab] = useState<'current' | 'default'>('current');
 
   useEffect(() => {
     if (account?.mailer_dsn) setSmtpMode('dsn');
@@ -344,8 +351,21 @@ const AccountForm = (
         </Grid>
 
         <Grid size={12}>
-          <Box sx={{fontWeight: 600, mt: 2, mb: 1}}>
-            {t('account.section.privacy')}
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2, mb: 1}}>
+            <Box sx={{fontWeight: 600}}>
+              {t('account.section.privacy')}
+            </Box>
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<VisibilityIcon/>}
+              onClick={() => {
+                setPrivacyPreviewTab((values.privacy_policy ?? '').trim() ? 'current' : 'default');
+                setPrivacyPreviewOpen(true);
+              }}
+            >
+              {t('account.btn.preview_privacy')}
+            </Button>
           </Box>
         </Grid>
         <Grid size={12}>
@@ -829,6 +849,64 @@ const AccountForm = (
           >
             {t('account.btn.regenerate_anyway')}
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={privacyPreviewOpen} onClose={() => setPrivacyPreviewOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>{t('account.dialog.preview_privacy.title')}</DialogTitle>
+        <Tabs
+          value={privacyPreviewTab}
+          onChange={(_, v: 'current' | 'default') => setPrivacyPreviewTab(v)}
+          sx={{borderBottom: 1, borderColor: 'divider', px: 2}}
+        >
+          <Tab value="current" label={t('account.dialog.preview_privacy.tab_current')}/>
+          <Tab value="default" label={t('account.dialog.preview_privacy.tab_default')}/>
+        </Tabs>
+        <DialogContent dividers>
+          {privacyPreviewTab === 'current' && (
+            (values.privacy_policy ?? '').trim() ? (
+              <Box
+                sx={{
+                  fontSize: '0.9rem',
+                  lineHeight: 1.6,
+                  '& p': {mt: 0, mb: 1},
+                  '& a': {color: 'primary.main'},
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: renderPrivacyPlaceholders(values.privacy_policy ?? '', {
+                    nome_account: values.ragione_sociale,
+                    email_contatto_account: values.email_contatto,
+                    indirizzo_account: values.indirizzo,
+                    partita_iva_account: values.partita_iva,
+                    mail_from_account: values.mail_from,
+                    mail_from_name_account: values.mail_from_name,
+                  }),
+                }}
+              />
+            ) : (
+              <Typography color="text.secondary" sx={{fontStyle: 'italic'}}>
+                {t('account.dialog.preview_privacy.empty')}
+              </Typography>
+            )
+          )}
+          {privacyPreviewTab === 'default' && (
+            <Typography
+              component="div"
+              sx={{whiteSpace: 'pre-wrap', fontSize: '0.9rem', lineHeight: 1.6}}
+            >
+              {renderPrivacyPlaceholders(DEFAULT_PRIVACY_POLICY, {
+                nome_account: values.ragione_sociale,
+                email_contatto_account: values.email_contatto,
+                indirizzo_account: values.indirizzo,
+                partita_iva_account: values.partita_iva,
+                mail_from_account: values.mail_from,
+                mail_from_name_account: values.mail_from_name,
+              })}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPrivacyPreviewOpen(false)}>{t('messages.btn.close')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

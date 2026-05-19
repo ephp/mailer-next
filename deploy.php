@@ -39,7 +39,7 @@ task('nextjs:restart', function () {
     // Restarting PHP to load the new container file.
 //    run('systemctl stop nextjs-mailer.service');
 //    run('systemctl start nextjs-mailer.service');
-//    run('systemctl restart nextjs-mailer.service');
+    run('systemctl restart nextjs-mailer.service');
 });
 
 after('deploy:failed', 'deploy:unlock');

@@ -46,7 +46,16 @@
     "diagnose": "Esegui diagnostica",
     "test_smtp": "Test Connessione SMTP",
     "send_test_email": "Invia Email di Test",
-    "send": "Invia"
+    "send": "Invia",
+    "preview_privacy": "Anteprima"
+  },
+  "dialog": {
+    "preview_privacy": {
+      "title": "Anteprima informativa sulla privacy",
+      "tab_current": "La tua informativa",
+      "tab_default": "Informativa di default",
+      "empty": "Nessuna informativa personalizzata. Agli utenti sarà mostrata l'informativa di default qui sotto."
+    }
   },
   "diagnostic": {
     "smtp": {

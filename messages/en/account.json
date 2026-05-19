@@ -46,7 +46,16 @@
     "diagnose": "Run diagnostics",
     "test_smtp": "Test SMTP Connection",
     "send_test_email": "Send Test Email",
-    "send": "Send"
+    "send": "Send",
+    "preview_privacy": "Preview"
+  },
+  "dialog": {
+    "preview_privacy": {
+      "title": "Privacy policy preview",
+      "tab_current": "Your policy",
+      "tab_default": "Default policy",
+      "empty": "No custom privacy policy. The default policy shown below will be displayed to users."
+    }
   },
   "diagnostic": {
     "smtp": {
