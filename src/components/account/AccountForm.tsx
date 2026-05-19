@@ -350,13 +350,15 @@ const AccountForm = (
         </Grid>
         <Grid size={12}>
           <SkeletonWrapper loading={loading} wrapping={wrapping} width="100%">
-            <RichHtmlEditor
-              label={t('account.field.privacy_policy')}
-              value={values.privacy_policy ?? ''}
-              onChange={(html) => setValues(v => ({...v, privacy_policy: html || null}))}
-              minHeight={220}
-            />
-            <FormHelperText>{t('account.help.privacy_policy')}</FormHelperText>
+            <Box>
+              <RichHtmlEditor
+                label={t('account.field.privacy_policy')}
+                value={values.privacy_policy ?? ''}
+                onChange={(html) => setValues(v => ({...v, privacy_policy: html || null}))}
+                minHeight={220}
+              />
+              <FormHelperText>{t('account.help.privacy_policy')}</FormHelperText>
+            </Box>
           </SkeletonWrapper>
         </Grid>
 
