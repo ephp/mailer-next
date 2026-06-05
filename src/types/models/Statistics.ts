@@ -42,6 +42,7 @@ export interface CampaignRecipient {
   contact_cognome: string | null;
   mail_list_name: string | null;
   status: string;
+  error_message: string | null;
   opened: boolean;
   opened_at: string | null;
   open_count: number;

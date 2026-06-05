@@ -21,6 +21,10 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
@@ -144,6 +148,7 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
   const [recipients, setRecipients] = useState<RecipientsResult | null>(null);
   const [loadingRecipients, setLoadingRecipients] = useState(true);
   const [exportingCsv, setExportingCsv] = useState(false);
+  const [bounceDialog, setBounceDialog] = useState<{email: string; message: string | null} | null>(null);
 
   useEffect(() => {
     setLoadingMain(true);
@@ -440,7 +445,17 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
                     <Typography variant="body2" noWrap>{r.mail_list_name ?? '—'}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip label={r.status} color={statusChipColor(r.status)} size="small"/>
+                    {(r.status === 'bounced' || r.status === 'failed') ? (
+                      <Chip
+                        label={r.status}
+                        color={statusChipColor(r.status)}
+                        size="small"
+                        onClick={() => setBounceDialog({email: r.email, message: r.error_message})}
+                        sx={{cursor: 'pointer'}}
+                      />
+                    ) : (
+                      <Chip label={r.status} color={statusChipColor(r.status)} size="small"/>
+                    )}
                   </TableCell>
                   <TableCell sx={{whiteSpace: 'nowrap'}}>
                     {r.opened ? fmtDate(r.opened_at) : <CancelIcon fontSize="small" color="disabled"/>}
@@ -471,6 +486,37 @@ const CampaignStatsContent = ({campaignId}: Props): ReactElement => {
           />
         </TableContainer>
       )}
+
+      <Dialog open={bounceDialog !== null} onClose={() => setBounceDialog(null)} maxWidth="sm" fullWidth>
+        <DialogTitle>{t('stats.bounce_dialog_title', {email: bounceDialog?.email ?? ''})}</DialogTitle>
+        <DialogContent dividers>
+          {bounceDialog?.message ? (
+            <Typography
+              component="pre"
+              variant="body2"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                fontFamily: 'monospace',
+                fontSize: '0.85rem',
+                m: 0,
+                color: 'error.main',
+              }}
+            >
+              {bounceDialog.message}
+            </Typography>
+          ) : (
+            <Typography color="text.secondary" fontStyle="italic">
+              {t('stats.bounce_dialog_empty')}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setBounceDialog(null)}>
+            {t('stats.bounce_dialog_close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

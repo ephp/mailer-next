@@ -259,7 +259,10 @@
     "recipients_col_click_count": "N° Click",
     "recipients_col_unsubscribed": "Disiscr.",
     "recipients_no_data": "Nessun destinatario trovato",
-    "recipients_export_csv": "Esporta CSV"
+    "recipients_export_csv": "Esporta CSV",
+    "bounce_dialog_title": "Errore di consegna — {email}",
+    "bounce_dialog_empty": "Nessun messaggio di errore registrato.",
+    "bounce_dialog_close": "Chiudi"
   },
   "send": {
     "confirm": {
