@@ -69,6 +69,7 @@ export const getContactList = async (
       page,
       per_page: perPage,
       fts: filters?.fts,
+      taxonomy_term_ids: filters?.taxonomy_term_ids ?? [],
     },
   });
   return {

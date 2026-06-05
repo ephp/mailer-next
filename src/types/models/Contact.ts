@@ -53,4 +53,5 @@ export const newContact: Contact = {
 
 export interface ContactListFilter {
   fts?: string;
+  taxonomy_term_ids?: number[];
 }

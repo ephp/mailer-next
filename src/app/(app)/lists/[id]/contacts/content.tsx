@@ -1,6 +1,6 @@
 'use client';
 
-import React, {ReactElement, useCallback, useMemo, useState} from "react";
+import React, {ReactElement, useCallback, useEffect, useMemo, useState} from "react";
 import {
   ControlledDataGridProps,
   NextControlledDataGrid,
@@ -18,6 +18,9 @@ import DialogActions from "@mui/material/DialogActions";
 import Link from 'next/link';
 import {useParams} from 'next/navigation';
 import {Contact, ContactListFilter} from '@/types/models/Contact';
+import {TaxonomyCategory} from '@/types/models/TaxonomyCategory';
+import {TaxonomyTerm} from '@/types/models/TaxonomyTerm';
+import {Tag} from '@/@oimmei/bundle/tag/type/model/Tag';
 import {MAIL_LIST_CONTACTS_EDIT} from '@/shared/constants/AppRoutes';
 import AppSearchBar2 from '../../../../../@oimmei/core/AppSearchBar2';
 import {useSnackbar} from 'notistack';
@@ -27,6 +30,8 @@ import {
   subscribeContact,
   unsubscribeContact,
 } from '@/shared/helpers/api/contactApiHelper';
+import {getTaxonomyCategoryList} from '@/shared/helpers/api/taxonomyApiHelper';
+import {taxonomyTermsHelper} from '@/shared/helpers/api/taxonomyTermApiHelper';
 import {MAIL_LIST_CONTACTS_NEW, MAIL_LIST_CONTACTS_IMPORT, TAXONOMY_CATEGORIES} from '@/shared/constants/AppRoutes';
 import useAsyncLoader from '@/@oimmei/utility/useAsyncLoader';
 import {useAsyncCallHelper2Actions} from '@/@oimmei/services/context/AsyncCallHelper2Provider';
@@ -35,35 +40,81 @@ import GridActionsLinkCellItem from '@/@oimmei/components/Mui/GridActionsLinkCel
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import ContactBouncesDialog from '@/components/contact/ContactBouncesDialog';
+import AutocompleteTag from '@/@oimmei/bundle/tag/component/field/AutocompleteTag';
 
 const defaultSortField = "email";
 
 const defaultParameters = {
   sortBy: defaultSortField as keyof Contact,
-  filters: {fts: ""},
+  filters: {fts: "", taxonomy_term_ids: []} as ContactListFilter,
 };
 
+interface ContactFilterExtraProps {
+  categories: TaxonomyCategory[];
+  termsByCategory: Record<number, TaxonomyTerm[]>;
+}
+
 const ContactFilterComponent = (
-  {filterValues, onFilterChanged}: FilterComponentProps<ContactListFilter>,
+  {
+    filterValues,
+    onFilterChanged,
+    categories,
+    termsByCategory,
+  }: FilterComponentProps<ContactListFilter> & ContactFilterExtraProps,
 ) => {
   const t = useTranslations('messages');
+  const selectedIds = filterValues.taxonomy_term_ids ?? [];
+
+  const handleCategoryChange = (categoryId: number, tags: Tag[]): void => {
+    const categoryTermIds = new Set((termsByCategory[categoryId] ?? []).map(term => term.id));
+    const idsFromOtherCategories = selectedIds.filter(id => !categoryTermIds.has(id));
+    const idsFromThisCategory = tags.map(tag => tag.id);
+    onFilterChanged({taxonomy_term_ids: [...idsFromOtherCategories, ...idsFromThisCategory]});
+  };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: 'flex-end',
-        alignItems: "center",
-        width: 1,
-        marginBottom: 2,
-      }}
-    >
-      <AppSearchBar2
-        value={filterValues.fts}
-        onChange={(e) => onFilterChanged({fts: e.target.value})}
-        placeholder={t("common.placeholders.search")}
-      />
+    <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, width: 1, mb: 2}}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: 'flex-end',
+          alignItems: "center",
+        }}
+      >
+        <AppSearchBar2
+          value={filterValues.fts}
+          onChange={(e) => onFilterChanged({fts: e.target.value})}
+          placeholder={t("common.placeholders.search")}
+        />
+      </Box>
+
+      {categories.length > 0 && (
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)'},
+            gap: 2,
+          }}
+        >
+          {categories.map((category) => {
+            const helper = taxonomyTermsHelper(category.id);
+            const categoryTerms = termsByCategory[category.id] ?? [];
+            const selectedForCategory = categoryTerms.filter(term => selectedIds.includes(term.id));
+            return (
+              <AutocompleteTag<true>
+                key={category.id}
+                multiple
+                size="small"
+                label={category.name}
+                value={selectedForCategory}
+                fetchAllTags={helper.allTag.bind(helper)}
+                onChange={(_event, newValue) => handleCategoryChange(category.id, newValue as Tag[])}
+              />
+            );
+          })}
+        </Box>
+      )}
     </Box>
   );
 };
@@ -84,6 +135,31 @@ const ContactContent = (): ReactElement => {
 
   const [deletingContact, setDeletingContact] = useState<Contact | null>(null);
   const [bouncesContact, setBouncesContact] = useState<Contact | null>(null);
+  const [categories, setCategories] = useState<TaxonomyCategory[]>([]);
+  const [termsByCategory, setTermsByCategory] = useState<Record<number, TaxonomyTerm[]>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    getTaxonomyCategoryList({listId})
+      .then(async (result) => {
+        const cats = result.item ?? [];
+        if (cancelled) return;
+        setCategories(cats);
+        const entries = await Promise.all(
+          cats.map(async (cat) => {
+            const r = await taxonomyTermsHelper(cat.id).allTag();
+            return [cat.id, r.item ?? []] as const;
+          }),
+        );
+        if (!cancelled) {
+          setTermsByCategory(Object.fromEntries(entries));
+        }
+      })
+      .catch(console.error);
+    return () => {
+      cancelled = true;
+    };
+  }, [listId]);
 
   const columns = useMemo<GridColDef<Contact>[]>(
     () => ([
@@ -233,12 +309,17 @@ const ContactContent = (): ReactElement => {
   );
 
   const onParametersChanged =
-    useCallback<ControlledDataGridProps<Contact, ContactListFilter, void>["onInit"]>(
+    useCallback<ControlledDataGridProps<Contact, ContactListFilter, ContactFilterExtraProps>["onInit"]>(
       (parameters) => {
         fetchContactList({...parameters, listId}).catch((error) => console.error(error));
       },
       [fetchContactList, listId],
     );
+
+  const filterExtraProps = useMemo<ContactFilterExtraProps>(() => ({
+    categories,
+    termsByCategory,
+  }), [categories, termsByCategory]);
 
   const closeDeleteModal = () => setDeletingContact(null);
 
@@ -284,6 +365,7 @@ const ContactContent = (): ReactElement => {
       <NextControlledDataGrid<Contact, ContactListFilter,
         React.ComponentProps<typeof ContactFilterComponent>>
         filterWrapper={ContactFilterComponent}
+        filterWrapperAdditionalProps={filterExtraProps}
         defaultParameters={defaultParameters}
         columns={columns}
         rows={contacts?.items ?? []}
