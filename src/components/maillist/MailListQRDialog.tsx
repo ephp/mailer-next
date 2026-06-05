@@ -39,18 +39,9 @@ const MailListQRDialog = ({mailList, open, onClose}: Props): ReactElement => {
     setLoading(true);
     setCategories(null);
     setSelected(new Set());
-    // eslint-disable-next-line no-console
-    console.log('[QR debug] fetching subscribe info for token:', mailList.subscribe_token);
     getSubscribeInfo(mailList.subscribe_token)
-      .then((info) => {
-        // eslint-disable-next-line no-console
-        console.log('[QR debug] subscribe info response:', info);
-        setCategories(info?.categories ?? []);
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error('[QR debug] fetch failed:', e);
-      })
+      .then((info) => setCategories(info?.categories ?? []))
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, [open, mailList]);
 

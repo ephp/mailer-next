@@ -34,9 +34,12 @@ export interface SubscribePayload {
   privacy_accepted: boolean;
 }
 
-const apiBase = baseUrl.replace(/\/api\/v\d+\/?$/, '');
+// L'endpoint JSON sta su /api/public/v1/subscribe/{token} (backend Symfony):
+// la rotta nuda /subscribe/{token} e' la pagina Next del form pubblico, e nginx
+// instrada quel path a Next non a PHP.
+const publicApiBase = baseUrl.replace(/\/api\/v\d+\/?$/, '/api/public/v1');
 
-const subscribeBase = (token: string): string => `${apiBase}/subscribe/${token}`;
+const subscribeBase = (token: string): string => `${publicApiBase}/subscribe/${token}`;
 
 export const getSubscribeInfo = async (token: string): Promise<SubscribeInfo | null> => {
   const r = await fetch(subscribeBase(token), {method: 'GET', credentials: 'omit'});
